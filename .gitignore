@@ -1,0 +1,5 @@
+# Simulation junk
+sim/work/log/*.log
+sim/work/transcript
+sim/work/coverage.ucdb
+sim/work/vsim.wlf

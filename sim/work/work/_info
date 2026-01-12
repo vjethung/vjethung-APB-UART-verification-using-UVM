@@ -1,0 +1,93 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/viethung/Desktop/HUST/KiemChungViMach/APB_UART_CK/verify/sim/work
+T_opt
+!s110 1768222092
+VY`L3F8I`>9[FU0>`K9lUI2
+04 10 4 work tb_uart_tx fast 0
+=1-f42679728972-6964ed8c-df382-229f
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;10.7c;67
+vtb_uart_rx
+Z2 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
+Z3 !s110 1768222091
+!i10b 1
+!s100 jZzW;9=5:^K]@iHADBTIj3
+Ih8RUYCDR=allhU5?H5V@U1
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+!s105 tb_uart_rx_sv_unit
+S1
+R0
+w1768180444
+8../tb/tb_uart_rx.sv
+F../tb/tb_uart_rx.sv
+L0 3
+Z5 OL;L;10.7c;67
+r1
+!s85 0
+31
+Z6 !s108 1768222091.000000
+Z7 !s107 ../tb/tb_uart_rx.sv|../tb/tb_uart_tx.sv|
+Z8 !s90 -64|-f|filelist_com.f|-f|filelist_vsim.f|-f|filelist_tb.f|-l|./log/vlogt.log|
+!i113 0
+Z9 o+libext+.v +libext+.vh +libext+.sv +libext+.svh +notimingchecks -sv -timescale 1ns/1ns -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vtb_uart_tx
+R2
+R3
+!i10b 1
+!s100 ?QY^1MGBP3Vhh]>cC2Y7@3
+IB_SnfDJd5NSB[f^46zK:<0
+R4
+!s105 tb_uart_tx_sv_unit
+S1
+R0
+w1768222081
+8../tb/tb_uart_tx.sv
+F../tb/tb_uart_tx.sv
+L0 135
+R5
+r1
+!s85 0
+31
+R6
+R7
+R8
+!i113 0
+R9
+R1
+vuart
+R2
+R3
+!i10b 1
+!s100 Be]A;;jSI55XTn>o<[>Ud0
+IzX[5JFA1<=kj9RFYc[mza3
+R4
+!s105 uart_sv_unit
+S1
+R0
+w1768058917
+8../../hdl/uart.sv
+F../../hdl/uart.sv
+L0 2
+R5
+r1
+!s85 0
+31
+R6
+!s107 ../../hdl/uart.sv|
+!s90 -64|-f|filelist_com.f|-f|filelist_rtl.f|+cover=bcefs|-l|./log/vlogr.log|
+!i113 0
+!s102 +cover=bcefs
+o+libext+.v +libext+.vh +libext+.sv +libext+.svh +cover=bcefs -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+!s92 +libext+.v +libext+.vh +libext+.sv +libext+.svh +incdir+../../hdl -y ../../hdl +cover=bcefs -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
