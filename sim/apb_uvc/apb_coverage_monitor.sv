@@ -1,5 +1,3 @@
-typedef enum bit {COV_ENABLE, COV_DISABLE} cover_e;
-
 class apb_coverage_monitor extends uvm_monitor;
     apb_transaction trans;
     virtual interface apb_if vif;
@@ -53,8 +51,7 @@ class apb_coverage_monitor extends uvm_monitor;
         cross_addr_pwrite: cross cp_paddr, cp_pwrite;
 
         // Cross: Địa chỉ và Strobe (đặc biệt quan trọng cho TX_DATA và CFG_REG)
-        cross_addr_strobe0: cross cp_paddr, cp_pstrb_bit0 {
-          // kiểm tra strobe trong chu kỳ Ghi 
+        cross_addr_strobe0: cross cp_paddr, cp_pstrb_bit0, cp_pwrite {
           ignore_bins read_cases = binsof(cp_pwrite) intersect {1'b0};
         }
     endgroup
@@ -84,19 +81,18 @@ class apb_coverage_monitor extends uvm_monitor;
 
     // 3. Run Phase: Theo dõi reset và lặp lại việc thu thập
     virtual task run_phase(uvm_phase phase);
+        // biến trung gian để thu thập từ Interface task
+        logic [31:0] captured_data;
+        logic        is_write;
         @(posedge vif.presetn);
 
         forever begin
           trans = apb_transaction::type_id::create("trans", this);
-          // biến trung gian để thu thập từ Interface task
-
-          logic [31:0] captured_data;
-          logic        is_write;
 
           fork
             vif.collect_apb_transaction(trans.paddr, captured_data, is_write, trans.pstrb, trans.pslverr);
             // Kích hoạt recording dựa trên tín hiệu monitor_start từ interface
-            @(posedge vif.monstart) void'(begin_tr(trans, "Monitor_APB_Coverage"));
+            @(posedge vif.monitor_start) void'(begin_tr(trans, "Monitor_APB_Coverage"));
           join
 
           trans.pwrite = is_write;

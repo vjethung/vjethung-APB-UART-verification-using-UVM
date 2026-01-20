@@ -1,0 +1,338 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/viethung/Desktop/HUST/KiemChungViMach/APB_UART_CK/verify/sim/work
+T_opt
+!s110 1768924879
+V@[FH_e^RJm8S<:dVFEGoX2
+04 6 4 work tb_top fast 0
+04 6 4 work hw_top fast 0
+=1-f42679728972-696fa6cf-485b3-256e
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;10.7c;67
+Yapb_if
+Z2 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
+Z3 !s110 1768924878
+!i10b 1
+!s100 B?RDA<GT=R^EkUW[@`NWa1
+IC1hZ>@5?;A2fMQdcFi0ID3
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+!s105 apb_if_sv_unit
+S1
+R0
+w1768897225
+8../apb_uvc/apb_if.sv
+F../apb_uvc/apb_if.sv
+L0 1
+Z5 OL;L;10.7c;67
+r1
+!s85 0
+31
+Z6 !s108 1768924878.000000
+Z7 !s107 ../tb/apb_uart_testlib.sv|../tb/apb_uart_env.sv|../tb/uart_virseqs.sv|../tb/uart_virsequencer.sv|../uart_uvc/uart_uvc.sv|../uart_uvc/uart_agent.sv|../uart_uvc/uart_driver.sv|../uart_uvc/uart_sequencer.sv|../uart_uvc/uart_seqs.sv|../uart_uvc/uart_monitor.sv|../uart_uvc/uart_transaction.sv|../apb_uvc/apb_uvc.sv|../apb_uvc/apb_agent.sv|../apb_uvc/apb_driver.sv|../apb_uvc/apb_sequencer.sv|../apb_uvc/apb_seqs.sv|../apb_uvc/apb_monitor.sv|../apb_uvc/apb_transaction.sv|../cfig/apb_uart_config.sv|../cfig/types_param.sv|../libs/uvm-1.1d/src/macros/uvm_deprecated_defines.svh|../libs/uvm-1.1d/src/macros/uvm_reg_defines.svh|../libs/uvm-1.1d/src/macros/uvm_callback_defines.svh|../libs/uvm-1.1d/src/macros/uvm_sequence_defines.svh|../libs/uvm-1.1d/src/tlm1/uvm_tlm_imps.svh|../libs/uvm-1.1d/src/macros/uvm_tlm_defines.svh|../libs/uvm-1.1d/src/macros/uvm_printer_defines.svh|../libs/uvm-1.1d/src/macros/uvm_object_defines.svh|../libs/uvm-1.1d/src/macros/uvm_phase_defines.svh|../libs/uvm-1.1d/src/macros/uvm_message_defines.svh|../libs/uvm-1.1d/src/macros/uvm_version_defines.svh|../libs/uvm-1.1d/src/uvm_macros.svh|../tb/tb_top.sv|../tb/hw_top.sv|../tb/uart_tb_pkg.sv|../uart_uvc/uart_pkg.sv|../apb_uvc/apb_pkg.sv|../uart_uvc/uart_if.sv|../apb_uvc/apb_if.sv|../cfig/uart_common_pkg.sv|
+Z8 !s90 -64|-f|filelist_com.f|-f|filelist_vsim.f|-f|filelist_tb.f|-l|./log/vlogt.log|
+!i113 0
+Z9 o+libext+.v +libext+.vh +libext+.sv +libext+.svh +notimingchecks -sv -timescale 1ns/1ns -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z10 !s92 +libext+.v +libext+.vh +libext+.sv +libext+.svh +notimingchecks -sv -timescale 1ns/1ns +incdir+../libs/uvm-1.1d/src +incdir+../cfig +incdir+../apb_uvc +incdir+../uart_uvc +incdir+../tb -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+Xapb_pkg
+!s115 apb_if
+R2
+Z11 DXx6 mtiUvm 7 uvm_pkg 0 22 3zPkj@YUcM=M^m3zCLh<H1
+Z12 DXx4 work 15 uart_common_pkg 0 22 5A8Md5o:c]CnCzY5P]?R^1
+R3
+!i10b 1
+!s100 KRgOM;VFiMf3LdLbeQo0Y2
+ILSWaDeN[Yz[1KAn<<NUOb3
+VLSWaDeN[Yz[1KAn<<NUOb3
+S1
+R0
+w1768913155
+8../apb_uvc/apb_pkg.sv
+F../apb_uvc/apb_pkg.sv
+Z13 F../libs/uvm-1.1d/src/uvm_macros.svh
+Z14 F../libs/uvm-1.1d/src/macros/uvm_version_defines.svh
+Z15 F../libs/uvm-1.1d/src/macros/uvm_message_defines.svh
+Z16 F../libs/uvm-1.1d/src/macros/uvm_phase_defines.svh
+Z17 F../libs/uvm-1.1d/src/macros/uvm_object_defines.svh
+Z18 F../libs/uvm-1.1d/src/macros/uvm_printer_defines.svh
+Z19 F../libs/uvm-1.1d/src/macros/uvm_tlm_defines.svh
+Z20 F../libs/uvm-1.1d/src/tlm1/uvm_tlm_imps.svh
+Z21 F../libs/uvm-1.1d/src/macros/uvm_sequence_defines.svh
+Z22 F../libs/uvm-1.1d/src/macros/uvm_callback_defines.svh
+Z23 F../libs/uvm-1.1d/src/macros/uvm_reg_defines.svh
+Z24 F../libs/uvm-1.1d/src/macros/uvm_deprecated_defines.svh
+F../apb_uvc/apb_transaction.sv
+F../apb_uvc/apb_monitor.sv
+F../apb_uvc/apb_seqs.sv
+F../apb_uvc/apb_sequencer.sv
+F../apb_uvc/apb_driver.sv
+F../apb_uvc/apb_agent.sv
+F../apb_uvc/apb_uvc.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+R7
+R8
+!i113 0
+R9
+R10
+R1
+vhw_top
+R2
+R3
+!i10b 1
+!s100 `?d2J?N;;]hj1Q6gzI44X2
+ISMDhg0UF_HDWU1Um:9HI?0
+R4
+!s105 hw_top_sv_unit
+S1
+R0
+w1768924527
+8../tb/hw_top.sv
+F../tb/hw_top.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+R7
+R8
+!i113 0
+R9
+R10
+R1
+vtb_top
+R2
+R11
+R12
+Z25 DXx4 work 7 apb_pkg 0 22 LSWaDeN[Yz[1KAn<<NUOb3
+Z26 DXx4 work 8 uart_pkg 0 22 BCa@9GhA5f3F2=94Vokl]2
+DXx4 work 11 uart_tb_pkg 0 22 UJ<:k41o3:aILoaQ42Xg]1
+R3
+!i10b 1
+!s100 =Ybo_F4nhToWJM;K2J4g12
+Ii2FjOkXc2UJAZdA1YHkjH2
+R4
+!s105 tb_top_sv_unit
+S1
+R0
+w1768916751
+8../tb/tb_top.sv
+F../tb/tb_top.sv
+R13
+R14
+R15
+R16
+R17
+R18
+R19
+R20
+R21
+R22
+R23
+R24
+L0 2
+R5
+r1
+!s85 0
+31
+R6
+R7
+R8
+!i113 0
+R9
+R10
+R1
+vuart
+R2
+R3
+!i10b 1
+!s100 Be]A;;jSI55XTn>o<[>Ud0
+IzX[5JFA1<=kj9RFYc[mza3
+R4
+!s105 uart_sv_unit
+S1
+R0
+w1768058917
+8../../hdl/uart.sv
+F../../hdl/uart.sv
+L0 2
+R5
+r1
+!s85 0
+31
+!s108 1768924877.000000
+!s107 ../../hdl/uart.sv|
+!s90 -64|-f|filelist_com.f|-f|filelist_rtl.f|+cover=bcefs|-l|./log/vlogr.log|
+!i113 0
+!s102 +cover=bcefs
+o+libext+.v +libext+.vh +libext+.sv +libext+.svh +cover=bcefs -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+!s92 +libext+.v +libext+.vh +libext+.sv +libext+.svh +incdir+../../hdl -y ../../hdl +cover=bcefs -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+Xuart_common_pkg
+R2
+R11
+R3
+!i10b 1
+!s100 KIhzg6]H^]zcfSdbhF6:o2
+I5A8Md5o:c]CnCzY5P]?R^1
+V5A8Md5o:c]CnCzY5P]?R^1
+S1
+R0
+w1768914543
+8../cfig/uart_common_pkg.sv
+F../cfig/uart_common_pkg.sv
+R13
+R14
+R15
+R16
+R17
+R18
+R19
+R20
+R21
+R22
+R23
+R24
+F../cfig/types_param.sv
+F../cfig/apb_uart_config.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+R7
+R8
+!i113 0
+R9
+R10
+R1
+Yuart_if
+R2
+R3
+!i10b 1
+!s100 ;1UQO[lIza?@;gD0z3K9=2
+I9I6^?ka;MlPKH[^k3JjRW3
+R4
+!s105 uart_if_sv_unit
+S1
+R0
+w1768891410
+8../uart_uvc/uart_if.sv
+F../uart_uvc/uart_if.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+R7
+R8
+!i113 0
+R9
+R10
+R1
+Xuart_pkg
+!s115 uart_if
+R2
+R11
+R12
+R3
+!i10b 1
+!s100 zMG;H<f[m0]LQUmiN3f_61
+IBCa@9GhA5f3F2=94Vokl]2
+VBCa@9GhA5f3F2=94Vokl]2
+S1
+R0
+w1768916361
+8../uart_uvc/uart_pkg.sv
+F../uart_uvc/uart_pkg.sv
+R13
+R14
+R15
+R16
+R17
+R18
+R19
+R20
+R21
+R22
+R23
+R24
+F../uart_uvc/uart_transaction.sv
+F../uart_uvc/uart_monitor.sv
+F../uart_uvc/uart_seqs.sv
+F../uart_uvc/uart_sequencer.sv
+F../uart_uvc/uart_driver.sv
+F../uart_uvc/uart_agent.sv
+F../uart_uvc/uart_uvc.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+R7
+R8
+!i113 0
+R9
+R10
+R1
+Xuart_tb_pkg
+R2
+R11
+R12
+R25
+R26
+R3
+!i10b 1
+!s100 LTRD2QNXH==C6GEE@Lzhi3
+IUJ<:k41o3:aILoaQ42Xg]1
+VUJ<:k41o3:aILoaQ42Xg]1
+S1
+R0
+w1768924871
+8../tb/uart_tb_pkg.sv
+F../tb/uart_tb_pkg.sv
+R13
+R14
+R15
+R16
+R17
+R18
+R19
+R20
+R21
+R22
+R23
+R24
+F../tb/uart_virsequencer.sv
+F../tb/uart_virseqs.sv
+F../tb/apb_uart_env.sv
+F../tb/apb_uart_testlib.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+R7
+R8
+!i113 0
+R9
+R10
+R1

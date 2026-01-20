@@ -64,7 +64,6 @@ endclass
 class apb_config_random_seq extends apb_base_seq;
     `uvm_object_utils(apb_config_random_seq)
     
-    // Sử dụng các kiểu dữ liệu vừa định nghĩa
     rand uart_data_size_e   data_bit_num;
     rand uart_stop_size_e   stop_bit_num;
     rand uart_parity_mode_e parity_en;
@@ -72,8 +71,7 @@ class apb_config_random_seq extends apb_base_seq;
     rand bit                pstrb_bit0; 
 
     constraint c_uart_cfg {
-      data_bit_num  inside  {[2'b00:2'b11]}; 
-      data_bit_num  dist    { 2'b11 := 60, [2'b00:2'b10] := 40 };
+      data_bit_num dist { DATA_8BIT := 60, [DATA_5BIT:DATA_7BIT] := 40 };
     }
 
     function new(string name="apb_config_random_seq");
@@ -83,15 +81,13 @@ class apb_config_random_seq extends apb_base_seq;
     virtual task body();
       bit [31:0] cfg_data = 32'h0;
 
-      // Đóng gói dữ liệu cấu hình dựa trên Enum
       cfg_data[1:0] = data_bit_num;
       cfg_data[2]   = stop_bit_num;
       cfg_data[3]   = parity_en;
       cfg_data[4]   = parity_type;
 
       `uvm_info(get_type_name(), $sformatf("Random Config: Size=%s, Stop=%s, Parity=%s, Type=%s, PSTRB0=%b", 
-                data_bit_num.name(), stop_bit_num.name(), 
-                parity_en.name(), parity_type.name(), pstrb_bit0), UVM_LOW)
+                data_bit_num.name(), stop_bit_num.name(), parity_en.name(), parity_type.name(), pstrb_bit0), UVM_LOW)
 
       `uvm_do_with(req, { 
         paddr  == 12'h008; 
@@ -102,10 +98,43 @@ class apb_config_random_seq extends apb_base_seq;
     endtask
 endclass
 
+// use in virtual 
+class apb_config_frame_seq extends apb_base_seq;
+  `uvm_object_utils(apb_config_frame_seq)
+
+  apb_uart_config cfg; 
+
+  function new(string name="apb_config_frame_seq");
+    super.new(name);
+  endfunction
+
+  virtual task body();
+    bit [31:0] wdata = 0;
+
+    if (cfg == null) begin
+        `uvm_fatal("APB_CFG_SEQ", "Config object is NULL! Virtual Sequence must set it.")
+    end
+    
+    wdata[1:0] = cfg.data_width;
+    wdata[2]   = cfg.stop_bits;
+    wdata[3]   = cfg.parity_en;
+    wdata[4]   = cfg.parity_type;
+
+    `uvm_info("APB_WR_SEQ", $sformatf("Writing Config to DUT: 0x%h (Size=%s)", wdata, cfg.data_width.name()), UVM_LOW)
+
+    `uvm_do_with(req, { 
+        paddr  == 12'h008; 
+        pwrite == 1'b1; 
+        pwdata == wdata; 
+        pstrb  == 4'hf;
+    })
+  endtask
+endclass
+
 // sequence truyền dữ liệu 
 class apb_trans_data_seq extends apb_base_seq;
     `uvm_object_utils(apb_trans_data_seq)
-    // random dữ liệu muốn gửi
+  
     rand logic [7:0] tx_byte;
 
     function new(string name="apb_trans_data_seq");
@@ -131,6 +160,15 @@ class apb_trans_data_seq extends apb_base_seq;
         pstrb  == 4'hf;
       })
     endtask
+
+    task wait_for_tx_done();
+        bit done = 0;
+        while (!done) begin
+            `uvm_do_with(req, { paddr == 12'h010; pwrite == 1'b0; })
+            done = req.prdata[0]; 
+            if (!done) #10ns; 
+        end
+    endtask
 endclass
 
 class apb_trans_random_data_seq extends apb_base_seq;
@@ -145,7 +183,7 @@ class apb_trans_random_data_seq extends apb_base_seq;
 
     virtual task body();
       `uvm_info(get_type_name(), $sformatf("Executing TX Random: Data=0x%0h, PSTRB=0x%0h", 
-                random_data, random_pstrb), UVM_LOW)
+                random_data, pstrb_bit0), UVM_LOW)
 
       // BƯỚC 1: Ghi dữ liệu ngẫu nhiên vào thanh ghi TX_DATA (Địa chỉ 0x0) 
       `uvm_do_with(req, { 
@@ -155,8 +193,7 @@ class apb_trans_random_data_seq extends apb_base_seq;
         pstrb  == {3'b000, pstrb_bit0}; 
       })
 
-      // BƯỚC 2: Kích hoạt lệnh truyền (Start TX) tại thanh ghi CTRL (Địa chỉ 0xC)
-      // Lưu ý: Lệnh điều khiển thường ghi cả Word (pstrb = 4'hf) để đảm bảo bit start được nhận
+      // BƯỚC 2: Kích hoạt lệnh truyền (Start TX) tại thanh ghi CTRL (Địa chỉ 0xC)z
       `uvm_do_with(req, { 
         paddr  == 12'h00C; 
         pwrite == 1'b1; 

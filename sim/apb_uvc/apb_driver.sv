@@ -12,19 +12,16 @@ class apb_driver extends uvm_driver #(apb_transaction);
       super.new(name, parent);
     endfunction
 
-    //  1. Connect phase
     virtual function void connect_phase(uvm_phase phase);
       if (!apb_vif_config::get(this, "", "vif", vif)) begin
         `uvm_error("NOVIF", {"Virtual interface must be set for: ", get_full_name(), ".vif"})
       end
     endfunction
 
-    // 2. Start of Simulation Phase
     virtual function void start_of_simulation_phase(uvm_phase phase);
       `uvm_info(get_type_name(), {"Start of simulation for ", get_full_name()}, UVM_HIGH)
     endfunction
 
-    // 3. Run Phase: Chạy song song quá trình lái dữ liệu và reset
     virtual task run_phase(uvm_phase phase);
       fork
         get_and_drive();
@@ -32,7 +29,6 @@ class apb_driver extends uvm_driver #(apb_transaction);
       join
     endtask : run_phase
 
-    // 4. Task chính điều phối việc gửi transaction
     task get_and_drive();
       // Chờ cho đến khi reset kết thúc (presetn mức cao) 
       @(posedge vif.presetn);
@@ -66,7 +62,6 @@ class apb_driver extends uvm_driver #(apb_transaction);
       end
     endtask : get_and_drive
 
-    // 5. Task quản lý Reset: Đưa các tín hiệu về trạng thái an toàn [
     task reset_signals();
       forever begin
         @(negedge vif.presetn);
@@ -79,7 +74,6 @@ class apb_driver extends uvm_driver #(apb_transaction);
       end
     endtask : reset_signals
 
-    // 6. Report Phase: Tổng kết số lượng giao dịch
     function void report_phase(uvm_phase phase);
       `uvm_info(get_type_name(), $sformatf("Report: APB Driver sent %0d transactions", num_trans), UVM_LOW)
     endfunction : report_phase

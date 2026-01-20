@@ -18,28 +18,23 @@ class apb_monitor extends uvm_monitor;
       item_collected_port = new("item_collected_port", this);
     endfunction
 
-    // 1. Connect Phase
     virtual function void connect_phase(uvm_phase phase);
       if (!apb_vif_config::get(this, "", "vif", vif)) begin
         `uvm_error("NOVIF", {"Virtual interface must be set for: ", get_full_name(), ".vif"})
       end
     endfunction
 
-    // 2. Start of Simulation Phase
     virtual function void start_of_simulation_phase(uvm_phase phase);
       `uvm_info(get_type_name(), "Monitor started.", UVM_HIGH)
     endfunction
 
-    // 3. Run Phase: Theo dõi reset và lặp lại việc thu thập
     virtual task run_phase(uvm_phase phase);
+      // biến trung gian để thu thập từ Interface task
+      logic [31:0] captured_data;
+      logic        is_write;
       @(posedge vif.presetn); 
-    
       forever begin
         trans = apb_transaction::type_id::create("trans", this);
-
-        // biến trung gian để thu thập từ Interface task
-        logic [31:0] captured_data;
-        logic        is_write;
 
         fork
           vif.collect_apb_transaction(trans.paddr, captured_data, is_write, trans.pstrb, trans.pslverr);
@@ -51,7 +46,13 @@ class apb_monitor extends uvm_monitor;
 
         if (is_write) begin
           trans.pwdata = captured_data; 
-          trans.prdata = 32'h0;         
+          trans.prdata = 32'h0;
+          case (trans.paddr)
+            12'h000: `uvm_info("MON", $sformatf("Writing TX Data: 0x%h", trans.pwdata[7:0]), UVM_MEDIUM) 
+            12'h008: `uvm_info("MON", "Updating UART Configuration", UVM_MEDIUM) 
+            12'h00C: `uvm_info("MON", trans.pwdata[0] ? "Start TX Triggered" : "Control Update", UVM_MEDIUM) 
+            default: `uvm_error("MON", $sformatf("Write to invalid address: 0x%h", trans.paddr))
+          endcase         
         end 
         else begin
           trans.prdata = captured_data; 
@@ -64,7 +65,6 @@ class apb_monitor extends uvm_monitor;
       end
     endtask
 
-    // 4. Report Phase: Tổng kết số lượng đã thu thập được
     virtual function void report_phase(uvm_phase phase);
       `uvm_info(get_type_name(), $sformatf("Report: APB Monitor Collected %0d Transactions", num_trans_col), UVM_LOW)
     endfunction : report_phase

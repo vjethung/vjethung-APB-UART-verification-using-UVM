@@ -10,15 +10,15 @@ interface apb_if (input logic pclk, input logic presetn);
     logic        pslverr;
 
     // Tín hiệu hỗ trợ Transaction Recording 
-    bit monstart, drvstart;
+    bit monitor_start, drive_start;
 
-    // --- TASK: WRITE TRANSFER (Dùng cho Driver) ---
+    // WRITE TRANSFER - Driver
     task automatic write_task(input logic [11:0] addr, 
                               input logic [31:0] data, 
                               input logic [3:0]  strb = 4'hf);
         // T1: Setup Phase 
         @(posedge pclk);
-        drvstart <= 1'b1; // Kích hoạt trigger ghi lại giao dịch của Driver
+        drive_start <= 1'b1; // Kích hoạt trigger ghi lại giao dịch của Driver
         psel     <= 1'b1;
         pwrite   <= 1'b1;
         paddr    <= addr;
@@ -35,14 +35,14 @@ interface apb_if (input logic pclk, input logic presetn);
         
         psel     <= 1'b0;
         penable  <= 1'b0;
-        drvstart <= 1'b0; // Tắt trigger 
+        drive_start <= 1'b0; // Tắt trigger 
     endtask
 
-    // --- TASK: READ TRANSFER (Dùng cho Driver) ---
+    // READ TRANSFER - Driver 
     task automatic read_task(input  logic [11:0] addr, 
                              output logic [31:0] data);
         @(posedge pclk);
-        drvstart <= 1'b1;
+        drive_start <= 1'b1;
         psel     <= 1'b1;
         pwrite   <= 1'b0;
         paddr    <= addr;
@@ -58,19 +58,19 @@ interface apb_if (input logic pclk, input logic presetn);
         data     = prdata;
         psel     <= 1'b0;
         penable  <= 1'b0;
-        drvstart <= 1'b0;
+        drive_start <= 1'b0;
     endtask
 
-    // --- TASK: MONITOR COLLECT (Dùng cho Monitor) ---
+    // MONITOR COLLECT - Monitor
     task automatic collect_apb_transaction(output logic [11:0] addr,
                                            output logic [31:0] captured_data,
                                            output logic        is_write,
                                            output logic [3:0]  strobe,
                                            output logic        err);
-        // Đợi đến thời điểm Access Phase hoàn tất thành công (PREADY lên cao)
+        // thời điểm Access Phase hoàn tất thành công (PREADY lên cao)
         wait(psel === 1'b1 && penable === 1'b1 && pready === 1'b1);
         
-        monstart <= 1'b1; // Trigger cho Monitor recording 
+        monitor_start <= 1'b1; // Trigger cho Monitor recording 
         
         addr     = paddr;
         is_write = pwrite;
@@ -86,11 +86,11 @@ interface apb_if (input logic pclk, input logic presetn);
             if (pstrb[3]) captured_data[31:24] = pwdata[31:24];
         end
         else begin
-            captured_data = prdata; // Đọc toàn bộ dữ liệu trả về
+            captured_data = prdata; 
         end
 
         @(posedge pclk); 
-        monstart <= 1'b0; // Tắt trigger 
+        monitor_start <= 1'b0; // Tắt trigger 
     endtask
 
 endinterface
