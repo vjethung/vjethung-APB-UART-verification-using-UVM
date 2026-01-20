@@ -9,18 +9,18 @@ z2
 cModel Technology
 Z0 d/home/viethung/Desktop/HUST/KiemChungViMach/APB_UART_CK/verify/sim/work
 T_opt
-!s110 1768924879
-V@[FH_e^RJm8S<:dVFEGoX2
+!s110 1768931930
+VVQGInV=eZYA47>XHhc^n;2
 04 6 4 work tb_top fast 0
 04 6 4 work hw_top fast 0
-=1-f42679728972-696fa6cf-485b3-256e
+=1-f42679728972-696fc259-ea942-46d2
 o-quiet -auto_acc_if_foreign -work work +acc
 Z1 tCvgOpt 0
 n@_opt
 OL;O;10.7c;67
 Yapb_if
 Z2 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
-Z3 !s110 1768924878
+Z3 !s110 1768931928
 !i10b 1
 !s100 B?RDA<GT=R^EkUW[@`NWa1
 IC1hZ>@5?;A2fMQdcFi0ID3
@@ -36,7 +36,7 @@ Z5 OL;L;10.7c;67
 r1
 !s85 0
 31
-Z6 !s108 1768924878.000000
+Z6 !s108 1768931928.000000
 Z7 !s107 ../tb/apb_uart_testlib.sv|../tb/apb_uart_env.sv|../tb/uart_virseqs.sv|../tb/uart_virsequencer.sv|../uart_uvc/uart_uvc.sv|../uart_uvc/uart_agent.sv|../uart_uvc/uart_driver.sv|../uart_uvc/uart_sequencer.sv|../uart_uvc/uart_seqs.sv|../uart_uvc/uart_monitor.sv|../uart_uvc/uart_transaction.sv|../apb_uvc/apb_uvc.sv|../apb_uvc/apb_agent.sv|../apb_uvc/apb_driver.sv|../apb_uvc/apb_sequencer.sv|../apb_uvc/apb_seqs.sv|../apb_uvc/apb_monitor.sv|../apb_uvc/apb_transaction.sv|../cfig/apb_uart_config.sv|../cfig/types_param.sv|../libs/uvm-1.1d/src/macros/uvm_deprecated_defines.svh|../libs/uvm-1.1d/src/macros/uvm_reg_defines.svh|../libs/uvm-1.1d/src/macros/uvm_callback_defines.svh|../libs/uvm-1.1d/src/macros/uvm_sequence_defines.svh|../libs/uvm-1.1d/src/tlm1/uvm_tlm_imps.svh|../libs/uvm-1.1d/src/macros/uvm_tlm_defines.svh|../libs/uvm-1.1d/src/macros/uvm_printer_defines.svh|../libs/uvm-1.1d/src/macros/uvm_object_defines.svh|../libs/uvm-1.1d/src/macros/uvm_phase_defines.svh|../libs/uvm-1.1d/src/macros/uvm_message_defines.svh|../libs/uvm-1.1d/src/macros/uvm_version_defines.svh|../libs/uvm-1.1d/src/uvm_macros.svh|../tb/tb_top.sv|../tb/hw_top.sv|../tb/uart_tb_pkg.sv|../uart_uvc/uart_pkg.sv|../apb_uvc/apb_pkg.sv|../uart_uvc/uart_if.sv|../apb_uvc/apb_if.sv|../cfig/uart_common_pkg.sv|
 Z8 !s90 -64|-f|filelist_com.f|-f|filelist_vsim.f|-f|filelist_tb.f|-l|./log/vlogt.log|
 !i113 0
@@ -50,12 +50,12 @@ Z11 DXx6 mtiUvm 7 uvm_pkg 0 22 3zPkj@YUcM=M^m3zCLh<H1
 Z12 DXx4 work 15 uart_common_pkg 0 22 5A8Md5o:c]CnCzY5P]?R^1
 R3
 !i10b 1
-!s100 KRgOM;VFiMf3LdLbeQo0Y2
-ILSWaDeN[Yz[1KAn<<NUOb3
-VLSWaDeN[Yz[1KAn<<NUOb3
+!s100 FPE`:SEUiR`3<5UX[zz7_3
+IS>lIzf`dJGTaFDX8C<KQo1
+VS>lIzf`dJGTaFDX8C<KQo1
 S1
 R0
-w1768913155
+w1768931891
 8../apb_uvc/apb_pkg.sv
 F../apb_uvc/apb_pkg.sv
 Z13 F../libs/uvm-1.1d/src/uvm_macros.svh
@@ -118,13 +118,13 @@ vtb_top
 R2
 R11
 R12
-Z25 DXx4 work 7 apb_pkg 0 22 LSWaDeN[Yz[1KAn<<NUOb3
+Z25 DXx4 work 7 apb_pkg 0 22 S>lIzf`dJGTaFDX8C<KQo1
 Z26 DXx4 work 8 uart_pkg 0 22 BCa@9GhA5f3F2=94Vokl]2
-DXx4 work 11 uart_tb_pkg 0 22 UJ<:k41o3:aILoaQ42Xg]1
+DXx4 work 11 uart_tb_pkg 0 22 o8;1g5DUn4<UUQhQ^UePi0
 R3
 !i10b 1
 !s100 =Ybo_F4nhToWJM;K2J4g12
-Ii2FjOkXc2UJAZdA1YHkjH2
+I?fAU>`h??m^S?Aee5Jhih0
 R4
 !s105 tb_top_sv_unit
 S1
@@ -174,7 +174,7 @@ R5
 r1
 !s85 0
 31
-!s108 1768924877.000000
+R6
 !s107 ../../hdl/uart.sv|
 !s90 -64|-f|filelist_com.f|-f|filelist_rtl.f|+cover=bcefs|-l|./log/vlogr.log|
 !i113 0
@@ -300,12 +300,12 @@ R25
 R26
 R3
 !i10b 1
-!s100 LTRD2QNXH==C6GEE@Lzhi3
-IUJ<:k41o3:aILoaQ42Xg]1
-VUJ<:k41o3:aILoaQ42Xg]1
+!s100 _XZD?RDg^5_UJR=DV>?[51
+Io8;1g5DUn4<UUQhQ^UePi0
+Vo8;1g5DUn4<UUQhQ^UePi0
 S1
 R0
-w1768924871
+w1768931269
 8../tb/uart_tb_pkg.sv
 F../tb/uart_tb_pkg.sv
 R13

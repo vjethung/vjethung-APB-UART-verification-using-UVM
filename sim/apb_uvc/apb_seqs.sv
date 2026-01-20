@@ -126,7 +126,7 @@ class apb_config_frame_seq extends apb_base_seq;
         paddr  == 12'h008; 
         pwrite == 1'b1; 
         pwdata == wdata; 
-        pstrb  == 4'hf;
+        pstrb  == 4'h1;
     })
   endtask
 endclass
