@@ -13,13 +13,13 @@ add wave -noupdate -expand -group DUT -expand -group apb /hw_top/dut/pwdata
 add wave -noupdate -expand -group DUT -expand -group apb /hw_top/dut/pready
 add wave -noupdate -expand -group DUT -expand -group apb /hw_top/dut/pslverr
 add wave -noupdate -expand -group DUT -expand -group apb /hw_top/dut/prdata
+add wave -noupdate -expand -group DUT -expand -group uart -color {Dark Orchid} /hw_top/dut/cts_n
 add wave -noupdate -expand -group DUT -expand -group uart -color {Dark Orchid} /hw_top/dut/tx
 add wave -noupdate -expand -group DUT -expand -group uart -color {Dark Orchid} /hw_top/dut/rts_n
 add wave -noupdate -expand -group DUT -expand -group uart -color {Dark Orchid} /hw_top/dut/rx
-add wave -noupdate -expand -group DUT -expand -group uart -color {Dark Orchid} /hw_top/dut/cts_n
 add wave -noupdate -expand -group DUT /hw_top/dut/clk_tx
 add wave -noupdate -expand -group DUT /hw_top/dut/clk_rx
-add wave -noupdate -expand -group DUT -expand -group register /hw_top/dut/tx_data
+add wave -noupdate -expand -group DUT -expand -group register -radix binary /hw_top/dut/tx_data
 add wave -noupdate -expand -group DUT -expand -group register /hw_top/dut/rx_data
 add wave -noupdate -expand -group DUT -expand -group register /hw_top/dut/data_bit_num
 add wave -noupdate -expand -group DUT -expand -group register /hw_top/dut/stop_bit_num
@@ -50,7 +50,7 @@ add wave -noupdate -expand -group uart_interface -color {Dark Orchid} /hw_top/ui
 add wave -noupdate -expand -group uart_interface -color {Dark Orchid} /hw_top/uif/rts_n
 add wave -noupdate -expand -group uart_interface /hw_top/uif/bit_period_ns
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {88100000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {22509623 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -66,4 +66,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {83517322 ps} {88930668 ps}
+WaveRestoreZoom {0 ps} {110082 ns}

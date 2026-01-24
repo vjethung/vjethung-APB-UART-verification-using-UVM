@@ -29,8 +29,9 @@ TOP_TB="tb_top hw_top"
 # Xóa các alias cũ có thể gây xung đột với Function bên dưới
 unalias vsm vsm_gui 2>/dev/null
 
-alias vlb='rm -rf work; mkdir -p log; rm -rf log/*; vlib work'
-alias vlgr='vlog -64 -f filelist_com.f -f filelist_rtl.f +cover=bcefs -l ./log/vlogr.log'
+# Prepare workspace
+alias vlb='reset; rm -rf work; mkdir -p log; rm -rf log/*; vlib work'
+alias vlgr='vlog -64 -f filelist_com.f -f filelist_rtl.f  +cover=bcefs -l ./log/vlogr.log'
 alias vlgt='vlog -64 -f filelist_com.f -f filelist_vsim.f -f filelist_tb.f -l ./log/vlogt.log'
 alias vlg='vlgr; vlgt'
 
@@ -41,13 +42,13 @@ alias viwcov='vsim -viewcov coverage.ucdb &'
 #--------------------------------------------------------------------------------------
 # 3. Các Hàm Chạy Mô Phỏng (Functions)
 # Cú pháp: vsm <tên_test> <mức_verbosity>
-# Ví dụ: vsm simple_test UVM_HIGH
+# Ví dụ: vsm base_test UVM_HIGH
 
 vsm() {
     # Chống xung đột alias trong session hiện tại
     unalias vsm 2>/dev/null
     
-    local TEST=${1:-"simple_test"}    # Mặc định: simple_test [cite: 50]
+    local TEST=${1:-"base_test"}    # Mặc định: base_test [cite: 50]
     local VERB=${2:-"UVM_MEDIUM"}    # Mặc định: UVM_MEDIUM
     
     echo "--- Running Batch Simulation: $TEST | Seed: Random | Verbosity: $VERB ---"
@@ -65,7 +66,7 @@ vsm() {
 vsm_gui() {
     unalias vsm_gui 2>/dev/null
     
-    local TEST=${1:-"simple_test"}
+    local TEST=${1:-"base_test"}
     local VERB=${2:-"UVM_MEDIUM"}
     
     echo "--- Opening QuestaSim GUI: $TEST | Verbosity: $VERB ---"
