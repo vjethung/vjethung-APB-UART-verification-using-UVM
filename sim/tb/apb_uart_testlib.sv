@@ -22,7 +22,7 @@ class base_test extends uvm_test;
     cfg = apb_uart_config::type_id::create("cfg");
     if(!cfg.randomize()) `uvm_fatal("TEST", "Config Randomization Failed");
 
-    system_config::set(this, "env.*", "cfg", cfg);
+    system_config::set(this, "env", "cfg", cfg);
     
     // Tạo Environment
     env = apb_uart_env::type_id::create("env", this);
@@ -73,8 +73,8 @@ class simple_test extends base_test;
 
 endclass
 
-class send_1_frame extends base_test;
-  `uvm_component_utils(send_1_frame)
+class test_send_1_frame extends base_test;
+  `uvm_component_utils(test_send_1_frame)
 
   function new (string name, uvm_component parent);
     super.new(name, parent);
@@ -84,16 +84,40 @@ class send_1_frame extends base_test;
     uvm_config_wrapper::set(this, 
                             "env.vir_seqr.run_phase", 
                             "default_sequence", 
-                            vseq_apb_to_uart::get_type());
+                            vseq_send_TX::get_type());
     
     super.build_phase(phase);
     
     cfg.monitor_mode = MON_TX_ONLY;
     
-    `uvm_info("TEST", "Build phase: SEND 1 FRAME configured (TX Monitoring Only)", UVM_LOW)
+    `uvm_info("TEST", "SEND 1 FRAME configured (TX Monitoring Only)", UVM_LOW)
   endfunction
 endclass
 
+class test_received_1_frame extends base_test;
+  `uvm_component_utils(test_received_1_frame)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    // 1. Gán sequence mặc định cho Virtual Sequencer
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_receive_RX::get_type()); // Dùng vseq nhận RX bạn vừa đổi tên
+
+    // 2. Gọi super.build_phase để base_test tạo và randomize đối tượng cfg 
+    super.build_phase(phase);
+    
+    // 3. Thiết lập chế độ giám sát (Monitor Mode)
+    // MON_RX_ONLY: Chỉ giám sát hướng từ UVC đẩy vào DUT (RX path) 
+    cfg.monitor_mode = MON_RX_ONLY; 
+    
+    `uvm_info("TEST", "RECEIVE 1 FRAME configured (RX Monitoring only)", UVM_LOW)
+  endfunction
+endclass
 // --------------------------------------------------------------------------
 // TEST 2: PARITY ERROR INJECTION (Negative Test)
 // Mục tiêu: Kiểm tra DUT xử lý thế nào khi nhận gói tin lỗi Parity từ UART

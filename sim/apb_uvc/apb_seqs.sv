@@ -37,67 +37,6 @@ class apb_base_seq extends uvm_sequence #(apb_transaction);
 
 endclass 
 
-// // sequence cấu hình cho uart
-// class apb_config_seq extends apb_base_seq;
-//     `uvm_object_utils(apb_config_seq)
-
-//     function new(string name="apb_config_seq");
-//       super.new(name);
-//     endfunction
-
-//     virtual task body();
-//       `uvm_info(get_type_name(), "Configuring UART Frame: 8 bits, 1 Stop bit, No Parity", UVM_LOW)
-
-//       // Ghi vào cfg_reg (0x8) 
-//       // Bit [1:0] = 2'b11 (8 bits) 
-//       // Bit [2]   = 1'b0  (1 stop bit) 
-//       // Bit [3]   = 1'b0  (Disable parity) 
-//       `uvm_do_with(req, { 
-//         paddr  == 12'h008; 
-//         pwrite == 1'b1; 
-//         pwdata == 32'h0000_0003; 
-//         pstrb  == 4'h1;
-//       })
-//     endtask
-// endclass
-
-// class apb_config_random_seq extends apb_base_seq;
-//     `uvm_object_utils(apb_config_random_seq)
-    
-//     rand uart_data_size_e   data_bit_num;
-//     rand uart_stop_size_e   stop_bit_num;
-//     rand uart_parity_mode_e parity_en;
-//     rand uart_parity_type_e parity_type;
-//     rand bit                pstrb_bit0; 
-
-//     constraint c_uart_cfg {
-//       data_bit_num dist { DATA_8BIT := 60, [DATA_5BIT:DATA_7BIT] := 40 };
-//     }
-
-//     function new(string name="apb_config_random_seq");
-//       super.new(name);
-//     endfunction
-
-//     virtual task body();
-//       bit [31:0] cfg_data = 32'h0;
-
-//       cfg_data[1:0] = data_bit_num;
-//       cfg_data[2]   = stop_bit_num;
-//       cfg_data[3]   = parity_en;
-//       cfg_data[4]   = parity_type;
-
-//       `uvm_info(get_type_name(), $sformatf("Random Config: Size=%s, Stop=%s, Parity=%s, Type=%s, PSTRB0=%b", 
-//                 data_bit_num.name(), stop_bit_num.name(), parity_en.name(), parity_type.name(), pstrb_bit0), UVM_LOW)
-
-//       `uvm_do_with(req, { 
-//         paddr  == 12'h008; 
-//         pwrite == 1'b1; 
-//         pwdata == cfg_data; 
-//         pstrb  == {3'b000, pstrb_bit0};
-//       })
-//     endtask
-// endclass
-
 // use in virtual 
 class apb_config_frame_seq extends apb_base_seq;
   `uvm_object_utils(apb_config_frame_seq)
@@ -132,17 +71,17 @@ class apb_config_frame_seq extends apb_base_seq;
 endclass
 
 // sequence truyền dữ liệu 
-class apb_trans_data_seq extends apb_base_seq;
-    `uvm_object_utils(apb_trans_data_seq)
+class send_tx_data_seq extends apb_base_seq;
+    `uvm_object_utils(send_tx_data_seq)
   
     rand logic [7:0] tx_byte;
 
-    function new(string name="apb_trans_data_seq");
+    function new(string name="send_tx_data_seq");
       super.new(name);
     endfunction
 
     virtual task body();
-      `uvm_info(get_type_name(), $sformatf("Executing TX sequence with data: 0x%0h", tx_byte), UVM_HIGH)
+      `uvm_info(get_type_name(), $sformatf("Send TX with data: 0x%0h", tx_byte), UVM_HIGH)
 
       // Bước 1: Ghi dữ liệu vào tx_data_reg (0x0) 
       `uvm_do_with(req, { 
@@ -160,14 +99,22 @@ class apb_trans_data_seq extends apb_base_seq;
         pstrb  == 4'h1;
       })
     endtask
+endclass
 
-    task wait_for_tx_done();
-        bit done = 0;
-        while (!done) begin
-            `uvm_do_with(req, { paddr == 12'h010; pwrite == 1'b0; })
-            done = req.prdata[0]; 
-            if (!done) #10ns; 
-        end
+class read_rx_data_seq extends apb_base_seq;
+    `uvm_object_utils(read_rx_data_seq)
+    
+    logic [7:0] rx_data; 
+
+    function new(string name="read_rx_data_seq");
+      super.new(name);
+    endfunction
+
+    virtual task body();
+      // Đọc thanh ghi RX_DATA (0x004) 
+      `uvm_do_with(req, { paddr == 12'h004; pwrite == 1'b0; })
+      rx_data = req.prdata[7:0];
+      `uvm_info("APB_RX_SEQ", $sformatf("Read RX with DATA: 0x%h", rx_data), UVM_LOW)
     endtask
 endclass
 
@@ -227,13 +174,13 @@ class apb_multiple_trans_seq extends apb_base_seq;
 endclass
 
 // seq đọc thanh ghi trạng thái stt_reg
-class apb_read_status_seq extends apb_base_seq;
-    `uvm_object_utils(apb_read_status_seq)
+class read_status_reg_seq extends apb_base_seq;
+    `uvm_object_utils(read_status_reg_seq)
 
-    function new(string name="apb_read_status_seq");
+    function new(string name="read_status_reg_seq");
       super.new(name);
     endfunction
-
+    logic [31:0] read_data;
     virtual task body();
       `uvm_info(get_type_name(), "Reading UART Status Register (0x10)", UVM_LOW)
       `uvm_do_with(req, { 
@@ -241,6 +188,7 @@ class apb_read_status_seq extends apb_base_seq;
         pwrite == 1'b0; 
       })
       // Sau khi Driver thực hiện xong, dữ liệu nằm trong req.prdata 
+      read_data = req.prdata;
     endtask
 
 endclass

@@ -39,9 +39,11 @@ class uart_driver extends uvm_driver #(uart_transaction);
             seq_item_port.get_next_item(req);
             drive_transfer(req); // Thực hiện lái bit vào chân RX 
             seq_item_port.item_done();
-        end else begin
+        end 
+        else begin
             // Nếu ở chế độ MON_TX_ONLY, Driver giữ chân RX ở mức Idle (1) và chờ đợi
             vif.rx <= 1'b1; 
+            // vif.rts_n <= 1'b0;
             #1us; // Tránh loop vô hạn làm treo mô phỏng
         end
     end
@@ -53,8 +55,8 @@ class uart_driver extends uvm_driver #(uart_transaction);
     bit parity_bit;
     logic [7:0] payload;
 
-    `uvm_info(get_type_name(), $sformatf("Driving Trans: Data=0x%h Width=%s Parity=%s", 
-                                         trans.data, trans.data_width.name(), trans.parity_en.name()), UVM_HIGH)
+    `uvm_info(get_type_name(), $sformatf("\n#####===Driving Trans: DATA=0x%h,%s, %s, %s, %s===#####", 
+                                         trans.data, trans.data_width.name(), trans.stop_bits.name(),trans.parity_en.name(),cfg.parity_type.name()), UVM_HIGH)
 
     vif.wait_rts_active();
 

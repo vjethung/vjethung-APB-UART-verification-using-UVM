@@ -21,8 +21,5 @@ class uart_uvc extends uvm_env;
       end
 
       agent = uart_agent::type_id::create("agent", this);
-
-      system_config::set(this, "agent", "cfg", cfg);
-      uart_vif_config::set(this, "agent", "vif", vif); 
     endfunction
 endclass

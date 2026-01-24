@@ -5,6 +5,7 @@ class apb_uart_env extends uvm_env;
   uart_uvc     uart_uvcc;
   // apb_uart_scoreboard scoreboard;
   uart_virsequencer vir_seqr;
+  apb_uart_config cfg; //
 
   function new(string name, uvm_component parent);
     super.new(name, parent);
@@ -13,11 +14,17 @@ class apb_uart_env extends uvm_env;
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     `uvm_info("APB_UART_ENVIRONMENT", "The env is being build phase", UVM_HIGH)
+    if (!system_config::get(this, "", "cfg", cfg)) begin
+        `uvm_fatal("ENV", "Config 'cfg' not found! Check base_test.")
+    end
 
     apb_uvcc    = apb_uvc::type_id::create("apb_uvcc", this);
     uart_uvcc   = uart_uvc::type_id::create("uart_uvcc", this);
     // scoreboard = apb_uart_scoreboard::type_id::create("scoreboard", this);
     vir_seqr      = uart_virsequencer::type_id::create("vir_seqr", this);
+
+    system_config::set(this, "uart_uvcc*", "cfg", cfg);
+    system_config::set(this, "vir_seqr*", "cfg", cfg);
   endfunction
 
   virtual function void connect_phase(uvm_phase phase);

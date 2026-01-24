@@ -37,9 +37,6 @@ class apb_driver extends uvm_driver #(apb_transaction);
       forever begin
         // Lấy yêu cầu mới từ sequencer
         seq_item_port.get_next_item(req);
-
-        `uvm_info(get_type_name(), $sformatf("Driving APB Transaction:\n%s", req.sprint()), UVM_HIGH)
-
         // Thực thi song song: Lái tín hiệu và Ghi lại giao dịch (Transaction Recording)
         fork
           // Thực thi giao thức thông qua interface tasks
@@ -52,7 +49,7 @@ class apb_driver extends uvm_driver #(apb_transaction);
           // Kích hoạt recording dựa trên tín hiệu drive_start từ interface 
           @(posedge vif.drive_start) void'(begin_tr(req, "Driver_APB_Transaction"));
         join
-
+        `uvm_info(get_type_name(), $sformatf("APB Transaction:\n%s", req.sprint()), UVM_HIGH)
         // Kết thúc ghi lại giao dịch
         end_tr(req);
         num_trans++;

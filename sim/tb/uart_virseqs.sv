@@ -34,7 +34,14 @@ class base_vseq extends uvm_sequence;
       `uvm_info(get_type_name(), "drop objection", UVM_HIGH)
     end
   endtask : post_body
-
+  task print_frame_cfg(apb_uart_config cfg);
+    if (cfg == null) return;
+    `uvm_info("VSEQ", $sformatf("\n#####===NUM DATA BIT = %s, NUM STOP BIT = %s, PARITY EN = %s, PARITY TYPE = %s===#####", 
+                  cfg.data_width.name(), 
+                  cfg.stop_bits.name(), 
+                  cfg.parity_en.name(),
+                  cfg.parity_type.name()), UVM_LOW)
+  endtask
 endclass
 
 // SEQUENCE: SYSTEM CONFIGURATION
@@ -52,9 +59,8 @@ class system_config_seq extends base_vseq;
     endfunction
 
   virtual task body();
-    // Lấy config đã được Test nạp sẵn trong DB
-    if (!system_config::get(null, get_full_name(), "cfg", shared_cfg)) begin
-        `uvm_fatal("VSEQ", "Cannot find 'cfg' in Config DB! Check base_test.")
+    if (!system_config::get(p_sequencer, "", "cfg", shared_cfg)) begin
+        `uvm_fatal("VSEQ", "Cannot find 'cfg' in Config DB associated with p_sequencer!")
     end
 
     `uvm_info("VSEQ", "Configuring System using shared object from Test...", UVM_LOW)
@@ -75,16 +81,16 @@ class system_config_seq extends base_vseq;
   endtask
 endclass
 
-// SEQUENCE:  TEST (APB -> UART)
-class vseq_apb_to_uart extends base_vseq;
-    `uvm_object_utils(vseq_apb_to_uart)
+// SEQUENCE:  TEST (DUT -> uart_UVC)
+class vseq_send_TX extends base_vseq;
+    `uvm_object_utils(vseq_send_TX)
 
-    system_config_seq    config_vseq;  
-    apb_trans_data_seq   apb_write_send_seq; 
-    apb_read_status_seq  stt_seq;
-    apb_uart_config      shared_cfg;
+    system_config_seq     config_vseq;  
+    send_tx_data_seq      apb_write_send_seq; 
+    read_status_reg_seq   stt_seq;
+    apb_uart_config       shared_cfg;
 
-    function new(string name="vseq_apb_to_uart");
+    function new(string name="vseq_send_TX");
         super.new(name);
     endfunction
 
@@ -96,7 +102,7 @@ class vseq_apb_to_uart extends base_vseq;
         int total_frame_bits;
         real bit_period_ns;
 
-        `uvm_info("VSEQ", "=== STARTING  TEST: APB to UART ===", UVM_MEDIUM)
+        `uvm_info("VSEQ", "=== STARTING  TEST: DUT -> uart UVC ===", UVM_MEDIUM)
 
         // Lấy Config từ DB
         if (!system_config::get(null, get_full_name(), "cfg", shared_cfg)) begin
@@ -123,32 +129,106 @@ class vseq_apb_to_uart extends base_vseq;
 
         // Tính thời gian 1 bit (ns) dựa trên Baudrate 
         bit_period_ns = 1000000000.0 / shared_cfg.baud_rate;
-
-        `uvm_info("VSEQ", $sformatf("Calc: Bits=%0d, Baud=%0d, Tbit=%0.2fns", 
+        print_frame_cfg(shared_cfg);
+        `uvm_info("VSEQ", $sformatf("\n#####===Calculation: Data=%0d bits, Baud=%0d, Tbit=%0.2fns===#####", 
                   total_frame_bits, shared_cfg.baud_rate, bit_period_ns), UVM_LOW)
 
         // Gửi dữ liệu qua APB
         `uvm_do_on(apb_write_send_seq, p_sequencer.apb_sqr)
-        
-        // Chờ đúng khoảng thời gian truyền hết khung vật lý
-        repeat(total_frame_bits) #(bit_period_ns * 1ns); 
 
+        // Chờ đúng khoảng thời gian truyền hết khung vật lý
+        repeat(total_frame_bits+1) #(bit_period_ns * 1ns); 
+
+        #(bit_period_ns * 1ns); 
         // Polling trạng thái
-        stt_seq = apb_read_status_seq::type_id::create("stt_seq"); 
-        while(!tx_done) begin
-            `uvm_do_on(stt_seq, p_sequencer.apb_sqr)
-            if(stt_seq.req.prdata[0] == 1) begin
-                tx_done = 1;
-                `uvm_info("VSEQ", "TX_DONE Detected!", UVM_LOW)
-            end else begin
-                if(timeout++ > 1000) begin 
-                     `uvm_error("VSEQ", "Timeout waiting for TX_DONE")
-                     break;
-                end
-                #10us; 
-            end
+        // #1000;
+        stt_seq = read_status_reg_seq::type_id::create("stt_seq"); 
+        `uvm_do_on(stt_seq, p_sequencer.apb_sqr)
+        if(stt_seq.read_data[0] == 1) begin 
+          `uvm_info("VSEQ", "TX_DONE Detected!", UVM_LOW)
         end
+        else begin
+          `uvm_error("VSEQ", "Timeout waiting for TX_DONE")
+        end
+
         `uvm_info("VSEQ", "===  TEST COMPLETED ===", UVM_MEDIUM)
+    endtask
+endclass
+
+// class vseq_send__TX
+
+// SEQUENCE:  TEST (uart_UVC -> DUT)
+class vseq_receive_RX extends base_vseq;
+    `uvm_object_utils(vseq_receive_RX)
+
+    system_config_seq    config_vseq;  
+    receive_rx_data_seq  uart_send_seq; 
+    read_rx_data_seq     apb_read_seq;  
+    apb_uart_config      shared_cfg;
+
+    function new(string name="vseq_receive_RX");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        real bit_period_ns;
+        int  actual_data_bits;
+        int  total_frame_bits;
+
+        `uvm_info("VSEQ", "=== STARTING RX TEST: UART to APB (Dynamic Bit Width) ===", UVM_MEDIUM)
+
+        // Lấy Config từ DB
+        if (!system_config::get(p_sequencer, "", "cfg", shared_cfg)) begin
+            `uvm_fatal("VSEQ", "Cannot find 'cfg' in Config DB!")
+        end
+        
+        config_vseq = system_config_seq::type_id::create("config_vseq");
+        config_vseq.shared_cfg = shared_cfg;
+
+        `uvm_do(config_vseq) 
+
+        bit_period_ns = 1000000000.0 / shared_cfg.baud_rate; 
+        print_frame_cfg(shared_cfg);
+
+        uart_send_seq = receive_rx_data_seq::type_id::create("uart_send_seq");
+
+        `uvm_do_on_with(uart_send_seq, p_sequencer.uart_sqr, {
+          cfg_data_width  == shared_cfg.data_width;
+          cfg_stop_bits   == shared_cfg.stop_bits;
+          cfg_parity_en   == shared_cfg.parity_en;
+          cfg_parity_type == shared_cfg.parity_type;
+        }) 
+
+        case(uart_send_seq.req.data_width)
+            DATA_5BIT: actual_data_bits = 5;
+            DATA_6BIT: actual_data_bits = 6;
+            DATA_7BIT: actual_data_bits = 7;
+            DATA_8BIT: actual_data_bits = 8;
+            default:   actual_data_bits = 8;
+        endcase
+
+        // Frame = 1 (Start) + Data Bits + Parity (nếu có) + Stop Bits
+        total_frame_bits = 1 + actual_data_bits; 
+        if (uart_send_seq.req.parity_en == PARITY_EN) total_frame_bits += 1; 
+        total_frame_bits += (uart_send_seq.req.stop_bits == STOP_2BIT) ? 2 : 1; 
+
+        `uvm_info("VSEQ", $sformatf("\n#####===Calculation: Data=%0d bits, Total=%0d bits, Baud=%0d, Tbit=%0.2fns", 
+                  actual_data_bits, total_frame_bits, shared_cfg.baud_rate, bit_period_ns), UVM_LOW)
+
+        // Chờ đúng thời gian vật lý của khung hình đó 
+        repeat(total_frame_bits) #(bit_period_ns * 1ns); 
+        #500ns; // Margin an toàn cho logic nội bộ DUT xử lý
+
+        // APB đọc kết quả từ thanh ghi nhận (0x004) 
+        apb_read_seq = read_rx_data_seq::type_id::create("apb_read_seq");
+        `uvm_do_on(apb_read_seq, p_sequencer.apb_sqr) 
+
+        if (apb_read_seq.rx_data == uart_send_seq.req.data) begin
+            `uvm_info("VSEQ_MATCH", $sformatf("SUCCESS! Data Match: 0x%h", apb_read_seq.rx_data), UVM_LOW) 
+        end else begin
+            `uvm_error("VSEQ_MISMATCH", $sformatf("FAILED! Sent: 0x%h, Read: 0x%h", 
+                       uart_send_seq.req.data, apb_read_seq.rx_data))
+        end
     endtask
 endclass
 
@@ -160,7 +240,7 @@ class vseq_parity_error_test extends base_vseq;
     apb_config_frame_seq  apb_cfg;
     uart_config_frame_seq uart_sync;
     uart_error_inject_seq uart_err_seq;
-    apb_read_status_seq   stt_seq;
+    read_status_reg_seq   stt_seq;
 
     function new(string name="vseq_parity_error_test");
         super.new(name);

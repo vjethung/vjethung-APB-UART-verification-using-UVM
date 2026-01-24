@@ -16,7 +16,7 @@ class apb_uvc extends uvm_env;
   endfunction
 
   virtual function void start_of_simulation_phase(uvm_phase phase);
-    `uvm_info(get_type_name(), "APB UVC start_of_simulation_phase entered.", UVM_HIGH)
+    `uvm_info(get_type_name(), {"Start of simulation for ", get_full_name()}, UVM_HIGH)
   endfunction
 
 endclass : apb_uvc

@@ -8,7 +8,9 @@ class apb_uart_config extends uvm_object;
   int baud_rate = 115200;
 
   rand uart_data_size_e   data_width;
+  // uart_data_size_e   data_width = DATA_8BIT;
   rand uart_stop_size_e   stop_bits;
+  // uart_stop_size_e   stop_bits = STOP_2BIT;
   rand uart_parity_mode_e parity_en;
   rand uart_parity_type_e parity_type;
   rand uart_mon_mode_e    monitor_mode = MON_BOTH; // Mặc định giám sát cả 2

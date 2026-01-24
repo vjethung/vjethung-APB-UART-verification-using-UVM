@@ -18,7 +18,7 @@ class uart_monitor extends uvm_monitor;
     virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
       if (!system_config::get(this, "", "cfg", cfg)) begin
-          `uvm_info("NOCFG", "Config not found, using default monitoring parameters", UVM_LOW)
+          `uvm_fatal("MON_CFG", "Monitor cannot get config from DB!")
       end
     endfunction
 
@@ -29,6 +29,9 @@ class uart_monitor extends uvm_monitor;
     endfunction
 
     virtual task run_phase(uvm_phase phase);
+        if (cfg != null) vif.set_baud_rate(cfg.baud_rate);
+        else vif.set_baud_rate(115200);
+
         wait(vif.rst_n === 1); 
         `uvm_info(get_type_name(), "Monitor started.", UVM_HIGH)
 
@@ -117,8 +120,11 @@ class uart_monitor extends uvm_monitor;
             end_tr(trans);
             item_collected_port.write(trans);
             num_trans_col++;
-            
-            `uvm_info(tag, $sformatf("Captured Packet: 0x%h", trans.data), UVM_MEDIUM)
+
+            if (is_tx)
+                `uvm_info(tag, $sformatf("DATA is monitored from TX: 0x%h", trans.data), UVM_MEDIUM)
+            else 
+                `uvm_info(tag, $sformatf("DATA is monitored from RX: 0x%h", trans.data), UVM_MEDIUM)
         end
     endtask
     

@@ -63,28 +63,25 @@ class uart_config_frame_seq extends uart_base_seq;
   endtask
 endclass
 
-class uart_rand_data_trans_seq extends uart_base_seq;
-  `uvm_object_utils(uart_rand_data_trans_seq)
+class receive_rx_data_seq extends uart_base_seq;
+  `uvm_object_utils(receive_rx_data_seq)
 
+  // Mở lại các biến để nhận config từ Virtual Sequence
   rand uart_data_size_e   cfg_data_width; 
+  rand uart_stop_size_e   cfg_stop_bits;
   rand uart_parity_mode_e cfg_parity_en;
+  rand uart_parity_type_e cfg_parity_type;
 
-  constraint c_default {
-      cfg_data_width == DATA_8BIT;
-      cfg_parity_en  == PARITY_DIS;
-  }
-
-  function new(string name="uart_rand_data_trans_seq");
+  function new(string name="receive_rx_data_seq");
     super.new(name);
   endfunction
 
   virtual task body();
-    `uvm_info(get_type_name(), "Executing Random UART Transaction Data", UVM_HIGH)
-    
     `uvm_do_with(req, {
         data_width  == cfg_data_width;
+        stop_bits   == cfg_stop_bits;
         parity_en   == cfg_parity_en;
-        // data, delay, error được random
+        parity_type == cfg_parity_type;
     })
   endtask
 endclass

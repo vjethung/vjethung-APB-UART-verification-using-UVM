@@ -25,7 +25,7 @@ class apb_monitor extends uvm_monitor;
     endfunction
 
     virtual function void start_of_simulation_phase(uvm_phase phase);
-      `uvm_info(get_type_name(), "Monitor started.", UVM_HIGH)
+      `uvm_info(get_type_name(), {"Start of simulation for ", get_full_name()}, UVM_HIGH)
     endfunction
 
     virtual task run_phase(uvm_phase phase);
