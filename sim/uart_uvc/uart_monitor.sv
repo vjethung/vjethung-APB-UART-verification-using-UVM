@@ -33,8 +33,12 @@ class uart_monitor extends uvm_monitor;
         `uvm_info(get_type_name(), "Monitor started.", UVM_HIGH)
 
         fork
-            collect_transfer(0); // RX Mode (UVC -> DUT)
-            collect_transfer(1); // TX Mode (DUT -> UVC)
+            if (cfg.monitor_mode == MON_RX_ONLY || cfg.monitor_mode == MON_BOTH) begin
+                collect_transfer(0); // RX Mode (UVC -> DUT)
+            end
+            if (cfg.monitor_mode == MON_TX_ONLY || cfg.monitor_mode == MON_BOTH) begin
+                collect_transfer(1); // TX Mode (DUT -> UVC) 
+            end
         join_none
     endtask
 
@@ -114,7 +118,7 @@ class uart_monitor extends uvm_monitor;
             item_collected_port.write(trans);
             num_trans_col++;
             
-            `uvm_info(tag, $sformatf("Captured Packet: 0x%h", trans.data), UVM_HIGH)
+            `uvm_info(tag, $sformatf("Captured Packet: 0x%h", trans.data), UVM_MEDIUM)
         end
     endtask
     

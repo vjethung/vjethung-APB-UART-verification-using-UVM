@@ -35,74 +35,74 @@ class apb_base_seq extends uvm_sequence #(apb_transaction);
     end
   endtask : post_body
 
-endclass //apb_base_seq extends superClass
+endclass 
 
-// sequence cấu hình cho uart
-class apb_config_seq extends apb_base_seq;
-    `uvm_object_utils(apb_config_seq)
+// // sequence cấu hình cho uart
+// class apb_config_seq extends apb_base_seq;
+//     `uvm_object_utils(apb_config_seq)
 
-    function new(string name="apb_config_seq");
-      super.new(name);
-    endfunction
+//     function new(string name="apb_config_seq");
+//       super.new(name);
+//     endfunction
 
-    virtual task body();
-      `uvm_info(get_type_name(), "Configuring UART Frame: 8 bits, 1 Stop bit, No Parity", UVM_LOW)
+//     virtual task body();
+//       `uvm_info(get_type_name(), "Configuring UART Frame: 8 bits, 1 Stop bit, No Parity", UVM_LOW)
 
-      // Ghi vào cfg_reg (0x8) 
-      // Bit [1:0] = 2'b11 (8 bits) 
-      // Bit [2]   = 1'b0  (1 stop bit) 
-      // Bit [3]   = 1'b0  (Disable parity) 
-      `uvm_do_with(req, { 
-        paddr  == 12'h008; 
-        pwrite == 1'b1; 
-        pwdata == 32'h0000_0003; 
-        pstrb  == 4'hf;
-      })
-    endtask
-endclass
+//       // Ghi vào cfg_reg (0x8) 
+//       // Bit [1:0] = 2'b11 (8 bits) 
+//       // Bit [2]   = 1'b0  (1 stop bit) 
+//       // Bit [3]   = 1'b0  (Disable parity) 
+//       `uvm_do_with(req, { 
+//         paddr  == 12'h008; 
+//         pwrite == 1'b1; 
+//         pwdata == 32'h0000_0003; 
+//         pstrb  == 4'h1;
+//       })
+//     endtask
+// endclass
 
-class apb_config_random_seq extends apb_base_seq;
-    `uvm_object_utils(apb_config_random_seq)
+// class apb_config_random_seq extends apb_base_seq;
+//     `uvm_object_utils(apb_config_random_seq)
     
-    rand uart_data_size_e   data_bit_num;
-    rand uart_stop_size_e   stop_bit_num;
-    rand uart_parity_mode_e parity_en;
-    rand uart_parity_type_e parity_type;
-    rand bit                pstrb_bit0; 
+//     rand uart_data_size_e   data_bit_num;
+//     rand uart_stop_size_e   stop_bit_num;
+//     rand uart_parity_mode_e parity_en;
+//     rand uart_parity_type_e parity_type;
+//     rand bit                pstrb_bit0; 
 
-    constraint c_uart_cfg {
-      data_bit_num dist { DATA_8BIT := 60, [DATA_5BIT:DATA_7BIT] := 40 };
-    }
+//     constraint c_uart_cfg {
+//       data_bit_num dist { DATA_8BIT := 60, [DATA_5BIT:DATA_7BIT] := 40 };
+//     }
 
-    function new(string name="apb_config_random_seq");
-      super.new(name);
-    endfunction
+//     function new(string name="apb_config_random_seq");
+//       super.new(name);
+//     endfunction
 
-    virtual task body();
-      bit [31:0] cfg_data = 32'h0;
+//     virtual task body();
+//       bit [31:0] cfg_data = 32'h0;
 
-      cfg_data[1:0] = data_bit_num;
-      cfg_data[2]   = stop_bit_num;
-      cfg_data[3]   = parity_en;
-      cfg_data[4]   = parity_type;
+//       cfg_data[1:0] = data_bit_num;
+//       cfg_data[2]   = stop_bit_num;
+//       cfg_data[3]   = parity_en;
+//       cfg_data[4]   = parity_type;
 
-      `uvm_info(get_type_name(), $sformatf("Random Config: Size=%s, Stop=%s, Parity=%s, Type=%s, PSTRB0=%b", 
-                data_bit_num.name(), stop_bit_num.name(), parity_en.name(), parity_type.name(), pstrb_bit0), UVM_LOW)
+//       `uvm_info(get_type_name(), $sformatf("Random Config: Size=%s, Stop=%s, Parity=%s, Type=%s, PSTRB0=%b", 
+//                 data_bit_num.name(), stop_bit_num.name(), parity_en.name(), parity_type.name(), pstrb_bit0), UVM_LOW)
 
-      `uvm_do_with(req, { 
-        paddr  == 12'h008; 
-        pwrite == 1'b1; 
-        pwdata == cfg_data; 
-        pstrb  == {3'b000, pstrb_bit0};
-      })
-    endtask
-endclass
+//       `uvm_do_with(req, { 
+//         paddr  == 12'h008; 
+//         pwrite == 1'b1; 
+//         pwdata == cfg_data; 
+//         pstrb  == {3'b000, pstrb_bit0};
+//       })
+//     endtask
+// endclass
 
 // use in virtual 
 class apb_config_frame_seq extends apb_base_seq;
   `uvm_object_utils(apb_config_frame_seq)
 
-  apb_uart_config cfg; 
+  rand apb_uart_config cfg; 
 
   function new(string name="apb_config_frame_seq");
     super.new(name);
@@ -120,7 +120,7 @@ class apb_config_frame_seq extends apb_base_seq;
     wdata[3]   = cfg.parity_en;
     wdata[4]   = cfg.parity_type;
 
-    `uvm_info("APB_WR_SEQ", $sformatf("Writing Config to DUT: 0x%h (Size=%s)", wdata, cfg.data_width.name()), UVM_LOW)
+    `uvm_info("APB_WR_SEQ", $sformatf("Writing Config to DUT: 0x%h (Size=%s)", wdata, cfg.data_width.name()), UVM_MEDIUM)
 
     `uvm_do_with(req, { 
         paddr  == 12'h008; 
@@ -142,14 +142,14 @@ class apb_trans_data_seq extends apb_base_seq;
     endfunction
 
     virtual task body();
-      `uvm_info(get_type_name(), $sformatf("Executing TX sequence with data: 0x%0h", tx_byte), UVM_LOW)
+      `uvm_info(get_type_name(), $sformatf("Executing TX sequence with data: 0x%0h", tx_byte), UVM_HIGH)
 
       // Bước 1: Ghi dữ liệu vào tx_data_reg (0x0) 
       `uvm_do_with(req, { 
         paddr  == 12'h000; 
         pwrite == 1'b1; 
         pwdata == tx_byte; 
-        pstrb  == 4'hf;
+        pstrb  == 4'h1;
       })
 
       // Bước 2: Kích hoạt truyền bằng cách set bit start_tx trong ctrl_reg (0xC) 
@@ -157,7 +157,7 @@ class apb_trans_data_seq extends apb_base_seq;
         paddr  == 12'h00C; 
         pwrite == 1'b1; 
         pwdata == 32'h0000_0001; // start_tx = bit [0] 
-        pstrb  == 4'hf;
+        pstrb  == 4'h1;
       })
     endtask
 

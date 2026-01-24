@@ -22,3 +22,10 @@ typedef enum bit {
 } uart_parity_type_e;
 
 typedef enum bit {COV_ENABLE, COV_DISABLE} cover_e;
+
+typedef enum {
+    MON_NONE,    // Không giám sát
+    MON_TX_ONLY, // Chỉ giám sát TX (DUT -> UVC)
+    MON_RX_ONLY, // Chỉ giám sát RX (UVC -> DUT)
+    MON_BOTH     // Giám sát cả hai (Mặc định)
+} uart_mon_mode_e;

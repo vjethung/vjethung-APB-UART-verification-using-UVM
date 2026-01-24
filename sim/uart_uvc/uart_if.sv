@@ -8,6 +8,12 @@ interface uart_if(input logic clk, input logic rst_n);
 
     real bit_period_ns; 
 
+    // dùng cho mode passive của uart uvc
+    initial begin
+        rx    = 1'b1; // Idle 
+        cts_n = 1'b0; // Sẵn sàng nhận dữ liệu 
+    end
+
     function void set_baud_rate(int baud);
         if (baud <= 0) baud = 115200;
         bit_period_ns = 1000000000.0 / baud;

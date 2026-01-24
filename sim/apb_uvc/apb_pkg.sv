@@ -3,7 +3,7 @@ package apb_pkg;
   import uart_common_pkg::*;
   `include "uvm_macros.svh"
 
-  typedef uvm_config_db#(virtual apb_if) apb_vif_config;
+  typedef uvm_config_db#(virtual interface apb_if) apb_vif_config;
   
   `include "apb_transaction.sv"
   `include "apb_monitor.sv"

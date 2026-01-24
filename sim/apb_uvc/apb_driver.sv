@@ -32,7 +32,7 @@ class apb_driver extends uvm_driver #(apb_transaction);
     task get_and_drive();
       // Chờ cho đến khi reset kết thúc (presetn mức cao) 
       @(posedge vif.presetn);
-      `uvm_info(get_type_name(), "Reset released, APB Driver active", UVM_MEDIUM)
+      `uvm_info(get_type_name(), "Reset released, APB Driver active", UVM_LOW)
 
       forever begin
         // Lấy yêu cầu mới từ sequencer

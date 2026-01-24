@@ -23,7 +23,7 @@ class apb_transaction extends uvm_sequence_item;
         paddr inside {12'h000, 12'h004, 12'h008, 12'h00C, 12'h010};
     }
 
-    // Chỉ tập trung vào byte lane 0 theo thiết kế hiện tại
+    // Chỉ tập trung vào byte lane 0
     constraint c_pstrb_low_byte {
         pstrb[3:1] == 3'b000;
     }

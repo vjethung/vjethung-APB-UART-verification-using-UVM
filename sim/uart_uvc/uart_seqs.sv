@@ -41,7 +41,7 @@ endclass
 class uart_config_frame_seq extends uart_base_seq;
   `uvm_object_utils(uart_config_frame_seq)
 
-  apb_uart_config cfg; 
+  rand apb_uart_config cfg; 
 
   function new(string name="uart_config_frame_seq");
     super.new(name);
@@ -52,7 +52,7 @@ class uart_config_frame_seq extends uart_base_seq;
         `uvm_fatal("UART_CONFIG_FRAME_SEQ", "Config object is NULL! Virtual Sequence must set it.")
     end
 
-    `uvm_info("UART_CONFIG_FRAME_SEQ", "Driving UART Transaction based on Shared Config", UVM_LOW)
+    `uvm_info("UART_CONFIG_FRAME_SEQ", "Driving UART Transaction based on Shared Config", UVM_MEDIUM)
 
     `uvm_do_with(req, {
         data_width  == cfg.data_width;
@@ -79,7 +79,7 @@ class uart_rand_data_trans_seq extends uart_base_seq;
   endfunction
 
   virtual task body();
-    `uvm_info(get_type_name(), "Executing Random UART Transaction Data", UVM_LOW)
+    `uvm_info(get_type_name(), "Executing Random UART Transaction Data", UVM_HIGH)
     
     `uvm_do_with(req, {
         data_width  == cfg_data_width;
@@ -97,7 +97,7 @@ class uart_error_inject_seq extends uart_base_seq;
   endfunction
 
   virtual task body();
-    `uvm_info(get_type_name(), "Executing Error Injection Sequence (Bad Parity)", UVM_LOW)
+    `uvm_info(get_type_name(), "Executing Error Injection Sequence (Bad Parity)", UVM_HIGH)
 
     repeat(10) begin
       `uvm_do_with(req, {
@@ -121,7 +121,7 @@ class uart_stress_seq extends uart_base_seq;
   endfunction
 
   virtual task body();
-    `uvm_info(get_type_name(), $sformatf("Starting Stress Test: %0d packets back-to-back", count), UVM_LOW)
+    `uvm_info(get_type_name(), $sformatf("Starting Stress Test: %0d packets back-to-back", count), UVM_HIGH)
     
     repeat(count) begin
        `uvm_do_with(req, {

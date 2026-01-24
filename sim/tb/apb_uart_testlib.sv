@@ -29,7 +29,7 @@ class base_test extends uvm_test;
   endfunction : build_phase
 
   function void end_of_elaboration_phase(uvm_phase phase);
-    `uvm_info(get_type_name(), "Printing topology:", UVM_HIGH)
+    `uvm_info(get_type_name(), "Printing topology:", UVM_LOW)
     uvm_top.print_topology();
   endfunction
 
@@ -41,7 +41,7 @@ class base_test extends uvm_test;
     // Drain time: Thời gian chờ thêm sau khi sequence kết thúc.
     // UART Baud 115200 -> 1 bit ~ 8.6us. 
     uvm_objection obj = phase.get_objection();
-    obj.set_drain_time(this, 100us); 
+    obj.set_drain_time(this, 150us); 
   endtask : run_phase
 
   function void check_phase(uvm_phase phase);
@@ -68,9 +68,30 @@ class simple_test extends base_test;
     
     super.build_phase(phase);
     
-    `uvm_info("TEST", "Build phase: simple_test configured with system_config_seq", UVM_LOW)
+    `uvm_info("TEST", "Build phase: SIMPLE TEST configured with system_config_seq", UVM_LOW)
   endfunction
 
+endclass
+
+class send_1_frame extends base_test;
+  `uvm_component_utils(send_1_frame)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_apb_to_uart::get_type());
+    
+    super.build_phase(phase);
+    
+    cfg.monitor_mode = MON_TX_ONLY;
+    
+    `uvm_info("TEST", "Build phase: SEND 1 FRAME configured (TX Monitoring Only)", UVM_LOW)
+  endfunction
 endclass
 
 // --------------------------------------------------------------------------

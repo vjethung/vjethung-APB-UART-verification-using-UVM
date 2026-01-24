@@ -36,10 +36,13 @@ alias vlgt='vlog -64 -f filelist_com.f -f filelist_vsim.f -f filelist_tb.f -l ./
 # Compile rtl and testbench
 alias vlg='vlgr; vlgt'
 
+
 # Run simulation with UVM lib
 alias vsm='vsim -64 -c ${TOP_TB} -wlf vsim.wlf -solvefaildebug -assertdebug -sva -coverage -voptargs=+acc -l ./log/vsim.log +UVM_VERBOSITY=UVM_HIGH +UVM_TESTNAME=${TEST_NAME} -sv_lib uvm_dpi -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; add wave -r /${TOP_TB}/*; run -all; quit"'
 alias vsm_opt='vsim -64 -c ${TOP_TB} -wlf vsim.wlf -solvefaildebug -assertdebug -sva -coverage -voptargs=+acc -l ./log/vsim.log +UVM_VERBOSITY=UVM_MEDIUM +UVM_TESTNAME=${TEST_NAME} -sv_lib uvm_dpi -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; add wave -r /${TOP_TB}/*; run -all; quit"'
 
+# Run simulation with GUI (Best for UVM Debugging)
+alias vsm_gui='vsim -64 ${TOP_TB} -wlf vsim.wlf -solvefaildebug -assertdebug -sva -coverage -voptargs="+acc" -l ./log/vsim.log +UVM_VERBOSITY=UVM_MEDIUM +UVM_TESTNAME=${TEST_NAME} -sv_lib uvm_dpi -do "view objects; add wave -r /*; run 0;"'
 # Run simulation without UVM lib
 # alias vsm='vsim -64 -c ${TOP_TB} -wlf vsim.wlf -solvefaildebug -assertdebug -sva -coverage -voptargs=+acc -l ./log/vsim.log -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; add wave -r /${TOP_TB}/*; run -all; quit"'
 # alias vsm_opt='vsim -64 -c ${TOP_TB} -solvefaildebug -assertdebug -sva -coverage -voptargs=+acc -l ./log/vsim.log -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; run -all; quit"'
