@@ -56,7 +56,10 @@ class uart_driver extends uvm_driver #(uart_transaction);
     logic [7:0] payload;
 
     `uvm_info(get_type_name(), $sformatf("\n#####===Driving Trans: DATA=0x%h,%s, %s, %s, %s===#####", 
-                                         trans.data, trans.data_width.name(), trans.stop_bits.name(),trans.parity_en.name(),cfg.parity_type.name()), UVM_HIGH)
+                                         trans.data, trans.data_width.name(), 
+                                         trans.stop_bits.name(),
+                                         trans.parity_en.name(),
+                                         cfg.parity_type.name()), UVM_HIGH)
 
     vif.wait_rts_active();
 

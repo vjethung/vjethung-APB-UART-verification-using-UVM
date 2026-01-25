@@ -5,3 +5,4 @@
 -y  ../../hdl
 
 ../../hdl/uart.sv
+../../hdl/uart_n.sv

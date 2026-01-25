@@ -92,7 +92,28 @@ class test_send_1_frame extends base_test;
     
     `uvm_info("TEST", "SEND 1 FRAME configured (TX Monitoring Only)", UVM_LOW)
   endfunction
-endclass
+endclass 
+
+class test_send_N_frame extends base_test;
+  `uvm_component_utils(test_send_N_frame)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_send_N_TX::get_type());
+    
+    super.build_phase(phase);
+    
+    cfg.monitor_mode = MON_TX_ONLY;
+    
+    `uvm_info("TEST", "SEND 1 FRAME configured (TX Monitoring Only)", UVM_LOW)
+  endfunction
+endclass 
 
 class test_received_1_frame extends base_test;
   `uvm_component_utils(test_received_1_frame)
@@ -107,6 +128,31 @@ class test_received_1_frame extends base_test;
                             "env.vir_seqr.run_phase", 
                             "default_sequence", 
                             vseq_receive_RX::get_type()); // Dùng vseq nhận RX bạn vừa đổi tên
+
+    // 2. Gọi super.build_phase để base_test tạo và randomize đối tượng cfg 
+    super.build_phase(phase);
+    
+    // 3. Thiết lập chế độ giám sát (Monitor Mode)
+    // MON_RX_ONLY: Chỉ giám sát hướng từ UVC đẩy vào DUT (RX path) 
+    cfg.monitor_mode = MON_RX_ONLY; 
+    
+    `uvm_info("TEST", "RECEIVE 1 FRAME configured (RX Monitoring only)", UVM_LOW)
+  endfunction
+endclass
+
+class test_received_N_frame extends base_test;
+  `uvm_component_utils(test_received_N_frame)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    // 1. Gán sequence mặc định cho Virtual Sequencer
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_receive_N_RX::get_type()); // Dùng vseq nhận RX bạn vừa đổi tên
 
     // 2. Gọi super.build_phase để base_test tạo và randomize đối tượng cfg 
     super.build_phase(phase);

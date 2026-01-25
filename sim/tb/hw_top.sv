@@ -16,7 +16,7 @@ module hw_top;
     apb_if aif(clock, reset_n);
     uart_if uif(clock, reset_n);
 
-    uart dut(
+    uart_n dut(
         .clk(clock),
         .reset_n(reset_n),
         .pclk(clock),

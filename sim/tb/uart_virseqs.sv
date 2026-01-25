@@ -89,6 +89,9 @@ class vseq_send_TX extends base_vseq;
     send_tx_data_seq      apb_write_send_seq; 
     read_status_reg_seq   stt_seq;
     apb_uart_config       shared_cfg;
+    apb_config_frame_seq  dis_StartTX_seq;    
+
+    // apb_transaction dis_StartTX_tr;
 
     function new(string name="vseq_send_TX");
         super.new(name);
@@ -139,6 +142,15 @@ class vseq_send_TX extends base_vseq;
         // Chờ đúng khoảng thời gian truyền hết khung vật lý
         repeat(total_frame_bits+1) #(bit_period_ns * 1ns); 
 
+        // dis_StartTX_tr = apb_transaction::type_id::create("dis_StartTX_tr");
+        // `uvm_do_on_with(dis_StartTX_tr, p_sequencer.apb_sqr, {
+        //     paddr  == 12'h00C; 
+        //     pwrite == 1'b1;
+        //     pwdata == 32'h0;   
+        //     pstrb  == 4'h1;   
+        // })
+        // `uvm_info("VSEQ", "StartTX bit cleared. DUT is now IDLE.", UVM_MEDIUM)
+
         #(bit_period_ns * 1ns); 
         // Polling trạng thái
         // #1000;
@@ -151,18 +163,44 @@ class vseq_send_TX extends base_vseq;
           `uvm_error("VSEQ", "Timeout waiting for TX_DONE")
         end
 
+
         `uvm_info("VSEQ", "===  TEST COMPLETED ===", UVM_MEDIUM)
     endtask
 endclass
 
-// class vseq_send__TX
+class vseq_send_N_TX extends base_vseq;
+    `uvm_object_utils(vseq_send_N_TX)
+
+    rand int num_frames;
+    
+    constraint c_num_frames { num_frames inside {[5:10]}; }
+
+    vseq_send_TX single_tx_vseq;
+
+    function new(string name="vseq_send_N_TX");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        `uvm_info("VSEQ_N", $sformatf("=== STARTING TEST: SEND %0d FRAMES ===", num_frames), UVM_MEDIUM)
+
+        for (int i = 1; i <= num_frames; i++) begin
+            `uvm_info("VSEQ_N", $sformatf(
+              "\n#####========================Executing FRAME %0d/%0d...========================#####", 
+              i, num_frames), UVM_LOW)
+            
+            `uvm_do(single_tx_vseq)
+        end
+
+        `uvm_info("VSEQ_N", "=== SEND N FRAMES COMPLETED ===", UVM_MEDIUM)
+    endtask
+endclass
 
 // SEQUENCE:  TEST (uart_UVC -> DUT)
 class vseq_receive_RX extends base_vseq;
     `uvm_object_utils(vseq_receive_RX)
 
     system_config_seq    config_vseq;  
-    receive_rx_data_seq  uart_send_seq; 
     read_rx_data_seq     apb_read_seq;  
     apb_uart_config      shared_cfg;
 
@@ -172,65 +210,84 @@ class vseq_receive_RX extends base_vseq;
 
     virtual task body();
         real bit_period_ns;
-        int  actual_data_bits;
+        int  actual_data_bits; 
         int  total_frame_bits;
+        
+        bit [7:0] data_mask;
+        bit [7:0] masked_sent_data;
+        bit [7:0] masked_read_data;
 
-        `uvm_info("VSEQ", "=== STARTING RX TEST: UART to APB (Dynamic Bit Width) ===", UVM_MEDIUM)
+        `uvm_info("VSEQ", "=== STARTING RX TEST (With Data Masking) ===", UVM_MEDIUM)
 
-        // Lấy Config từ DB
         if (!system_config::get(p_sequencer, "", "cfg", shared_cfg)) begin
             `uvm_fatal("VSEQ", "Cannot find 'cfg' in Config DB!")
         end
         
         config_vseq = system_config_seq::type_id::create("config_vseq");
         config_vseq.shared_cfg = shared_cfg;
-
         `uvm_do(config_vseq) 
 
         bit_period_ns = 1000000000.0 / shared_cfg.baud_rate; 
-        print_frame_cfg(shared_cfg);
 
-        uart_send_seq = receive_rx_data_seq::type_id::create("uart_send_seq");
-
-        `uvm_do_on_with(uart_send_seq, p_sequencer.uart_sqr, {
-          cfg_data_width  == shared_cfg.data_width;
-          cfg_stop_bits   == shared_cfg.stop_bits;
-          cfg_parity_en   == shared_cfg.parity_en;
-          cfg_parity_type == shared_cfg.parity_type;
-        }) 
-
-        case(uart_send_seq.req.data_width)
-            DATA_5BIT: actual_data_bits = 5;
-            DATA_6BIT: actual_data_bits = 6;
-            DATA_7BIT: actual_data_bits = 7;
-            DATA_8BIT: actual_data_bits = 8;
-            default:   actual_data_bits = 8;
+        // 1. THIẾT LẬP MASK DỰA TRÊN DATA_WIDTH
+        case(shared_cfg.data_width) 
+            DATA_5BIT: begin actual_data_bits = 5; data_mask = 8'h1F; end // 5'b11111 
+            DATA_6BIT: begin actual_data_bits = 6; data_mask = 8'h3F; end // 6'b111111 
+            DATA_7BIT: begin actual_data_bits = 7; data_mask = 8'h7F; end // 7'b1111111 
+            DATA_8BIT: begin actual_data_bits = 8; data_mask = 8'hFF; end // 8'b11111111 
+            default:   begin actual_data_bits = 8; data_mask = 8'hFF; end
         endcase
 
-        // Frame = 1 (Start) + Data Bits + Parity (nếu có) + Stop Bits
-        total_frame_bits = 1 + actual_data_bits; 
-        if (uart_send_seq.req.parity_en == PARITY_EN) total_frame_bits += 1; 
-        total_frame_bits += (uart_send_seq.req.stop_bits == STOP_2BIT) ? 2 : 1; 
-
-        `uvm_info("VSEQ", $sformatf("\n#####===Calculation: Data=%0d bits, Total=%0d bits, Baud=%0d, Tbit=%0.2fns", 
-                  actual_data_bits, total_frame_bits, shared_cfg.baud_rate, bit_period_ns), UVM_LOW)
-
-        // Chờ đúng thời gian vật lý của khung hình đó 
+        total_frame_bits = actual_data_bits; 
+        if (shared_cfg.parity_en == PARITY_EN) total_frame_bits += 1; 
+        total_frame_bits += (shared_cfg.stop_bits == STOP_2BIT) ? 2 : 1; 
+        print_frame_cfg(shared_cfg);
+        // CHỜ DỮ LIỆU TRUYỀN XONG
         repeat(total_frame_bits) #(bit_period_ns * 1ns); 
-        #500ns; // Margin an toàn cho logic nội bộ DUT xử lý
 
-        // APB đọc kết quả từ thanh ghi nhận (0x004) 
         apb_read_seq = read_rx_data_seq::type_id::create("apb_read_seq");
         `uvm_do_on(apb_read_seq, p_sequencer.apb_sqr) 
 
-        if (apb_read_seq.rx_data == uart_send_seq.req.data) begin
-            `uvm_info("VSEQ_MATCH", $sformatf("SUCCESS! Data Match: 0x%h", apb_read_seq.rx_data), UVM_LOW) 
+        masked_sent_data = config_vseq.uart_seq.req.data & data_mask; 
+        masked_read_data = apb_read_seq.rx_data & data_mask;
+
+        if (masked_read_data == masked_sent_data) begin
+            `uvm_info("VSEQ_MATCH", $sformatf("SUCCESS! Masked Match: %b (Raw Sent: %b, Read: %b)", 
+                      masked_read_data, config_vseq.uart_seq.req.data, apb_read_seq.rx_data), UVM_LOW) 
         end else begin
-            `uvm_error("VSEQ_MISMATCH", $sformatf("FAILED! Sent: 0x%h, Read: 0x%h", 
-                       uart_send_seq.req.data, apb_read_seq.rx_data))
+            `uvm_error("VSEQ_MISMATCH", $sformatf("FAILED! Mask: %b, Masked Sent: %b, Masked Read: %b", 
+                       data_mask, masked_sent_data, masked_read_data))
         end
     endtask
 endclass
+
+class vseq_receive_N_RX extends base_vseq;
+  `uvm_object_utils(vseq_receive_N_RX)
+
+  rand int num_frames;
+    
+  constraint c_num_frames { num_frames inside {[5:10]}; }
+
+  vseq_receive_RX single_rx_vseq;
+
+    function new(string name="vseq_send_N_TX");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        `uvm_info("VSEQ_N", $sformatf("=== STARTING TEST: SEND %0d FRAMES ===", num_frames), UVM_MEDIUM)
+
+        for (int i = 1; i <= num_frames; i++) begin
+            `uvm_info("VSEQ_N", $sformatf(
+              "\n#####========================Executing FRAME %0d/%0d...========================#####",  
+              i, num_frames), UVM_LOW)
+            
+            `uvm_do(single_rx_vseq)
+        end
+
+        `uvm_info("VSEQ_N", "=== SEND N FRAMES COMPLETED ===", UVM_MEDIUM)
+    endtask
+endclass 
 
 // SEQUENCE: ERROR INJECTION TEST
 class vseq_parity_error_test extends base_vseq;

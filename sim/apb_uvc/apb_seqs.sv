@@ -59,7 +59,11 @@ class apb_config_frame_seq extends apb_base_seq;
     wdata[3]   = cfg.parity_en;
     wdata[4]   = cfg.parity_type;
 
-    `uvm_info("APB_WR_SEQ", $sformatf("Writing Config to DUT: 0x%h (Size=%s)", wdata, cfg.data_width.name()), UVM_MEDIUM)
+    `uvm_info("APB_WR_SEQ", $sformatf("Writing Config to DUT: 0x%h \n (%s, %s, %s, %s)", wdata, 
+                                      cfg.data_width.name(),
+                                      cfg.parity_en.name(),
+                                      cfg.parity_type.name(),
+                                      cfg.stop_bits.name()), UVM_MEDIUM)
 
     `uvm_do_with(req, { 
         paddr  == 12'h008; 
@@ -114,7 +118,7 @@ class read_rx_data_seq extends apb_base_seq;
       // Đọc thanh ghi RX_DATA (0x004) 
       `uvm_do_with(req, { paddr == 12'h004; pwrite == 1'b0; })
       rx_data = req.prdata[7:0];
-      `uvm_info("APB_RX_SEQ", $sformatf("Read RX with DATA: 0x%h", rx_data), UVM_LOW)
+      `uvm_info("APB_RX_SEQ", $sformatf("Read RX with DATA: %b", rx_data), UVM_LOW)
     endtask
 endclass
 
