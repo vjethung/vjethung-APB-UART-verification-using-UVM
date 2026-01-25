@@ -63,8 +63,8 @@
 
 // ../tb/uart_core_tb.sv
 // ../tb/tb_uart.sv
-../tb_direct/tb_uart_tx.sv
-// ../tb_direct/tb_uart_rx.sv
+// ../tb_direct/tb_uart_tx.sv
+../tb_direct/tb_uart_rx.sv
 
 
 
