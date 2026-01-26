@@ -13,6 +13,8 @@ TEST_LIST=(
     "test_rxdata_write_ignored"
     "test_cfg_wr_rd_check" 
     "test_txdata_no_side_effect" 
+    "test_send_TX_sweep_all_cfg_32"
+    "test_receive_RX_sweep_all_cfg_32"
     "test_tx_basic"
     "test_cts_asserted" 
     "test_cts_deasserted" 

@@ -1,17 +1,17 @@
 ==========================================================================================================
 Test Name                      | Status   | Error  | Fatal  | APB Trans  | UART Trans | Seed         | Sim Time  
-simple_test                    | PASS     | 0      | 0      | 2          | 1          | 908960755    | Time:     
-test_send_N_frame              | PASS     | 0      | 0      | 229        | 57         | 242065567    | Time:     
-test_received_N_frame          | PASS     | 0      | 0      | 41         | 20         | 3593314378   | Time:     
-test_N_parity_error            | PASS     | 0      | 0      | 175        | 58         | 3865944104   | Time:     
-test_check_reset               | PASS     | 0      | 0      | 0          | 0          | 709730471    | Time:     
-test_rxdata_write_ignored      | PASS     | 0      | 0      | 10         | 0          | 3593314571   | Time:     
-test_cfg_wr_rd_check           | PASS     | 0      | 0      | 3          | 0          | 1823318871   | Time:     
-test_txdata_no_side_effect     | PASS     | 0      | 0      | 6          | 0          | 11379315     | Time:     
-test_tx_basic                  | PASS     | 0      | 0      | 5          | 1          | 2301469202   | Time:     
-test_cts_asserted              | PASS     | 0      | 0      | 5          | 1          | 3865960115   | Time:     
-test_cts_deasserted            | PASS     | 0      | 0      | 3          | 0          | 4207796189   | Time:     
-test_tx_done_pulse             | PASS     | 0      | 0      | 3          | 1          | 820894990    | Time:     
-test_rx_rts_dynamic            | PASS     | 0      | 0      | 4          | 2          | 1781390806   | Time:     
-TOTAL TESTS: 13 | PASSED: 13 | FAILED: 0 | PASS RATE: 100.00%
+simple_test                    | FAIL     | 2      | 0      | 2          | 0          | 288227030    | Time:     
+test_send_N_frame              | FAIL     | 115    | 0      | 229        | 0          | 3981311918   | Time:     
+test_received_N_frame          | FAIL     | 29     | 0      | 37         | 18         | 3324902782   | Time:     
+test_N_parity_error            | FAIL     | 198    | 0      | 169        | 56         | 1036909917   | Time:     
+test_check_reset               | FAIL     | 3      | 0      | 0          | 0          | 4119722994   | Time:     
+test_rxdata_write_ignored      | FAIL     | 2      | 0      | 10         | 0          | 1104004114   | Time:     
+test_cfg_wr_rd_check           | FAIL     | 3      | 0      | 3          | 0          | 2548942268   | Time:     
+test_txdata_no_side_effect     | PASS     | 0      | 0      | 6          | 0          | 481150133    | Time:     
+test_tx_basic                  | FAIL     | 3      | 0      | 5          | 0          | 548259603    | Time:     
+test_cts_asserted              | FAIL     | 3      | 0      | 5          | 0          | 648922486    | Time:     
+test_cts_deasserted            | PASS     | 0      | 0      | 3          | 0          | 3926770353   | Time:     
+test_tx_done_pulse             | FAIL     |        |        | 0          | 0          | 4044210706   |           
+test_rx_rts_dynamic            | FAIL     |        |        | 0          | 0          | 1160631764   |           
+TOTAL TESTS: 13 | PASSED: 2 | FAILED: 11 | PASS RATE: 15.38%
 ==========================================================================================================
