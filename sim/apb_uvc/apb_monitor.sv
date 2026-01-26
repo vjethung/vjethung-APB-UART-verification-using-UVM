@@ -51,7 +51,11 @@ class apb_monitor extends uvm_monitor;
             12'h000: `uvm_info("MON", $sformatf("Writing TX Data: 0x%h", trans.pwdata[7:0]), UVM_MEDIUM) 
             12'h008: `uvm_info("MON", "Updating UART Configuration", UVM_MEDIUM) 
             12'h00C: `uvm_info("MON", trans.pwdata[0] ? "Start TX Triggered" : "Control Update", UVM_MEDIUM) 
-            default: `uvm_error("MON", $sformatf("Write to invalid address: 0x%h", trans.paddr))
+            12'h004, 12'h010: begin
+              // Ghi nhận hành vi ghi vào thanh ghi RO
+              `uvm_warning("MON_RO_WRITE", $sformatf("Illegal Write attempt to RO register at 0x%h", trans.paddr))
+            end
+            default: `uvm_info("MON_INVALID", $sformatf("Access to unmapped address 0x%h", trans.paddr), UVM_LOW)
           endcase         
         end 
         else begin

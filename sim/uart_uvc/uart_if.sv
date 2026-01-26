@@ -1,3 +1,5 @@
+import uvm_pkg::*;
+`include "uvm_macros.svh"
 interface uart_if(input logic clk, input logic rst_n);
     // rx uvc
     logic cts_n; 
@@ -60,4 +62,27 @@ interface uart_if(input logic clk, input logic rst_n);
 
         #(bit_period_ns / 2.0);
     endtask
+
+    // property p_tx_start_on_trigger;
+    //     // Sử dụng xung nhịp hệ thống và bỏ qua khi đang reset
+    //     @(posedge clk) disable iff (!rst_n)
+
+    //     // Khi tín hiệu start_tx nội bộ chuyển từ 1 xuống 0 (cạnh xuống)
+    //     $fell(hw_top.dut.start_tx) |->  ##[0:10000] (tx == 1'b0);
+    //     // Thì trong vòng 0 đến 5 chu kỳ clock, chân tx phải hạ xuống 0
+       
+    // endproperty
+
+    property p_tx_start_on_trigger;
+        @(posedge clk) disable iff (!rst_n)
+
+        $fell(hw_top.dut.start_tx) |-> (~tx)[*434];
+    endproperty
+
+    assert_tx_start_latency: assert property (p_tx_start_on_trigger)
+        else `uvm_error("SVA_TX", "TX pin failed to go LOW after start_tx pulse ended!")
+
+    cover_tx_start_latency: cover property (p_tx_start_on_trigger);
 endinterface
+
+

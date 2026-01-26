@@ -220,6 +220,11 @@ class test_N_parity_error extends base_test;
   endfunction
 endclass
 
+// APB & register =======================================================================================
+// APB & register =======================================================================================
+// APB & register =======================================================================================
+// APB & register =======================================================================================
+
 class test_check_reset extends base_test;
   `uvm_component_utils(test_check_reset)
 
@@ -236,5 +241,239 @@ class test_check_reset extends base_test;
     super.build_phase(phase);
 
     `uvm_info("TEST", "\n####======================== TEST VALUE OF REGISTER ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+class test_rxdata_write_ignored extends base_test;
+  `uvm_component_utils(test_rxdata_write_ignored)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_rxdata_write_ignored::get_type());
+
+    super.build_phase(phase);
+
+    `uvm_info("TEST", "\n####======================== TEST VALUE OF REGISTER ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+class test_cfg_wr_rd_check extends base_test;
+  `uvm_component_utils(test_cfg_wr_rd_check)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction   
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_cfg_wr_rd_check::get_type());
+
+    super.build_phase(phase);
+
+    `uvm_info("TEST", "\n####======================== TEST VALUE OF REGISTER ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+// test đọc ghi data vào thanh ghi
+class test_txdata_no_side_effect extends base_test;
+  `uvm_component_utils(test_txdata_no_side_effect)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_txdata_no_side_effect::get_type());
+
+    super.build_phase(phase);
+
+    `uvm_info("TEST", "\n####======================== TEST VALUE OF REGISTER ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+
+class test_send_TX_sweep_all_cfg_32 extends base_test;
+  `uvm_component_utils(test_send_TX_sweep_all_cfg_32)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_send_TX_sweep_all_cfg_32::get_type());
+
+    super.build_phase(phase);
+
+    `uvm_info("TEST", "\n####======================== TEST ALL CONFIG TO TRAN ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+class test_receive_RX_sweep_all_cfg_32 extends base_test;
+  `uvm_component_utils(test_receive_RX_sweep_all_cfg_32)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_receive_RX_sweep_all_cfg_32::get_type());
+
+    super.build_phase(phase);
+
+    `uvm_info("TEST", "\n####======================== TEST ALL CONFIG TO RECV ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+// =========== TX ====================================================================================
+// =========== TX ====================================================================================
+// =========== TX ====================================================================================
+// =========== TX ====================================================================================
+
+// test tx 1: kiểm tra có bit start khi start_tx reg = 1 
+class test_tx_basic extends base_test;
+  `uvm_component_utils (test_tx_basic)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_send_TX::get_type());
+    
+    super.build_phase(phase);
+    
+    cfg.monitor_mode = MON_TX_ONLY;
+    
+    `uvm_info("TEST", "\n####======================== TEST TX GOES DOWN TO 0 WHEN START_TX GOES UP 1 ========================#####", UVM_LOW)
+  endfunction
+endclass 
+
+// test tx 2: kiểm khi có cts_n = 0 thì uart truyền bình thường
+class test_cts_asserted extends base_test;
+  `uvm_component_utils (test_cts_asserted)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_tx_cts_asserted::get_type());
+    
+    super.build_phase(phase);
+    
+    cfg.monitor_mode = MON_TX_ONLY;
+    
+    `uvm_info("TEST", "\n####======================== TEST CTS_N ASSERTED ========================#####", UVM_LOW)
+  endfunction
+endclass 
+
+// test_tx 3: kiểm khi có cts_n = 1, ra lệnh truyền thì uart không truyền đợi bit start_tx reg được set
+class test_cts_deasserted extends base_test;
+  `uvm_component_utils (test_cts_deasserted)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_tx_cts_deasserted::get_type());
+    
+    super.build_phase(phase);
+    
+    cfg.monitor_mode = MON_TX_ONLY;
+    
+    `uvm_info("TEST", "\n####======================== TEST CTS_N DEASSERTED ========================#####", UVM_LOW)
+  endfunction
+endclass 
+
+// test_tx 4: đang gửi dở thì kéo cts_n lên 1
+// class test_cts_mid_frame extends base_test;
+//   `uvm_component_utils(test_cts_mid_frame)
+
+//   function new (string name, uvm_component parent);
+//     super.new(name, parent);
+//   endfunction
+
+//   virtual function void build_phase(uvm_phase phase);
+//     uvm_config_wrapper::set(this, "env.vir_seqr.run_phase", "default_sequence", vseq_tx_cts_mid_frame::get_type());
+    
+//     super.build_phase(phase);
+    
+//     cfg.monitor_mode = MON_TX_ONLY; 
+//   endfunction
+// endclass
+
+// tx test seq 4: theo doi tx_don reg, phải về 0 sau 1 chu kì khi start_tx = 1 và lên 1 khi truyền xong
+class test_tx_done_pulse extends base_test;
+  `uvm_component_utils(test_tx_done_pulse)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, "env.vir_seqr.run_phase", "default_sequence", vseq_tx_done_pulse::get_type());
+    super.build_phase(phase);
+    
+    cfg.monitor_mode = MON_TX_ONLY;
+
+    `uvm_info("TEST", "\n####======================== TEST TX_DONE REG GOES DOWN TO 0 WHEN START_TX GOES UP 1========================#####", UVM_LOW)
+    `uvm_info("TEST", "\n####======================== AFTER SEND COMPLETELY TX_DONE GOES UP TO 1 ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+// tx test seq 5: nạp dữ liệu mới ngay khi tx_done = 1, các khung truyền liên tiếp không có khoảng nghỉ thừa
+// run: test_send_N_frame
+
+
+
+// =========== RX ====================================================================================
+// =========== RX ====================================================================================
+// =========== RX ====================================================================================
+// =========== RX ====================================================================================
+
+// rx test 1 run: test_received_1_frame
+// test rx 2: rts flow 
+class test_rx_rts_dynamic extends base_test;
+  `uvm_component_utils(test_rx_rts_dynamic)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+        "env.vir_seqr.run_phase", 
+        "default_sequence", 
+        vseq_rx_rts_flow_control::get_type());
+    super.build_phase(phase);
+    
+    cfg.monitor_mode = MON_RX_ONLY; 
   endfunction
 endclass

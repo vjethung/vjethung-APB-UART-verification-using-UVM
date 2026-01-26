@@ -1,0 +1,17 @@
+==========================================================================================================
+Test Name                      | Status   | Error  | Fatal  | APB Trans  | UART Trans | Seed         | Sim Time  
+simple_test                    | PASS     | 0      | 0      | 2          | 1          | 2758641816   | Time:     
+test_send_1_frame              | PASS     | 0      | 0      | 5          | 1          | 3717040468   | Time:     
+test_received_1_frame          | PASS     | 0      | 0      | 3          | 1          | 2133691136   | Time:     
+test_parity_error              | PASS     | 0      | 0      | 4          | 1          | 2829945724   | Time:     
+test_check_reset               | PASS     | 0      | 0      | 0          | 0          | 2148371038   | Time:     
+test_rxdata_write_ignored      | PASS     | 0      | 0      | 10         | 0          | 1380824585   | Time:     
+test_cfg_wr_rd_check           | PASS     | 0      | 0      | 3          | 0          | 2804791238   | Time:     
+test_txdata_no_side_effect     | PASS     | 0      | 0      | 6          | 0          | 2976757417   | Time:     
+test_tx_basic                  | PASS     | 0      | 0      | 5          | 1          | 2125313301   | Time:     
+test_cts_asserted              | PASS     | 0      | 0      | 5          | 1          | 2421013364   | Time:     
+test_cts_deasserted            | PASS     | 0      | 0      | 3          | 0          | 476953686    | Time:     
+test_tx_done_pulse             | PASS     | 0      | 0      | 3          | 1          | 1162722335   | Time:     
+test_rx_rts_dynamic            | PASS     | 0      | 0      | 4          | 2          | 684571868    | Time:     
+TOTAL TESTS: 13 | PASSED: 13 | FAILED: 0 | PASS RATE: 100.00%
+==========================================================================================================

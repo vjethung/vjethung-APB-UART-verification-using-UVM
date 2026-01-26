@@ -24,6 +24,9 @@ typedef enum bit {
 
 typedef enum bit {COV_ENABLE, COV_DISABLE} cover_e;
 
+typedef enum {ADDR_VALID, ADDR_INVALID, ADDR_RO} addr_test_type_e;
+typedef enum {WRITE_ADDR_TRUE, WRITE_ADDR_FALSE} write_quality_e;
+
 typedef enum {
     MON_NONE,    
     MON_TX_ONLY, 

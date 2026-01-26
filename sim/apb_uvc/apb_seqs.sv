@@ -141,3 +141,50 @@ class read_status_reg_seq extends apb_base_seq;
     endtask
 
 endclass
+
+class apb_read_reg_seq extends apb_base_seq;
+  `uvm_object_utils(apb_read_reg_seq)
+
+  rand logic [11:0] addr;
+  logic [31:0]      rdata;
+
+  function new(string name="apb_read_reg_seq");
+    super.new(name);
+  endfunction
+
+  virtual task body();
+    `uvm_info(get_type_name(), $sformatf("READ REG [0x%03h]", addr), UVM_LOW)
+
+    `uvm_do_with(req, {
+      paddr  == addr;
+      pwrite == 1'b0;
+    })
+
+    rdata = req.prdata;
+    `uvm_info(get_type_name(), $sformatf("READ REG [0x%03h] -> 0x%08h", addr, rdata), UVM_LOW)
+  endtask
+endclass
+
+class apb_write_reg_seq extends apb_base_seq;
+  `uvm_object_utils(apb_write_reg_seq)
+
+  rand logic [11:0] addr;
+  rand logic [31:0] wdata;
+  rand logic [3:0]  strb;
+
+  function new(string name="apb_write_reg_seq");
+    super.new(name);
+    strb = 4'h1;
+  endfunction
+
+  virtual task body();
+    `uvm_info(get_type_name(), $sformatf("WRITE REG [0x%03h] = 0x%08h strb=0x%0h", addr, wdata, strb), UVM_LOW)
+
+    `uvm_do_with(req, {
+      paddr  == addr;
+      pwrite == 1'b1;
+      pwdata == wdata;
+      pstrb  == strb;
+    })
+  endtask
+endclass
