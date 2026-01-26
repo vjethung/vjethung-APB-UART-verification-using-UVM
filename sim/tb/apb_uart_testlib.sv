@@ -53,6 +53,7 @@ endclass
 // TEST 1: SIMPLE TRANSFER (Sanity Check)
 // Mục tiêu: Kiểm tra luồng dữ liệu APB -> DUT -> UART UVC
 // --------------------------------------------------------------------------
+// test ghi config 
 class simple_test extends base_test;
   `uvm_component_utils(simple_test)
 

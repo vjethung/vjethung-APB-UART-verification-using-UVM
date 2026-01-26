@@ -1,0 +1,280 @@
+# vsim -c tb_top hw_top -wlf vsim.wlf -sv_seed random -solvefaildebug -assertdebug -sva -coverage -voptargs="+acc" -l ./log/vsim.log "+UVM_VERBOSITY=UVM_HIGH" "+UVM_TESTNAME=test_cts_asserted" -sv_lib uvm_dpi -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; log -r /*; run -all; quit" 
+# Start time: 19:50:35 on Jan 26,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-143) Recognized 1 FSM in module "uart_tx(fast)".
+# ** Note: (vopt-143) Recognized 1 FSM in module "uart_rx(fast)".
+# //  Questa Sim-64
+# //  Version 10.7c linux_x86_64 Aug 17 2018
+# //
+# //  Copyright 1991-2018 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.apb_if(fast)
+# Loading work.uart_if(fast)
+# Loading mtiUvm.uvm_pkg
+# Loading work.uart_common_pkg(fast)
+# Loading work.uart_pkg(fast)
+# Loading work.apb_pkg(fast)
+# Loading work.uart_tb_pkg(fast)
+# Loading work.tb_top(fast)
+# Loading work.hw_top(fast)
+# Loading work.apb_if_sv_unit(fast)
+# Loading work.apb_if(fast)
+# Loading work.uart_if_sv_unit(fast)
+# Loading work.uart_if(fast)
+# Loading work.uart_DUT_4(fast)
+# Loading work.apb_slave(fast)
+# Loading work.register_block(fast)
+# Loading work.uart_tx(fast)
+# Loading work.bclk_gen(fast)
+# Loading work.uart_rx(fast)
+# Loading mtiUvm.questa_uvm_pkg(fast)
+# Loading ./uvm_dpi.so
+# Sv_Seed = 648922486
+# coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb
+#  log -r /*
+#  run -all
+# ----------------------------------------------------------------
+# UVM-1.1d
+# (C) 2007-2013 Mentor Graphics Corporation
+# (C) 2007-2013 Cadence Design Systems, Inc.
+# (C) 2006-2013 Synopsys, Inc.
+# (C) 2011-2013 Cypress Semiconductor Corp.
+# ----------------------------------------------------------------
+# 
+#   ***********       IMPORTANT RELEASE NOTES         ************
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_NO_DEPRECATED undefined.
+#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_OBJECT_MUST_HAVE_CONSTRUCTOR undefined.
+#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
+# 
+#       (Specify +UVM_NO_RELNOTES to turn off this notice)
+# 
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(215) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(216) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
+# UVM_INFO @ 0: reporter [RNTST] Running test test_cts_asserted...
+# UVM_INFO ../tb/apb_uart_testlib.sv(389) @ 0: uvm_test_top [TEST] 
+####======================== TEST CTS_N ASSERTED ========================#####
+# UVM_INFO ../tb/apb_uart_env.sv(17) @ 0: uvm_test_top.env [APB_UART_ENVIRONMENT] The env is being build phase
+# UVM_INFO ../uart_uvc/uart_agent.sv(24) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Agent set to PASSIVE (TX Only monitoring)
+# UVM_INFO ../tb/apb_uart_testlib.sv(32) @ 0: uvm_test_top [test_cts_asserted] Printing topology:
+# UVM_INFO @ 0: reporter [UVMTOP] UVM testbench topology:
+# ------------------------------------------------------------------------
+# Name                           Type                     Size  Value     
+# ------------------------------------------------------------------------
+# uvm_test_top                   test_cts_asserted        -     @476      
+#   env                          apb_uart_env             -     @494      
+#     apb_uvcc                   apb_uvc                  -     @502      
+#       agent                    apb_agent                -     @652      
+#         driver                 apb_driver               -     @787      
+#           rsp_port             uvm_analysis_port        -     @802      
+#           seq_item_port        uvm_seq_item_pull_port   -     @794      
+#           num_trans            integral                 32    'h0       
+#         monitor                apb_monitor              -     @663      
+#           item_collected_port  uvm_analysis_port        -     @670      
+#           num_trans_col        integral                 32    'h0       
+#         sequencer              apb_sequencer            -     @678      
+#           rsp_export           uvm_analysis_export      -     @685      
+#           seq_item_export      uvm_seq_item_pull_imp    -     @779      
+#           arbitration_queue    array                    0     -         
+#           lock_queue           array                    0     -         
+#           num_last_reqs        integral                 32    'd1       
+#           num_last_rsps        integral                 32    'd1       
+#         is_active              uvm_active_passive_enum  1     UVM_ACTIVE
+#     scoreboard                 apb_uart_scoreboard      -     @516      
+#       apb_port                 uvm_analysis_imp_apb     -     @523      
+#       uart_port                uvm_analysis_imp_uart    -     @531      
+#     uart_uvcc                  uart_uvc                 -     @509      
+#       agent                    uart_agent               -     @825      
+#         monitor                uart_monitor             -     @834      
+#           item_collected_port  uvm_analysis_port        -     @841      
+#     vir_seqr                   uart_virsequencer        -     @539      
+#       rsp_export               uvm_analysis_export      -     @546      
+#       seq_item_export          uvm_seq_item_pull_imp    -     @640      
+#       arbitration_queue        array                    0     -         
+#       lock_queue               array                    0     -         
+#       num_last_reqs            integral                 32    'd1       
+#       num_last_rsps            integral                 32    'd1       
+# ------------------------------------------------------------------------
+# 
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] End Of Elaboration
+# UVM_INFO ../apb_uvc/apb_driver.sv(22) @ 0: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Start of simulation for uvm_test_top.env.apb_uvcc.agent.driver
+# UVM_INFO ../apb_uvc/apb_monitor.sv(28) @ 0: uvm_test_top.env.apb_uvcc.agent.monitor [apb_monitor] Start of simulation for uvm_test_top.env.apb_uvcc.agent.monitor
+# UVM_INFO ../apb_uvc/apb_sequencer.sv(10) @ 0: uvm_test_top.env.apb_uvcc.agent.sequencer [apb_sequencer] start of simulation for uvm_test_top.env.apb_uvcc.agent.sequencer
+# UVM_INFO ../apb_uvc/apb_agent.sv(33) @ 0: uvm_test_top.env.apb_uvcc.agent [apb_agent] Start of simulation for uvm_test_top.env.apb_uvcc.agent
+# UVM_INFO ../apb_uvc/apb_uvc.sv(19) @ 0: uvm_test_top.env.apb_uvcc [apb_uvc] Start of simulation for uvm_test_top.env.apb_uvcc
+# UVM_INFO ../uart_uvc/uart_agent.sv(45) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Start of simulation for uvm_test_top.env.uart_uvcc.agent
+# UVM_INFO ../uart_uvc/uart_agent.sv(46) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Agent started in UVM_PASSIVE mode.
+# UVM_INFO ../tb/apb_uart_testlib.sv(37) @ 0: uvm_test_top [test_cts_asserted] start of simulation for uvm_test_top
+# UVM_INFO ../tb/uart_virseqs.sv(21) @ 0: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted [vseq_tx_cts_asserted] raise objection
+# UVM_INFO ../tb/uart_virseqs.sv(1014) @ 0: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted [TX_CTS_TEST] === STARTING TEST: CTS ASSERTED (Only Virseqs Mode) ===
+# UVM_INFO ../tb/uart_virseqs.sv(1021) @ 0: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted [TX_CTS_TEST] CTS_N forced to 0 via Backdoor path.
+# UVM_INFO ../tb/uart_virseqs.sv(108) @ 0: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted.single_tx_vseq [VSEQ] === STARTING  TEST: DUT -> uart UVC ===
+# UVM_INFO ../tb/uart_virseqs.sv(66) @ 0: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted.single_tx_vseq.config_vseq [VSEQ] Configuring System using shared object from Test...
+# UVM_INFO ../apb_uvc/apb_seqs.sv(62) @ 0: uvm_test_top.env.apb_uvcc.agent.sequencer@@apb_seq [APB_WR_SEQ] Writing Config to DUT: 0x00000016 
+#  (DATA_7BIT, PARITY_DIS, PARITY_EVEN, STOP_2BIT)
+# UVM_INFO ../uart_uvc/uart_monitor.sv(36) @ 100000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_monitor] Monitor started.
+# UVM_INFO ../apb_uvc/apb_driver.sv(35) @ 100000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Reset released, APB Driver active
+# UVM_INFO ../apb_uvc/apb_monitor.sv(52) @ 150000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Updating UART Configuration
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 150000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# --------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                            
+# --------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @894                                             
+#   paddr                        integral          12    'h8                                              
+#   pwdata                       integral          32    'h16                                             
+#   pwrite                       integral          1     'h1                                              
+#   pstrb                        integral          4     'h1                                              
+#   prdata                       integral          32    'h0xxxxxxxx                                      
+#   pslverr                      integral          1     'h0X                                             
+#   addr_type                    addr_test_type_e  32    ADDR_VALID                                       
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_FALSE                                 
+#   begin_time                   time              64    110000                                           
+#   depth                        int               32    'd2                                              
+#   parent sequence (name)       string            7     apb_seq                                          
+#   parent sequence (full name)  string            49    uvm_test_top.env.apb_uvcc.agent.sequencer.apb_seq
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer        
+# --------------------------------------------------------------------------------------------------------
+# 
+# UVM_INFO ../tb/uart_virseqs.sv(79) @ 150000: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted.single_tx_vseq.config_vseq [VSEQ] UART Driver remains IDLE (TX Only Mode)
+# UVM_INFO ../tb/uart_virseqs.sv(39) @ 150000: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted.single_tx_vseq [VSEQ] 
+#####===NUM DATA BIT = DATA_7BIT, NUM STOP BIT = STOP_2BIT, PARITY EN = PARITY_DIS, PARITY TYPE = PARITY_EVEN===#####
+# UVM_INFO ../tb/uart_virseqs.sv(136) @ 150000: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted.single_tx_vseq [VSEQ] 
+#####===Calculation: Data=10 bits, Baud=115200, Tbit=8680.56ns===#####
+# UVM_INFO ../apb_uvc/apb_seqs.sv(88) @ 150000: uvm_test_top.env.apb_uvcc.agent.sequencer@@vseq_tx_cts_asserted.single_tx_vseq.apb_write_send_seq [send_tx_data_seq] Send TX with data: 0x2f
+# UVM_ERROR ../tb/apb_uart_scoreboard.sv(232) @ 160000: uvm_test_top.env.scoreboard [SB_CFG_HDL] CFG mismatch!
+#   DUT: data_bit_num=0 stop_bit_num=0 parity_en=0 parity_type=0
+#   CFG: data_bit_num=2 stop_bit_num=1 parity_en=0 parity_type=1
+# UVM_INFO ../apb_uvc/apb_monitor.sv(52) @ 170000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Updating UART Configuration
+# UVM_ERROR ../tb/apb_uart_scoreboard.sv(232) @ 180000: uvm_test_top.env.scoreboard [SB_CFG_HDL] CFG mismatch!
+#   DUT: data_bit_num=0 stop_bit_num=0 parity_en=0 parity_type=0
+#   CFG: data_bit_num=2 stop_bit_num=1 parity_en=0 parity_type=1
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 210000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# ---------------------------------------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                                                           
+# ---------------------------------------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @964                                                                            
+#   paddr                        integral          12    'h0                                                                             
+#   pwdata                       integral          32    'h2f                                                                            
+#   pwrite                       integral          1     'h1                                                                             
+#   pstrb                        integral          4     'h1                                                                             
+#   prdata                       integral          32    'h0xxxxxxxx                                                                     
+#   pslverr                      integral          1     'h0X                                                                            
+#   addr_type                    addr_test_type_e  32    ADDR_VALID                                                                      
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                                                 
+#   begin_time                   time              64    170000                                                                          
+#   depth                        int               32    'd4                                                                             
+#   parent sequence (name)       string            18    apb_write_send_seq                                                              
+#   parent sequence (full name)  string            80    uvm_test_top.env.vir_seqr.vseq_tx_cts_asserted.single_tx_vseq.apb_write_send_seq
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer                                       
+# ---------------------------------------------------------------------------------------------------------------------------------------
+# 
+# UVM_INFO ../apb_uvc/apb_monitor.sv(51) @ 210000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Writing TX Data: 0x2f
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(65) @ 210000: uvm_test_top.env.scoreboard [SB_APB] APB->TXDATA queued: 0x2f
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 270000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# ---------------------------------------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                                                           
+# ---------------------------------------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @972                                                                            
+#   paddr                        integral          12    'hc                                                                             
+#   pwdata                       integral          32    'h1                                                                             
+#   pwrite                       integral          1     'h1                                                                             
+#   pstrb                        integral          4     'h1                                                                             
+#   prdata                       integral          32    'h0xxxxxxxx                                                                     
+#   pslverr                      integral          1     'h0X                                                                            
+#   addr_type                    addr_test_type_e  32    ADDR_VALID                                                                      
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                                                 
+#   begin_time                   time              64    230000                                                                          
+#   depth                        int               32    'd4                                                                             
+#   parent sequence (name)       string            18    apb_write_send_seq                                                              
+#   parent sequence (full name)  string            80    uvm_test_top.env.vir_seqr.vseq_tx_cts_asserted.single_tx_vseq.apb_write_send_seq
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer                                       
+# ---------------------------------------------------------------------------------------------------------------------------------------
+# 
+# UVM_INFO ../apb_uvc/apb_monitor.sv(53) @ 270000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Start TX Triggered
+# UVM_INFO ../apb_uvc/apb_seqs.sv(134) @ 104442000: uvm_test_top.env.apb_uvcc.agent.sequencer@@vseq_tx_cts_asserted.single_tx_vseq.stt_seq [read_status_reg_seq] Reading UART Status Register (0x10)
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 104490000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# ----------------------------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                                                
+# ----------------------------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @992                                                                 
+#   paddr                        integral          12    'h10                                                                 
+#   pwdata                       integral          32    'ha2e0c362                                                           
+#   pwrite                       integral          1     'h0                                                                  
+#   pstrb                        integral          4     'h1                                                                  
+#   prdata                       integral          32    'h0                                                                  
+#   pslverr                      integral          1     'h0X                                                                 
+#   addr_type                    addr_test_type_e  32    ADDR_RO                                                              
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_FALSE                                                     
+#   begin_time                   time              64    104450000                                                            
+#   depth                        int               32    'd4                                                                  
+#   parent sequence (name)       string            7     stt_seq                                                              
+#   parent sequence (full name)  string            69    uvm_test_top.env.vir_seqr.vseq_tx_cts_asserted.single_tx_vseq.stt_seq
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer                            
+# ----------------------------------------------------------------------------------------------------------------------------
+# 
+# UVM_ERROR ../tb/uart_virseqs.sv(163) @ 104490000: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted.single_tx_vseq [VSEQ] Timeout waiting for TX_DONE
+# UVM_INFO ../tb/uart_virseqs.sv(167) @ 104490000: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted.single_tx_vseq [VSEQ] ===  TEST COMPLETED ===
+# UVM_INFO ../tb/uart_virseqs.sv(1026) @ 104490000: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted [TX_CTS_TEST] === CTS ASSERTED TEST COMPLETED ===
+# UVM_INFO ../tb/uart_virseqs.sv(34) @ 104490000: uvm_test_top.env.vir_seqr@@vseq_tx_cts_asserted [vseq_tx_cts_asserted] drop objection
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 104640000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO ../apb_uvc/apb_driver.sv(75) @ 104640000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Report: APB Driver sent 4 transactions
+# UVM_INFO ../apb_uvc/apb_monitor.sv(73) @ 104640000: uvm_test_top.env.apb_uvcc.agent.monitor [apb_monitor] Report: APB Monitor Collected 5 Transactions
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(244) @ 104640000: uvm_test_top.env.scoreboard [SB_REPORT] 
+# --- APB-UART Scoreboard ---
+# CFG backdoor: OK=0 BAD=0
+# TX compare : MATCH=0 MIS=0
+# RX compare : MATCH=0 MIS=0
+# --------------------------
+# UVM_INFO ../uart_uvc/uart_monitor.sv(136) @ 104640000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_monitor] Report: UART Monitor Collected 0 Transactions
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :   47
+# UVM_WARNING :    0
+# UVM_ERROR :    3
+# UVM_FATAL :    0
+# ** Report counts by id
+# [APB_UART_ENVIRONMENT]     1
+# [APB_WR_SEQ]     1
+# [MON]     4
+# [Questa UVM]     3
+# [RNTST]     1
+# [SB_APB]     1
+# [SB_CFG_HDL]     2
+# [SB_REPORT]     1
+# [TEST]     1
+# [TEST_DONE]     1
+# [TX_CTS_TEST]     3
+# [UVMTOP]     1
+# [VSEQ]     7
+# [apb_agent]     1
+# [apb_driver]     7
+# [apb_monitor]     2
+# [apb_sequencer]     1
+# [apb_uvc]     1
+# [read_status_reg_seq]     1
+# [send_tx_data_seq]     1
+# [test_cts_asserted]     2
+# [uart_agent]     3
+# [uart_monitor]     2
+# [vseq_tx_cts_asserted]     2
+# ** Note: $finish    : /home/viethung/tools/Questasim/questasim/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
+#    Time: 104640 ns  Iteration: 53  Instance: /tb_top
+# Saving coverage database on exit...
+# End time: 19:50:38 on Jan 26,2026, Elapsed time: 0:00:03
+# Errors: 0, Warnings: 0

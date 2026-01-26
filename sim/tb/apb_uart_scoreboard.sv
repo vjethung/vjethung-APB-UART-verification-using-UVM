@@ -212,30 +212,79 @@ endtask
   //  - pwdata bits vs DUT internal signals
   //  - pwdata bits vs cfg object fields (để biết TB đang config đúng không)
   // ============================================================
-  task check_cfg_write_backdoor();
+  // task automatic check_cfg_write_backdoor();
+  //   // Khai báo biến tạm để đọc dữ liệu thô từ HDL 
+  //   bit [1:0] got_db;
+  //   bit       got_sb, got_pe, got_pt;
 
-    bit [1:0] got_data_bit_num;
-    bit       got_stop_bit_num;
-    bit       got_parity_en;
-    bit       got_parity_type;
-    // read DUT internal signals
-    void'(uvm_hdl_read(DUT_DATA_BIT_NUM_PATH, got_data_bit_num));
-    void'(uvm_hdl_read(DUT_STOP_BIT_NUM_PATH, got_stop_bit_num));
-    void'(uvm_hdl_read(DUT_PARITY_EN_PATH,    got_parity_en));
-    void'(uvm_hdl_read(DUT_PARITY_TYPE_PATH,  got_parity_type));
+  //   // Đọc các tín hiệu nội bộ từ DUT bằng Backdoor 
+  //   void'(uvm_hdl_read(DUT_DATA_BIT_NUM_PATH, got_db));
+  //   void'(uvm_hdl_read(DUT_STOP_BIT_NUM_PATH, got_sb));
+  //   void'(uvm_hdl_read(DUT_PARITY_EN_PATH,    got_pe));
+  //   void'(uvm_hdl_read(DUT_PARITY_TYPE_PATH,  got_pt));
 
-    // compare pwdata vs DUT
-    if (got_data_bit_num  !== cfg.data_bit_num ||
-        got_stop_bit_num  !== cfg.stop_bit_num ||
-        got_parity_en     !== cfg.parity_en    ||
-        got_parity_type   !== cfg.parity_type) begin
-      `uvm_error("SB_CFG_HDL",
-      $sformatf(
-        "CFG mismatch!\n  DUT: data_bit_num=%0d stop_bit_num=%0d parity_en=%0d parity_type=%0d\n  CFG: data_bit_num=%0d stop_bit_num=%0d parity_en=%0d parity_type=%0d",
-        got_data_bit_num, got_stop_bit_num, got_parity_en, got_parity_type,
-        cfg.data_bit_num, cfg.stop_bit_num, cfg.parity_en, cfg.parity_type
-      )
-    )
+  //   // Kiểm tra sự khác biệt giữa DUT và cấu hình mong muốn (cfg) 
+  //   if (got_db !== cfg.data_bit_num || got_sb !== cfg.stop_bit_num ||
+  //       got_pe !== cfg.parity_en    || got_pt !== cfg.parity_type) begin
+      
+  //     cfg_bad++;
+
+  //     `uvm_error("SB_CFG_HDL", $sformatf(
+  //       "CFG mismatch!\n  DUT: data_bit_num=%s stop_bit_num=%s parity_en=%s parity_type=%s\n  CFG: data_bit_num=%0d stop_bit_num=%0d parity_en=%0d parity_type=%0d",
+  //       uart_data_size_e'(got_db).name(), 
+  //       uart_stop_size_e'(got_sb).name(), 
+  //       uart_parity_mode_e'(got_pe).name(), 
+  //       uart_parity_type_e'(got_pt).name(),
+  //       cfg.data_bit_num, 
+  //       cfg.stop_bit_num, 
+  //       cfg.parity_en, 
+  //       cfg.parity_type))
+  //   end else begin
+  //     cfg_ok++; 
+  //     `uvm_info("SB_CFG_HDL", "CFG Backdoor check PASSED", UVM_HIGH)
+  //   end
+  // endtask
+task automatic check_cfg_write_backdoor();
+    bit [1:0] got_db;
+    bit       got_sb, got_pe, got_pt;
+
+    // 2. Khai báo biến kiểu enum để lưu giá trị sau khi ép kiểu 
+    uart_data_size_e   db_enum;
+    uart_stop_size_e   sb_enum;
+    uart_parity_mode_e pe_enum;
+    uart_parity_type_e pt_enum;
+
+    // Đọc các tín hiệu nội bộ từ DUT bằng Backdoor
+    void'(uvm_hdl_read(DUT_DATA_BIT_NUM_PATH, got_db));
+    void'(uvm_hdl_read(DUT_STOP_BIT_NUM_PATH, got_sb));
+    void'(uvm_hdl_read(DUT_PARITY_EN_PATH,    got_pe));
+    void'(uvm_hdl_read(DUT_PARITY_TYPE_PATH,  got_pt));
+
+    // Thực hiện ép kiểu ra biến tạm trước khi so sánh hoặc in log
+    db_enum = uart_data_size_e'(got_db);
+    sb_enum = uart_stop_size_e'(got_sb);
+    pe_enum = uart_parity_mode_e'(got_pe);
+    pt_enum = uart_parity_type_e'(got_pt);
+
+    // 3. Kiểm tra sự khác biệt giữa DUT và cấu hình mong muốn (cfg) 
+    if (got_db !== cfg.data_bit_num || got_sb !== cfg.stop_bit_num ||
+        got_pe !== cfg.parity_en    || got_pt !== cfg.parity_type) begin
+      
+      cfg_bad++; // Tăng biến đếm lỗi
+      
+      `uvm_error("SB_CFG_HDL", $sformatf(
+        "CFG mismatch!\n  DUT: data_bit_num=%s stop_bit_num=%s parity_en=%s parity_type=%s\n  CFG: data_bit_num=%0d stop_bit_num=%0d parity_en=%0d parity_type=%0d",
+        db_enum.name(), 
+        sb_enum.name(), 
+        pe_enum.name(), 
+        pt_enum.name(),
+        cfg.data_bit_num.name(), 
+        cfg.stop_bit_num.name(), 
+        cfg.parity_en.name(), 
+        cfg.parity_type.name()))
+    end else begin
+      cfg_ok++;
+      `uvm_info("SB_CFG_HDL", "CFG Backdoor check PASSED", UVM_HIGH)
     end
   endtask
 
