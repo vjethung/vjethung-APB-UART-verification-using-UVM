@@ -40,6 +40,7 @@ class apb_monitor extends uvm_monitor;
           vif.collect_apb_transaction(trans.paddr, captured_data, is_write, trans.pstrb, trans.pslverr);
           // Kích hoạt recording dựa trên tín hiệu monitor_start từ interface
           @(negedge vif.penable) void'(begin_tr(trans, "Monitor_APB_Transaction"));
+          // @(vif.monitor_start) void'(begin_tr(trans, "Monitor_APB_Transaction"));
         join
 
         trans.pwrite = is_write; 

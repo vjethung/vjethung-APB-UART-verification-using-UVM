@@ -6,8 +6,8 @@ package uart_pkg;
   typedef uvm_config_db#(virtual interface uart_if) uart_vif_config;
 
   `include "uart_transaction.sv"
-  `include "uart_monitor.sv"
-  // `include "uart_coverage_monitor.sv"
+  // `include "uart_monitor.sv"
+  `include "uart_coverage_monitor.sv"
   `include "uart_seqs.sv"
   `include "uart_sequencer.sv" 
   `include "uart_driver.sv"

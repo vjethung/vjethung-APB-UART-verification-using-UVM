@@ -46,7 +46,7 @@ class uart_monitor extends uvm_monitor;
     endtask
 
     task automatic collect_transfer(bit is_tx);
-        uart_transaction trans;
+        // uart_transaction trans;
         logic bit_val;
         int num_data_bits;
         logic [7:0] captured_data;
@@ -101,7 +101,7 @@ class uart_monitor extends uvm_monitor;
 
             // Check Stop Bit 1
             vif.sample_bit(bit_val, is_tx); 
-            if (bit_val != 1'b1) begin
+            if (bit_val != 1'b1 ) begin
                 if (is_tx) begin
                    `uvm_error(tag, "Framing Error! Stop bit is 0") 
                     trans.framing_error_detected = 1;

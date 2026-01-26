@@ -8,7 +8,8 @@ class apb_agent extends uvm_agent;
 
     apb_driver    driver;
     apb_sequencer sequencer;
-    apb_monitor   monitor;
+    // apb_monitor   monitor;
+    apb_coverage_monitor monitor;
 
     function new(string name, uvm_component parent);
       super.new(name, parent);
@@ -19,7 +20,8 @@ class apb_agent extends uvm_agent;
     virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
 
-      monitor = apb_monitor::type_id::create("monitor", this);
+      // monitor = apb_monitor::type_id::create("monitor", this);
+      monitor = apb_coverage_monitor::type_id::create("monitor", this);
       sequencer = apb_sequencer::type_id::create("sequencer", this);
       driver    = apb_driver::type_id::create("driver", this);
     endfunction

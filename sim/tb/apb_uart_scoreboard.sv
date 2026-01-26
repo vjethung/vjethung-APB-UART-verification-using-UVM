@@ -58,8 +58,32 @@ class apb_uart_scoreboard extends uvm_scoreboard;
   // - read  RXDATA (0x004) -> read_queue
   // - write CFG   (0x008)  -> immediate uvm_hdl_read check
   // ============================================================
-  virtual function void write_apb(apb_transaction tr);
+  // virtual function void write_apb(apb_transaction tr);
 
+  //   if (tr.pwrite && tr.paddr == 12'h000) begin
+  //     write_queue.push_back(tr);
+  //     `uvm_info("SB_APB",
+  //       $sformatf("APB->TXDATA queued: 0x%02h", tr.pwdata[7:0]),
+  //       UVM_MEDIUM)
+  //     return;
+  //   end
+    
+  //   if (!tr.pwrite && tr.paddr == 12'h004) begin
+  //     read_queue.push_back(tr);
+  //     `uvm_info("SB_APB",
+  //       $sformatf("APB<-RXDATA queued: 0x%02h", tr.prdata[7:0]),
+  //       UVM_MEDIUM)
+  //     return;
+  //   end
+
+  //   if (tr.pwrite && tr.paddr == 12'h008) begin
+  //     last_cfg_pwdata = tr.pwdata;
+  //     cfg_check_pending = 1'b1;
+  //     return;
+  //   end
+
+  // endfunction
+  virtual function void write_apb(apb_transaction tr);
     if (tr.pwrite && tr.paddr == 12'h000) begin
       write_queue.push_back(tr);
       `uvm_info("SB_APB",
@@ -67,23 +91,45 @@ class apb_uart_scoreboard extends uvm_scoreboard;
         UVM_MEDIUM)
       return;
     end
-
-    if (!tr.pwrite && tr.paddr == 12'h004) begin
+    else if (!tr.pwrite && tr.paddr == 12'h004) begin
       read_queue.push_back(tr);
       `uvm_info("SB_APB",
         $sformatf("APB<-RXDATA queued: 0x%02h", tr.prdata[7:0]),
         UVM_MEDIUM)
       return;
     end
-
-    if (tr.pwrite && tr.paddr == 12'h008) begin
+    // LỖI 1: Cập nhật cfg object khi ghi vào thanh ghi 0x008
+    else if (tr.pwrite && tr.paddr == 12'h008) begin
       last_cfg_pwdata = tr.pwdata;
       cfg_check_pending = 1'b1;
-      return;
+      
+      // Ép kiểu dữ liệu từ bus sang enum để Scoreboard luôn dùng cấu hình mới nhất
+      cfg.data_bit_num = uart_data_size_e'(tr.pwdata[1:0]);
+      cfg.stop_bit_num = uart_stop_size_e'(tr.pwdata[2]);
+      cfg.parity_en    = uart_parity_mode_e'(tr.pwdata[3]);
+      cfg.parity_type  = uart_parity_type_e'(tr.pwdata[4]);
+      
+      `uvm_info("SB_CFG_SYNC", $sformatf("Config updated via APB: %s, %s", 
+                cfg.data_bit_num.name(), cfg.stop_bit_num.name()), UVM_MEDIUM)
     end
-
   endfunction
 
+  task automatic handle_reset();
+    forever begin
+      // Chờ tín hiệu Reset xuống mức thấp
+      wait(vif.presetn == 1'b0);
+      `uvm_info("SB_RESET", "Reset detected! Clearing all queues...", UVM_LOW)
+      
+      // Xóa sạch các hàng đợi tránh Mismatch giả
+      read_queue.delete();
+      write_queue.delete();
+      tx_queue.delete();
+      rx_queue.delete();
+      cfg_check_pending = 1'b0;
+      
+      wait(vif.presetn == 1'b1);
+    end
+  endtask
   // ============================================================
   // UART side
   // - if is_tx==1 -> tx_queue
@@ -109,6 +155,7 @@ class apb_uart_scoreboard extends uvm_scoreboard;
     compare_apb_write_vs_uart_tx();
     compare_apb_read_vs_uart_rx();
     cfg_backdoor_checker();
+    handle_reset();
   join
 endtask
 
@@ -131,7 +178,8 @@ function automatic logic [7:0] mask_data(logic [31:0] x);
   logic [7:0] m;
   n = get_data_bits();           // 5..8
   m = (8'hFF >> (8 - n));        // n=5 -> 0x1F, 6 ->0x3F, 7->0x7F, 8->0xFF
-  return logic'(x[7:0] & m);
+  // return logic'(x[7:0] & m);
+  return (x[7:0] & m);
 endfunction
 task automatic compare_apb_write_vs_uart_tx();
   apb_transaction  apb_tr;
@@ -152,19 +200,19 @@ task automatic compare_apb_write_vs_uart_tx();
     if (exp_data !== act_data) begin
       tx_mis++;
       `uvm_error("SB_TX",
-        $sformatf("Mismatch APB->TXDATA vs UART_TX! bits=%0d EXP=0x%02h ACT=0x%02h (raw APB=0x%02h raw UART=0x%02h)",
+        $sformatf("\nMismatch APB->TXDATA vs UART_TX! bits=%0d EXP=0x%02h ACT=0x%02h (raw APB=0x%02h raw UART=0x%02h)",
                   get_data_bits(), exp_data, act_data, apb_tr.pwdata[7:0], uart_tr.data))
     end
     else if (uart_tr.parity_error_detected || uart_tr.framing_error_detected) begin
       tx_mis++;
       `uvm_error("SB_TX",
-        $sformatf("UART TX line error for data 0x%02h (parity_err=%0b framing_err=%0b)",
+        $sformatf("\nUART TX line error for data 0x%02h (parity_err=%0b framing_err=%0b)",
                   uart_tr.data, uart_tr.parity_error_detected, uart_tr.framing_error_detected))
     end
     else begin
       tx_match++;
       `uvm_info("SB_TX",
-        $sformatf("Match  APB->TXDATA == UART_TX == 0x%02h (bits=%0d)", act_data, get_data_bits()),
+        $sformatf("\nMatch  APB->TXDATA == UART_TX == 0x%02h (bits=%0d)", act_data, get_data_bits()),
         UVM_LOW)
     end
   end
@@ -188,19 +236,19 @@ task automatic compare_apb_read_vs_uart_rx();
     if (act_data !== exp_data) begin
       rx_mis++;
       `uvm_error("SB_RX",
-        $sformatf("Mismatch APB<-RXDATA vs UART_RX! bits=%0d EXP=0x%02h ACT=0x%02h (raw UART=0x%02h raw APB=0x%02h)",
+        $sformatf("\nMismatch APB<-RXDATA vs UART_RX! bits=%0d EXP=0x%02h ACT=0x%02h (raw UART=0x%02h raw APB=0x%02h)",
                   get_data_bits(), exp_data, act_data, uart_tr.data, apb_tr.prdata[7:0]))
     end
     else if (uart_tr.parity_error_detected || uart_tr.framing_error_detected) begin
       rx_mis++;
       `uvm_error("SB_RX",
-        $sformatf("UART RX line error for data 0x%02h (parity_err=%0b framing_err=%0b)",
+        $sformatf("\nUART RX line error for data 0x%02h (parity_err=%0b framing_err=%0b)",
                   uart_tr.data, uart_tr.parity_error_detected, uart_tr.framing_error_detected))
     end
     else begin
       rx_match++;
       `uvm_info("SB_RX",
-        $sformatf("Match UART_RX == APB<-RXDATA == 0x%02h (bits=%0d)", act_data, get_data_bits()),
+        $sformatf("\nMatch UART_RX == APB<-RXDATA == 0x%02h (bits=%0d)", act_data, get_data_bits()),
         UVM_LOW)
     end
   end
@@ -273,7 +321,7 @@ task automatic check_cfg_write_backdoor();
       cfg_bad++; // Tăng biến đếm lỗi
       
       `uvm_error("SB_CFG_HDL", $sformatf(
-        "CFG mismatch!\n  DUT: data_bit_num=%s stop_bit_num=%s parity_en=%s parity_type=%s\n  CFG: data_bit_num=%0d stop_bit_num=%0d parity_en=%0d parity_type=%0d",
+        "\n============CFG mismatch!============\n  DUT: data_bit_num=%s stop_bit_num=%s parity_en=%s parity_type=%s\n  CFG: data_bit_num=%0d stop_bit_num=%0d parity_en=%0d parity_type=%0d",
         db_enum.name(), 
         sb_enum.name(), 
         pe_enum.name(), 
@@ -284,7 +332,7 @@ task automatic check_cfg_write_backdoor();
         cfg.parity_type.name()))
     end else begin
       cfg_ok++;
-      `uvm_info("SB_CFG_HDL", "CFG Backdoor check PASSED", UVM_HIGH)
+      `uvm_info("SB_CFG_HDL", "\n============CFG Backdoor check PASSED============", UVM_HIGH)
     end
   endtask
 

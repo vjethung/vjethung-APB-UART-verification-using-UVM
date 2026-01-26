@@ -77,10 +77,13 @@ class apb_coverage_monitor extends uvm_monitor;
         @(posedge vif.presetn);
         forever begin
           trans = apb_transaction::type_id::create("trans", this);
-          fork
-            vif.collect_apb_transaction(trans.paddr, captured_data, is_write, trans.pstrb, trans.pslverr);
-            @(posedge vif.monitor_start) void'(begin_tr(trans, "Monitor_APB_Coverage"));
-          join
+          // fork
+          //   vif.collect_apb_transaction(trans.paddr, captured_data, is_write, trans.pstrb, trans.pslverr);
+          //   @(posedge vif.penable) void'(begin_tr(trans, "Monitor_APB_Coverage"));
+          //   // @(vif.monitor_start) void'(begin_tr(trans, "Monitor_APB_Transaction"));
+          // join
+          vif.collect_apb_transaction(trans.paddr, captured_data, is_write, trans.pstrb, trans.pslverr);
+          void'(begin_tr(trans, "Monitor_APB_Coverage")); // Gọi sau khi collect xong
           
           trans.pwrite = is_write;
           if (is_write) begin

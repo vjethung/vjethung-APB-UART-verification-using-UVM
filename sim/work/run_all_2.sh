@@ -22,66 +22,65 @@ TEST_LIST=(
     "test_rx_rts_dynamic"
 )
 
-# --- THAY ĐỔI ĐƯỜNG DẪN LƯU TRỮ ---
-# Lưu file summary ra thư mục sim (cha của work) để không bị vlb xóa
-# SUMMARY_FILE="../regression_summary.log"
-SUMMARY_FILE="regression_summary.log"
-LOG_DIR="./log" # log của từng test vẫn nằm trong work/log để vlb dọn dẹp
+# --- CẤU HÌNH ĐƯỜNG DẪN ---
+SUMMARY_DIR="summary"
+TEST_LOG_DIR="$SUMMARY_DIR/test_logs" # Thư mục con chứa log từng test
+SUMMARY_FILE="$SUMMARY_DIR/regression_summary.log"
+CURRENT_LOG="./log/vsim.log" # File log gốc sinh ra sau mỗi test
 
-mkdir -p "$LOG_DIR"
+# Tạo các thư mục cần thiết
+mkdir -p "$TEST_LOG_DIR"
 
-# Tạo tiêu đề mới (Ghi đè file cũ bằng dấu >)
+# Tạo tiêu đề báo cáo
 printf "==========================================================================================================\n" > "$SUMMARY_FILE"
 printf "%-30s | %-8s | %-6s | %-6s | %-10s | %-10s | %-12s | %-10s\n" \
        "Test Name" "Status" "Error" "Fatal" "APB Trans" "UART Trans" "Seed" "Sim Time" >> "$SUMMARY_FILE"
 printf "----------------------------------------------------------------------------------------------------------\n" >> "$SUMMARY_FILE"
 
 pass_count=0
-echo "Starting Regression. Summary will be saved at: $SUMMARY_FILE"
+echo "Starting Regression. Logs will be saved at: $TEST_LOG_DIR"
 
 for TEST in "${TEST_LIST[@]}"; do
     echo -n "Running $TEST... "
     
-    # Biên dịch sạch sẽ cho từng test
+    # Chạy mô phỏng
+    # vlb thực hiện dọn dẹp work/log nên ta phải copy log đi NGAY SAU khi vsm kết thúc
     vlb > /dev/null 2>&1 && vlg > /dev/null 2>&1
     vsm "$TEST" UVM_HIGH > /dev/null 2>&1
     
-    # 2. TRÍCH XUẤT THÔNG TIN (Sửa lỗi awk để lấy đúng con số) [cite: 370-444]
-    LOG="$LOG_DIR/vsim.log"
+    # --- CẬP NHẬT: LƯU LOG TỪNG TEST ---
+    if [ -f "$CURRENT_LOG" ]; then
+        cp "$CURRENT_LOG" "$TEST_LOG_DIR/${TEST}.log"
+    fi
+
+    # 2. TRÍCH XUẤT THÔNG TIN
+    LOG="$CURRENT_LOG"
     SEED=$(grep "Sv_Seed =" "$LOG" | awk '{print $NF}')
     ERRS=$(grep "UVM_ERROR :" "$LOG" | tail -1 | awk '{print $NF}')
     FATS=$(grep "UVM_FATAL :" "$LOG" | tail -1 | awk '{print $NF}')
     
-    # Lấy số lượng transaction (Sửa NF-2 thành NF-1 để lấy con số)
     APB_COL=$(grep "APB Monitor Collected" "$LOG" | tail -1 | awk '{print $(NF-1)}')
     UART_COL=$(grep "UART Monitor Collected" "$LOG" | tail -1 | awk '{print $(NF-1)}')
-    
-    # Lấy thời gian mô phỏng
     TIME=$(grep "Time:" "$LOG" | tail -1 | awk '{print $2}')
     
-    # Kiểm tra trạng thái PASS/FAIL [cite: 442-444]
+    # Kiểm tra trạng thái PASS/FAIL
     STATUS="FAIL"
     if [ "$ERRS" == "0" ] && [ "$FATS" == "0" ]; then
         STATUS="PASS"
         ((pass_count++))
-    else
-        # Lưu lại log lỗi của test đó để kiểm tra sau
-        cp "$LOG" "../vsim_${TEST}_error.log"
     fi
 
-    # Ghi dữ liệu vào file (Dùng dấu >> để NỐI THÊM vào file, không làm mất test cũ)
+    # Ghi vào file summary
     printf "%-30s | %-8s | %-6s | %-6s | %-10s | %-10s | %-12s | %-10s\n" \
-           "$TEST" "$STATUS" "$ERRS" "$FATS" "${APB_COL:-0}" "${UART_COL:-0}" "$SEED" "$TIME" >> "$SUMMARY_FILE"
+           "$TEST" "$STATUS" "${ERRS:-0}" "${FATS:-0}" "${APB_COL:-0}" "${UART_COL:-0}" "$SEED" "$TIME" >> "$SUMMARY_FILE"
     echo "$STATUS"
 done
 
 # 3. TỔNG KẾT CUỐI BÁO CÁO
 TOTAL=${#TEST_LIST[@]}
-# Tính % bằng lệnh bc
 RATE=$(echo "scale=2; $pass_count * 100 / $TOTAL" | bc)
 printf "----------------------------------------------------------------------------------------------------------\n" >> "$SUMMARY_FILE"
 printf "TOTAL TESTS: %d | PASSED: %d | FAILED: %d | PASS RATE: %s%%\n" "$TOTAL" "$pass_count" "$((TOTAL-pass_count))" "$RATE" >> "$SUMMARY_FILE"
 printf "==========================================================================================================\n" >> "$SUMMARY_FILE"
 
-# Hiển thị kết quả ra màn hình
 cat "$SUMMARY_FILE"

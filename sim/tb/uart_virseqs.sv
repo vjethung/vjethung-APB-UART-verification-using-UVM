@@ -30,6 +30,7 @@ class base_vseq extends uvm_sequence;
       phase = starting_phase;
     `endif
     if (phase != null) begin
+      #10us;
       phase.drop_objection(this, get_type_name());
       `uvm_info(get_type_name(), "drop objection", UVM_HIGH)
     end
@@ -69,6 +70,8 @@ class system_config_seq extends base_vseq;
     apb_seq = apb_config_frame_seq::type_id::create("apb_seq");
     apb_seq.cfg = shared_cfg; 
     apb_seq.start(p_sequencer.apb_sqr);
+
+    repeat(10) #20;
 
     if (shared_cfg.monitor_mode == MON_RX_ONLY || shared_cfg.monitor_mode == MON_BOTH) begin
         `uvm_info("VSEQ", "Activating UART Driver for RX path", UVM_MEDIUM)
@@ -904,7 +907,6 @@ class vseq_receive_RX_sweep_all_cfg_32 extends base_vseq;
 
   apb_uart_config cfg;
 
-  // vseq nhận 1 frame RX (bạn đã có)
   vseq_receive_RX one_rx;
 
   function new(string name="vseq_receive_RX_sweep_all_cfg_32");
@@ -942,7 +944,7 @@ class vseq_receive_RX_sweep_all_cfg_32 extends base_vseq;
 
     // RX test: ép RX-only để tránh kích TX path
     cfg.monitor_mode      = MON_RX_ONLY;
-
+    cfg.monitor_mode = MON_BOTH;
     // publish lại để vseq con get() đâu cũng thấy đúng handle
     system_config::set(p_sequencer, "", "cfg", cfg);
     system_config::set(null, "*", "cfg", cfg);

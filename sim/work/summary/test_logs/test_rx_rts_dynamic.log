@@ -1,8 +1,7 @@
 # vsim -c tb_top hw_top -wlf vsim.wlf -sv_seed random -solvefaildebug -assertdebug -sva -coverage -voptargs="+acc" -l ./log/vsim.log "+UVM_VERBOSITY=UVM_HIGH" "+UVM_TESTNAME=test_rx_rts_dynamic" -sv_lib uvm_dpi -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; log -r /*; run -all; quit" 
-# Start time: 19:52:35 on Jan 26,2026
+# Start time: 00:29:00 on Jan 27,2026
 # ** Note: (vsim-3812) Design is being optimized...
-# ** Note: (vopt-143) Recognized 1 FSM in module "uart_tx(fast)".
-# ** Note: (vopt-143) Recognized 1 FSM in module "uart_rx(fast)".
+# ** Note: (vopt-143) Recognized 2 FSMs in module "uart(fast)".
 # //  Questa Sim-64
 # //  Version 10.7c linux_x86_64 Aug 17 2018
 # //
@@ -31,15 +30,10 @@
 # Loading work.apb_if(fast)
 # Loading work.uart_if_sv_unit(fast)
 # Loading work.uart_if(fast)
-# Loading work.uart_DUT_4(fast)
-# Loading work.apb_slave(fast)
-# Loading work.register_block(fast)
-# Loading work.uart_tx(fast)
-# Loading work.bclk_gen(fast)
-# Loading work.uart_rx(fast)
+# Loading work.uart(fast)
 # Loading mtiUvm.questa_uvm_pkg(fast)
 # Loading ./uvm_dpi.so
-# Sv_Seed = 1160631764
+# Sv_Seed = 479522614
 # coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb
 #  log -r /*
 #  run -all
@@ -80,9 +74,10 @@
 #           rsp_port             uvm_analysis_port        -     @802      
 #           seq_item_port        uvm_seq_item_pull_port   -     @794      
 #           num_trans            integral                 32    'h0       
-#         monitor                apb_monitor              -     @663      
+#         monitor                apb_coverage_monitor     -     @663      
 #           item_collected_port  uvm_analysis_port        -     @670      
 #           num_trans_col        integral                 32    'h0       
+#           coverage_control     cover_e                  1     COV_ENABLE
 #         sequencer              apb_sequencer            -     @678      
 #           rsp_export           uvm_analysis_export      -     @685      
 #           seq_item_export      uvm_seq_item_pull_imp    -     @779      
@@ -99,7 +94,7 @@
 #         driver                 uart_driver              -     @958      
 #           rsp_port             uvm_analysis_port        -     @973      
 #           seq_item_port        uvm_seq_item_pull_port   -     @965      
-#         monitor                uart_monitor             -     @834      
+#         monitor                uart_coverage_monitor    -     @834      
 #           item_collected_port  uvm_analysis_port        -     @841      
 #         sequencer              uart_sequencer           -     @849      
 #           rsp_export           uvm_analysis_export      -     @856      
@@ -119,32 +114,32 @@
 # 
 # UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] End Of Elaboration
 # UVM_INFO ../apb_uvc/apb_driver.sv(22) @ 0: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Start of simulation for uvm_test_top.env.apb_uvcc.agent.driver
-# UVM_INFO ../apb_uvc/apb_monitor.sv(28) @ 0: uvm_test_top.env.apb_uvcc.agent.monitor [apb_monitor] Start of simulation for uvm_test_top.env.apb_uvcc.agent.monitor
-# UVM_INFO ../apb_uvc/apb_sequencer.sv(10) @ 0: uvm_test_top.env.apb_uvcc.agent.sequencer [apb_sequencer] start of simulation for uvm_test_top.env.apb_uvcc.agent.sequencer
-# UVM_INFO ../apb_uvc/apb_agent.sv(33) @ 0: uvm_test_top.env.apb_uvcc.agent [apb_agent] Start of simulation for uvm_test_top.env.apb_uvcc.agent
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(71) @ 0: uvm_test_top.env.apb_uvcc.agent.monitor [apb_coverage_monitor] Start of simulation for uvm_test_top.env.apb_uvcc.agent.monitor
+# UVM_INFO ../apb_uvc/apb_sequencer.sv(11) @ 0: uvm_test_top.env.apb_uvcc.agent.sequencer [apb_sequencer] start of simulation for uvm_test_top.env.apb_uvcc.agent.sequencer
+# UVM_INFO ../apb_uvc/apb_agent.sv(35) @ 0: uvm_test_top.env.apb_uvcc.agent [apb_agent] Start of simulation for uvm_test_top.env.apb_uvcc.agent
 # UVM_INFO ../apb_uvc/apb_uvc.sv(19) @ 0: uvm_test_top.env.apb_uvcc [apb_uvc] Start of simulation for uvm_test_top.env.apb_uvcc
 # UVM_INFO ../uart_uvc/uart_sequencer.sv(10) @ 0: uvm_test_top.env.uart_uvcc.agent.sequencer [uart_sequencer] start of simulation for uvm_test_top.env.uart_uvcc.agent.sequencer
-# UVM_INFO ../uart_uvc/uart_agent.sv(45) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Start of simulation for uvm_test_top.env.uart_uvcc.agent
-# UVM_INFO ../uart_uvc/uart_agent.sv(46) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Agent started in UVM_ACTIVE mode.
+# UVM_INFO ../uart_uvc/uart_agent.sv(48) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Start of simulation for uvm_test_top.env.uart_uvcc.agent
+# UVM_INFO ../uart_uvc/uart_agent.sv(49) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Agent started in UVM_ACTIVE mode.
 # UVM_INFO ../tb/apb_uart_testlib.sv(37) @ 0: uvm_test_top [test_rx_rts_dynamic] start of simulation for uvm_test_top
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(121) @ 0: uvm_test_top.env.scoreboard [SB_RESET] Reset detected! Clearing all queues...
 # UVM_INFO ../tb/uart_virseqs.sv(21) @ 0: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [vseq_rx_rts_flow_control] raise objection
-# UVM_INFO ../tb/uart_virseqs.sv(1248) @ 0: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_TEST] === STARTING RTS FLOW CONTROL TEST (READY & BUSY) ===
+# UVM_INFO ../tb/uart_virseqs.sv(1250) @ 0: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_TEST] === STARTING RTS FLOW CONTROL TEST (READY & BUSY) ===
 # UVM_INFO ../uart_uvc/uart_driver.sv(33) @ 100000: uvm_test_top.env.uart_uvcc.agent.driver [uart_driver] Reset released. UART Driver started.
-# UVM_INFO ../uart_uvc/uart_monitor.sv(36) @ 100000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_monitor] Monitor started.
+# UVM_INFO ../uart_uvc/uart_coverage_monitor.sv(95) @ 100000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_coverage_monitor] Coverage Monitor started.
 # UVM_INFO ../apb_uvc/apb_driver.sv(35) @ 100000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Reset released, APB Driver active
-# UVM_INFO ../tb/uart_virseqs.sv(1259) @ 110000: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_PASS] 
+# UVM_INFO ../tb/uart_virseqs.sv(1261) @ 110000: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_PASS] 
 # ======================== RTS correctly high (Busy/Not Init) after reset. ========================
-# UVM_INFO ../tb/uart_virseqs.sv(66) @ 110000: uvm_test_top.env.vir_seqr@@config_vseq [VSEQ] Configuring System using shared object from Test...
-# UVM_INFO ../apb_uvc/apb_seqs.sv(62) @ 110000: uvm_test_top.env.apb_uvcc.agent.sequencer@@apb_seq [APB_WR_SEQ] Writing Config to DUT: 0x0000001b 
-#  (DATA_8BIT, PARITY_EN, PARITY_EVEN, STOP_1BIT)
-# UVM_INFO ../apb_uvc/apb_monitor.sv(52) @ 170000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Updating UART Configuration
+# UVM_INFO ../tb/uart_virseqs.sv(67) @ 110000: uvm_test_top.env.vir_seqr@@config_vseq [VSEQ] Configuring System using shared object from Test...
+# UVM_INFO ../apb_uvc/apb_seqs.sv(62) @ 110000: uvm_test_top.env.apb_uvcc.agent.sequencer@@apb_seq [APB_WR_SEQ] Writing Config to DUT: 0x0000000b 
+#  (DATA_8BIT, PARITY_EN, PARITY_ODD, STOP_1BIT)
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 170000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # --------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                            
 # --------------------------------------------------------------------------------------------------------
 # req                            apb_transaction   -     @1099                                            
 #   paddr                        integral          12    'h8                                              
-#   pwdata                       integral          32    'h1b                                             
+#   pwdata                       integral          32    'hb                                              
 #   pwrite                       integral          1     'h1                                              
 #   pstrb                        integral          4     'h1                                              
 #   prdata                       integral          32    'h0xxxxxxxx                                      
@@ -158,80 +153,131 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer        
 # --------------------------------------------------------------------------------------------------------
 # 
-# UVM_INFO ../tb/uart_virseqs.sv(74) @ 170000: uvm_test_top.env.vir_seqr@@config_vseq [VSEQ] Activating UART Driver for RX path
-# UVM_INFO ../uart_uvc/uart_seqs.sv(55) @ 170000: uvm_test_top.env.uart_uvcc.agent.sequencer@@uart_seq [UART_CONFIG_FRAME_SEQ] Driving UART Transaction based on Shared Config
-# UVM_INFO ../uart_uvc/uart_driver.sv(58) @ 170000: uvm_test_top.env.uart_uvcc.agent.driver [uart_driver] 
-#####===Driving Trans: DATA=0xd2,DATA_8BIT, STOP_1BIT, PARITY_EN, PARITY_EVEN===#####
-# UVM_ERROR ../tb/apb_uart_scoreboard.sv(232) @ 180000: uvm_test_top.env.scoreboard [SB_CFG_HDL] CFG mismatch!
-#   DUT: data_bit_num=0 stop_bit_num=0 parity_en=0 parity_type=0
-#   CFG: data_bit_num=3 stop_bit_num=0 parity_en=1 parity_type=1
-# UVM_INFO ../apb_uvc/apb_monitor.sv(52) @ 190000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Updating UART Configuration
-# UVM_ERROR ../tb/apb_uart_scoreboard.sv(232) @ 200000: uvm_test_top.env.scoreboard [SB_CFG_HDL] CFG mismatch!
-#   DUT: data_bit_num=0 stop_bit_num=0 parity_en=0 parity_type=0
-#   CFG: data_bit_num=3 stop_bit_num=0 parity_en=1 parity_type=1
-# UVM_ERROR ../tb/uart_virseqs.sv(1296) @ 21811000: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_FAIL] 
-# ======================== DUT BUG: RTS is 0 (Ready) while receiving frame! ========================
-# UVM_INFO ../tb/apb_uart_scoreboard.sv(98) @ 95650000: uvm_test_top.env.scoreboard [SB_UART] UART RX queued: 0xd2
-# UVM_INFO ../uart_uvc/uart_monitor.sv(131) @ 95650000: uvm_test_top.env.uart_uvcc.agent.monitor [MON_RX] DATA is monitored from RX: 0xd2
-# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 113070000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(94) @ 170000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Updating UART Configuration
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(112) @ 170000: uvm_test_top.env.scoreboard [SB_CFG_SYNC] Config updated via APB: DATA_8BIT, STOP_1BIT
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(335) @ 180000: uvm_test_top.env.scoreboard [SB_CFG_HDL] 
+# ============CFG Backdoor check PASSED============
+# UVM_INFO ../tb/uart_virseqs.sv(77) @ 370000: uvm_test_top.env.vir_seqr@@config_vseq [VSEQ] Activating UART Driver for RX path
+# UVM_INFO ../uart_uvc/uart_seqs.sv(55) @ 370000: uvm_test_top.env.uart_uvcc.agent.sequencer@@uart_seq [UART_CONFIG_FRAME_SEQ] Driving UART Transaction based on Shared Config
+# UVM_INFO ../uart_uvc/uart_driver.sv(58) @ 370000: uvm_test_top.env.uart_uvcc.agent.driver [uart_driver] 
+#####===Driving Trans: DATA=0xe3,DATA_8BIT, STOP_1BIT, PARITY_EN, PARITY_ODD===#####
+# UVM_INFO ../tb/uart_virseqs.sv(1296) @ 21811000: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_PASS] 
+# ======================== RTS is 1 (Busy) while receiving data. ========================
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(144) @ 95850000: uvm_test_top.env.scoreboard [SB_UART] UART RX queued: 0xe3
+# UVM_INFO ../uart_uvc/uart_coverage_monitor.sv(191) @ 95850000: uvm_test_top.env.uart_uvcc.agent.monitor [MON_RX] DATA is monitored from RX: 0xe3
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 113270000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                                          
 # ----------------------------------------------------------------------------------------------------------------------
-# req                            apb_transaction   -     @1141                                                          
+# req                            apb_transaction   -     @1137                                                          
 #   paddr                        integral          12    'h4                                                            
-#   pwdata                       integral          32    'h5435e906                                                     
+#   pwdata                       integral          32    'hc44d90e1                                                     
 #   pwrite                       integral          1     'h0                                                            
-#   pstrb                        integral          4     'h0                                                            
-#   prdata                       integral          32    'h0                                                            
+#   pstrb                        integral          4     'h1                                                            
+#   prdata                       integral          32    'he3                                                           
 #   pslverr                      integral          1     'h0X                                                           
 #   addr_type                    addr_test_type_e  32    ADDR_RO                                                        
-#   write_true_flase             write_quality_e   32    WRITE_ADDR_FALSE                                               
-#   begin_time                   time              64    113030000                                                      
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                                
+#   begin_time                   time              64    113230000                                                      
 #   depth                        int               32    'd3                                                            
 #   parent sequence (name)       string            12    apb_read_seq                                                   
 #   parent sequence (full name)  string            63    uvm_test_top.env.vir_seqr.vseq_rx_rts_flow_control.apb_read_seq
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer                      
 # ----------------------------------------------------------------------------------------------------------------------
 # 
-# UVM_INFO ../apb_uvc/apb_seqs.sv(121) @ 113070000: uvm_test_top.env.apb_uvcc.agent.sequencer@@vseq_rx_rts_flow_control.apb_read_seq [APB_RX_SEQ] Read RX with DATA: 00000000
-# UVM_INFO ../tb/apb_uart_scoreboard.sv(73) @ 113070000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0x00
-# UVM_INFO ../tb/apb_uart_scoreboard.sv(202) @ 113070000: uvm_test_top.env.scoreboard [SB_RX] Match UART_RX == APB<-RXDATA == 0x00 (bits=8)
-# UVM_ERROR ../tb/uart_virseqs.sv(1326) @ 113170000: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_FAIL] 
-# ======================== RTS stayed 1 (Busy) even after data was read! ========================
-# UVM_INFO ../tb/uart_virseqs.sv(66) @ 113170000: uvm_test_top.env.vir_seqr@@config_vseq [VSEQ] Configuring System using shared object from Test...
-# UVM_INFO ../apb_uvc/apb_seqs.sv(62) @ 113170000: uvm_test_top.env.apb_uvcc.agent.sequencer@@apb_seq [APB_WR_SEQ] Writing Config to DUT: 0x0000001b 
-#  (DATA_8BIT, PARITY_EN, PARITY_EVEN, STOP_1BIT)
-# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 113230000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(96) @ 113270000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0xe3
+# UVM_INFO ../apb_uvc/apb_seqs.sv(121) @ 113270000: uvm_test_top.env.apb_uvcc.agent.sequencer@@vseq_rx_rts_flow_control.apb_read_seq [APB_RX_SEQ] Read RX with DATA: 11100011
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(250) @ 113270000: uvm_test_top.env.scoreboard [SB_RX] 
+# Match UART_RX == APB<-RXDATA == 0xe3 (bits=8)
+# UVM_INFO ../tb/uart_virseqs.sv(1326) @ 113370000: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_PASS] 
+# ======================== RTS dropped to 0 (Ready) after APB Read completed. ========================
+# UVM_INFO ../tb/uart_virseqs.sv(67) @ 113370000: uvm_test_top.env.vir_seqr@@config_vseq [VSEQ] Configuring System using shared object from Test...
+# UVM_INFO ../apb_uvc/apb_seqs.sv(62) @ 113370000: uvm_test_top.env.apb_uvcc.agent.sequencer@@apb_seq [APB_WR_SEQ] Writing Config to DUT: 0x0000000b 
+#  (DATA_8BIT, PARITY_EN, PARITY_ODD, STOP_1BIT)
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 113430000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # --------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                            
 # --------------------------------------------------------------------------------------------------------
-# req                            apb_transaction   -     @1154                                            
+# req                            apb_transaction   -     @1150                                            
 #   paddr                        integral          12    'h8                                              
-#   pwdata                       integral          32    'h1b                                             
+#   pwdata                       integral          32    'hb                                              
 #   pwrite                       integral          1     'h1                                              
 #   pstrb                        integral          4     'h1                                              
 #   prdata                       integral          32    'h0xxxxxxxx                                      
 #   pslverr                      integral          1     'h0X                                             
 #   addr_type                    addr_test_type_e  32    ADDR_VALID                                       
-#   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                  
-#   begin_time                   time              64    113190000                                        
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_FALSE                                 
+#   begin_time                   time              64    113390000                                        
 #   depth                        int               32    'd2                                              
 #   parent sequence (name)       string            7     apb_seq                                          
 #   parent sequence (full name)  string            49    uvm_test_top.env.apb_uvcc.agent.sequencer.apb_seq
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer        
 # --------------------------------------------------------------------------------------------------------
 # 
-# UVM_INFO ../tb/uart_virseqs.sv(74) @ 113230000: uvm_test_top.env.vir_seqr@@config_vseq [VSEQ] Activating UART Driver for RX path
-# UVM_INFO ../uart_uvc/uart_seqs.sv(55) @ 113230000: uvm_test_top.env.uart_uvcc.agent.sequencer@@uart_seq [UART_CONFIG_FRAME_SEQ] Driving UART Transaction based on Shared Config
-# UVM_INFO ../apb_uvc/apb_monitor.sv(52) @ 113230000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Updating UART Configuration
-# UVM_INFO ../uart_uvc/uart_driver.sv(58) @ 113230000: uvm_test_top.env.uart_uvcc.agent.driver [uart_driver] 
-#####===Driving Trans: DATA=0x08,DATA_8BIT, STOP_1BIT, PARITY_EN, PARITY_EVEN===#####
-# UVM_ERROR ../tb/apb_uart_scoreboard.sv(232) @ 113240000: uvm_test_top.env.scoreboard [SB_CFG_HDL] CFG mismatch!
-#   DUT: data_bit_num=0 stop_bit_num=0 parity_en=0 parity_type=0
-#   CFG: data_bit_num=3 stop_bit_num=0 parity_en=1 parity_type=1
-# Break key hit
-# Simulation stop requested.
-#  quit
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(94) @ 113430000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Updating UART Configuration
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(112) @ 113430000: uvm_test_top.env.scoreboard [SB_CFG_SYNC] Config updated via APB: DATA_8BIT, STOP_1BIT
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(335) @ 113440000: uvm_test_top.env.scoreboard [SB_CFG_HDL] 
+# ============CFG Backdoor check PASSED============
+# UVM_INFO ../tb/uart_virseqs.sv(77) @ 113630000: uvm_test_top.env.vir_seqr@@config_vseq [VSEQ] Activating UART Driver for RX path
+# UVM_INFO ../uart_uvc/uart_seqs.sv(55) @ 113630000: uvm_test_top.env.uart_uvcc.agent.sequencer@@uart_seq [UART_CONFIG_FRAME_SEQ] Driving UART Transaction based on Shared Config
+# UVM_INFO ../uart_uvc/uart_driver.sv(58) @ 113630000: uvm_test_top.env.uart_uvcc.agent.driver [uart_driver] 
+#####===Driving Trans: DATA=0xa6,DATA_8BIT, STOP_1BIT, PARITY_EN, PARITY_ODD===#####
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(144) @ 209110000: uvm_test_top.env.scoreboard [SB_UART] UART RX queued: 0xa6
+# UVM_INFO ../uart_uvc/uart_coverage_monitor.sv(191) @ 209110000: uvm_test_top.env.uart_uvcc.agent.monitor [MON_RX] DATA is monitored from RX: 0xa6
+# UVM_INFO ../tb/uart_virseqs.sv(1333) @ 209121000: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [RTS_TEST] === RTS FLOW CONTROL TEST COMPLETED ===
+# UVM_INFO ../tb/uart_virseqs.sv(35) @ 219121000: uvm_test_top.env.vir_seqr@@vseq_rx_rts_flow_control [vseq_rx_rts_flow_control] drop objection
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 319121000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO ../apb_uvc/apb_driver.sv(75) @ 319121000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Report: APB Driver sent 3 transactions
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(118) @ 319121000: uvm_test_top.env.apb_uvcc.agent.monitor [apb_coverage_monitor] Report: APB Monitor Collected 3 Transactions
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(341) @ 319121000: uvm_test_top.env.scoreboard [SB_REPORT] 
+# --- APB-UART Scoreboard ---
+# CFG backdoor: OK=2 BAD=0
+# TX compare : MATCH=0 MIS=0
+# RX compare : MATCH=1 MIS=0
+# --------------------------
+# UVM_INFO ../uart_uvc/uart_coverage_monitor.sv(196) @ 319121000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_coverage_monitor] Report: UART Monitor Collected 2 Transactions
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :   58
+# UVM_WARNING :    0
+# UVM_ERROR :    0
+# UVM_FATAL :    0
+# ** Report counts by id
+# [APB_RX_SEQ]     1
+# [APB_UART_ENVIRONMENT]     1
+# [APB_WR_SEQ]     2
+# [MON]     2
+# [MON_RX]     2
+# [Questa UVM]     3
+# [RNTST]     1
+# [RTS_PASS]     3
+# [RTS_TEST]     2
+# [SB_APB]     1
+# [SB_CFG_HDL]     2
+# [SB_CFG_SYNC]     2
+# [SB_REPORT]     1
+# [SB_RESET]     1
+# [SB_RX]     1
+# [SB_UART]     2
+# [TEST_DONE]     1
+# [UART_CONFIG_FRAME_SEQ]     2
+# [UVMTOP]     1
+# [VSEQ]     4
+# [apb_agent]     1
+# [apb_coverage_monitor]     2
+# [apb_driver]     6
+# [apb_sequencer]     1
+# [apb_uvc]     1
+# [test_rx_rts_dynamic]     2
+# [uart_agent]     2
+# [uart_coverage_monitor]     2
+# [uart_driver]     3
+# [uart_sequencer]     1
+# [vseq_rx_rts_flow_control]     2
+# ** Note: $finish    : /home/viethung/tools/Questasim/questasim/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
+#    Time: 319121 ns  Iteration: 53  Instance: /tb_top
 # Saving coverage database on exit...
-# End time: 19:53:07 on Jan 26,2026, Elapsed time: 0:00:32
+# End time: 00:29:03 on Jan 27,2026, Elapsed time: 0:00:03
 # Errors: 0, Warnings: 0

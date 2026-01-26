@@ -41,7 +41,8 @@ class base_test extends uvm_test;
     // Drain time: Thời gian chờ thêm sau khi sequence kết thúc.
     // UART Baud 115200 -> 1 bit ~ 8.6us. 
     uvm_objection obj = phase.get_objection();
-    obj.set_drain_time(this, 150us); 
+    // obj.set_drain_time(this, 150us); 
+    obj.set_drain_time(this, 100_000_000); 
   endtask : run_phase
 
   function void check_phase(uvm_phase phase);

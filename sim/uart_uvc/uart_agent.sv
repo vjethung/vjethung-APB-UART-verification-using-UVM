@@ -5,7 +5,8 @@ class uart_agent extends uvm_agent;
 
     uart_driver    driver;
     uart_sequencer sequencer;
-    uart_monitor   monitor; 
+    // uart_monitor   monitor; 
+    uart_coverage_monitor monitor;
 
     function new(string name, uvm_component parent);
       super.new(name, parent);
@@ -26,8 +27,10 @@ class uart_agent extends uvm_agent;
             is_active = UVM_ACTIVE;
         end
 
-        monitor = uart_monitor::type_id::create("monitor", this);
-        
+        // monitor = uart_monitor::type_id::create("monitor", this);
+        monitor = uart_coverage_monitor::type_id::create("monitor", this);
+    
+
         if (get_is_active() == UVM_ACTIVE) begin
           sequencer = uart_sequencer::type_id::create("sequencer", this);
           driver    = uart_driver::type_id::create("driver", this); 

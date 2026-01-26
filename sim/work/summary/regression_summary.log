@@ -1,0 +1,19 @@
+==========================================================================================================
+Test Name                      | Status   | Error  | Fatal  | APB Trans  | UART Trans | Seed         | Sim Time  
+simple_test                    | PASS     | 0      | 0      | 1          | 1          | 3197427329   | Time:     
+test_send_N_frame              | PASS     | 0      | 0      | 232        | 58         | 4019510815   | Time:     
+test_received_N_frame          | PASS     | 0      | 0      | 36         | 18         | 1930747519   | Time:     
+test_N_parity_error            | PASS     | 0      | 0      | 177        | 59         | 156556634    | Time:     
+test_check_reset               | PASS     | 0      | 0      | 0          | 0          | 2792678324   | Time:     
+test_rxdata_write_ignored      | PASS     | 0      | 0      | 9          | 0          | 2819941460   | Time:     
+test_cfg_wr_rd_check           | PASS     | 0      | 0      | 2          | 0          | 3178554492   | Time:     
+test_txdata_no_side_effect     | PASS     | 0      | 0      | 5          | 0          | 867493826    | Time:     
+test_send_TX_sweep_all_cfg_32  | PASS     | 0      | 0      | 128        | 32         | 3553944759   | Time:     
+test_receive_RX_sweep_all_cfg_32 | FAIL     | 0      | 1      | 0          | 0          | 760538486    | Time:     
+test_tx_basic                  | PASS     | 0      | 0      | 4          | 1          | 112520087    | Time:     
+test_cts_asserted              | PASS     | 0      | 0      | 4          | 1          | 3646221007   | Time:     
+test_cts_deasserted            | PASS     | 0      | 0      | 2          | 0          | 2561993205   | Time:     
+test_tx_done_pulse             | FAIL     | 1      | 0      | 2          | 1          | 2635394716   | Time:     
+test_rx_rts_dynamic            | PASS     | 0      | 0      | 3          | 2          | 479522614    | Time:     
+TOTAL TESTS: 15 | PASSED: 13 | FAILED: 2 | PASS RATE: 86.66%
+==========================================================================================================

@@ -1,0 +1,304 @@
+# vsim -c tb_top hw_top -wlf vsim.wlf -sv_seed random -solvefaildebug -assertdebug -sva -coverage -voptargs="+acc" -l ./log/vsim.log "+UVM_VERBOSITY=UVM_HIGH" "+UVM_TESTNAME=test_txdata_no_side_effect" -sv_lib uvm_dpi -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; log -r /*; run -all; quit" 
+# Start time: 00:28:16 on Jan 27,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-143) Recognized 2 FSMs in module "uart(fast)".
+# //  Questa Sim-64
+# //  Version 10.7c linux_x86_64 Aug 17 2018
+# //
+# //  Copyright 1991-2018 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.apb_if(fast)
+# Loading work.uart_if(fast)
+# Loading mtiUvm.uvm_pkg
+# Loading work.uart_common_pkg(fast)
+# Loading work.uart_pkg(fast)
+# Loading work.apb_pkg(fast)
+# Loading work.uart_tb_pkg(fast)
+# Loading work.tb_top(fast)
+# Loading work.hw_top(fast)
+# Loading work.apb_if_sv_unit(fast)
+# Loading work.apb_if(fast)
+# Loading work.uart_if_sv_unit(fast)
+# Loading work.uart_if(fast)
+# Loading work.uart(fast)
+# Loading mtiUvm.questa_uvm_pkg(fast)
+# Loading ./uvm_dpi.so
+# Sv_Seed = 867493826
+# coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb
+#  log -r /*
+#  run -all
+# ----------------------------------------------------------------
+# UVM-1.1d
+# (C) 2007-2013 Mentor Graphics Corporation
+# (C) 2007-2013 Cadence Design Systems, Inc.
+# (C) 2006-2013 Synopsys, Inc.
+# (C) 2011-2013 Cypress Semiconductor Corp.
+# ----------------------------------------------------------------
+# 
+#   ***********       IMPORTANT RELEASE NOTES         ************
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_NO_DEPRECATED undefined.
+#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_OBJECT_MUST_HAVE_CONSTRUCTOR undefined.
+#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
+# 
+#       (Specify +UVM_NO_RELNOTES to turn off this notice)
+# 
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(215) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(216) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
+# UVM_INFO @ 0: reporter [RNTST] Running test test_txdata_no_side_effect...
+# UVM_INFO ../tb/apb_uart_testlib.sv(303) @ 0: uvm_test_top [TEST] 
+####======================== TEST VALUE OF REGISTER ========================#####
+# UVM_INFO ../tb/apb_uart_env.sv(17) @ 0: uvm_test_top.env [APB_UART_ENVIRONMENT] The env is being build phase
+# UVM_INFO ../tb/apb_uart_testlib.sv(32) @ 0: uvm_test_top [test_txdata_no_side_effect] Printing topology:
+# UVM_INFO @ 0: reporter [UVMTOP] UVM testbench topology:
+# ---------------------------------------------------------------------------
+# Name                           Type                        Size  Value     
+# ---------------------------------------------------------------------------
+# uvm_test_top                   test_txdata_no_side_effect  -     @476      
+#   env                          apb_uart_env                -     @494      
+#     apb_uvcc                   apb_uvc                     -     @502      
+#       agent                    apb_agent                   -     @652      
+#         driver                 apb_driver                  -     @787      
+#           rsp_port             uvm_analysis_port           -     @802      
+#           seq_item_port        uvm_seq_item_pull_port      -     @794      
+#           num_trans            integral                    32    'h0       
+#         monitor                apb_coverage_monitor        -     @663      
+#           item_collected_port  uvm_analysis_port           -     @670      
+#           num_trans_col        integral                    32    'h0       
+#           coverage_control     cover_e                     1     COV_ENABLE
+#         sequencer              apb_sequencer               -     @678      
+#           rsp_export           uvm_analysis_export         -     @685      
+#           seq_item_export      uvm_seq_item_pull_imp       -     @779      
+#           arbitration_queue    array                       0     -         
+#           lock_queue           array                       0     -         
+#           num_last_reqs        integral                    32    'd1       
+#           num_last_rsps        integral                    32    'd1       
+#         is_active              uvm_active_passive_enum     1     UVM_ACTIVE
+#     scoreboard                 apb_uart_scoreboard         -     @516      
+#       apb_port                 uvm_analysis_imp_apb        -     @523      
+#       uart_port                uvm_analysis_imp_uart       -     @531      
+#     uart_uvcc                  uart_uvc                    -     @509      
+#       agent                    uart_agent                  -     @825      
+#         driver                 uart_driver                 -     @958      
+#           rsp_port             uvm_analysis_port           -     @973      
+#           seq_item_port        uvm_seq_item_pull_port      -     @965      
+#         monitor                uart_coverage_monitor       -     @834      
+#           item_collected_port  uvm_analysis_port           -     @841      
+#         sequencer              uart_sequencer              -     @849      
+#           rsp_export           uvm_analysis_export         -     @856      
+#           seq_item_export      uvm_seq_item_pull_imp       -     @950      
+#           arbitration_queue    array                       0     -         
+#           lock_queue           array                       0     -         
+#           num_last_reqs        integral                    32    'd1       
+#           num_last_rsps        integral                    32    'd1       
+#     vir_seqr                   uart_virsequencer           -     @539      
+#       rsp_export               uvm_analysis_export         -     @546      
+#       seq_item_export          uvm_seq_item_pull_imp       -     @640      
+#       arbitration_queue        array                       0     -         
+#       lock_queue               array                       0     -         
+#       num_last_reqs            integral                    32    'd1       
+#       num_last_rsps            integral                    32    'd1       
+# ---------------------------------------------------------------------------
+# 
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] End Of Elaboration
+# UVM_INFO ../apb_uvc/apb_driver.sv(22) @ 0: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Start of simulation for uvm_test_top.env.apb_uvcc.agent.driver
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(71) @ 0: uvm_test_top.env.apb_uvcc.agent.monitor [apb_coverage_monitor] Start of simulation for uvm_test_top.env.apb_uvcc.agent.monitor
+# UVM_INFO ../apb_uvc/apb_sequencer.sv(11) @ 0: uvm_test_top.env.apb_uvcc.agent.sequencer [apb_sequencer] start of simulation for uvm_test_top.env.apb_uvcc.agent.sequencer
+# UVM_INFO ../apb_uvc/apb_agent.sv(35) @ 0: uvm_test_top.env.apb_uvcc.agent [apb_agent] Start of simulation for uvm_test_top.env.apb_uvcc.agent
+# UVM_INFO ../apb_uvc/apb_uvc.sv(19) @ 0: uvm_test_top.env.apb_uvcc [apb_uvc] Start of simulation for uvm_test_top.env.apb_uvcc
+# UVM_INFO ../uart_uvc/uart_sequencer.sv(10) @ 0: uvm_test_top.env.uart_uvcc.agent.sequencer [uart_sequencer] start of simulation for uvm_test_top.env.uart_uvcc.agent.sequencer
+# UVM_INFO ../uart_uvc/uart_agent.sv(48) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Start of simulation for uvm_test_top.env.uart_uvcc.agent
+# UVM_INFO ../uart_uvc/uart_agent.sv(49) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Agent started in UVM_ACTIVE mode.
+# UVM_INFO ../tb/apb_uart_testlib.sv(37) @ 0: uvm_test_top [test_txdata_no_side_effect] start of simulation for uvm_test_top
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(121) @ 0: uvm_test_top.env.scoreboard [SB_RESET] Reset detected! Clearing all queues...
+# UVM_INFO ../tb/uart_virseqs.sv(21) @ 0: uvm_test_top.env.vir_seqr@@vseq_txdata_no_side_effect [vseq_txdata_no_side_effect] raise objection
+# UVM_INFO ../tb/uart_virseqs.sv(750) @ 0: uvm_test_top.env.vir_seqr@@vseq_txdata_no_side_effect [VSEQ_SIDEFX] === START: write 0x0, check 0x4/0x8 unchanged ===
+# UVM_INFO ../apb_uvc/apb_seqs.sv(156) @ 0: uvm_test_top.env.apb_uvcc.agent.sequencer@@rd_rx_before [apb_read_reg_seq] READ REG [0x004]
+# UVM_INFO ../uart_uvc/uart_driver.sv(33) @ 100000: uvm_test_top.env.uart_uvcc.agent.driver [uart_driver] Reset released. UART Driver started.
+# UVM_INFO ../uart_uvc/uart_coverage_monitor.sv(95) @ 100000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_coverage_monitor] Coverage Monitor started.
+# UVM_INFO ../apb_uvc/apb_driver.sv(35) @ 100000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Reset released, APB Driver active
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 150000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# -------------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                                 
+# -------------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @1013                                                 
+#   paddr                        integral          12    'h4                                                   
+#   pwdata                       integral          32    'h84bc2da8                                            
+#   pwrite                       integral          1     'h0                                                   
+#   pstrb                        integral          4     'h0                                                   
+#   prdata                       integral          32    'h0xxxxxxxx                                           
+#   pslverr                      integral          1     'h0X                                                  
+#   addr_type                    addr_test_type_e  32    ADDR_RO                                               
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                       
+#   begin_time                   time              64    110000                                                
+#   depth                        int               32    'd2                                                   
+#   parent sequence (name)       string            12    rd_rx_before                                          
+#   parent sequence (full name)  string            54    uvm_test_top.env.apb_uvcc.agent.sequencer.rd_rx_before
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer             
+# -------------------------------------------------------------------------------------------------------------
+# 
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(96) @ 150000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0xxx
+# UVM_INFO ../apb_uvc/apb_seqs.sv(164) @ 150000: uvm_test_top.env.apb_uvcc.agent.sequencer@@rd_rx_before [apb_read_reg_seq] READ REG [0x004] -> 0xxxxxxxxx
+# UVM_INFO ../apb_uvc/apb_seqs.sv(156) @ 150000: uvm_test_top.env.apb_uvcc.agent.sequencer@@rd_cfg_before [apb_read_reg_seq] READ REG [0x008]
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 210000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# --------------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                                  
+# --------------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @1106                                                  
+#   paddr                        integral          12    'h8                                                    
+#   pwdata                       integral          32    'hbd2e654c                                             
+#   pwrite                       integral          1     'h0                                                    
+#   pstrb                        integral          4     'h1                                                    
+#   prdata                       integral          32    'h0xxxxxxX0                                            
+#   pslverr                      integral          1     'h0X                                                   
+#   addr_type                    addr_test_type_e  32    ADDR_VALID                                             
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                        
+#   begin_time                   time              64    170000                                                 
+#   depth                        int               32    'd2                                                    
+#   parent sequence (name)       string            13    rd_cfg_before                                          
+#   parent sequence (full name)  string            55    uvm_test_top.env.apb_uvcc.agent.sequencer.rd_cfg_before
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer              
+# --------------------------------------------------------------------------------------------------------------
+# 
+# UVM_INFO ../apb_uvc/apb_seqs.sv(164) @ 210000: uvm_test_top.env.apb_uvcc.agent.sequencer@@rd_cfg_before [apb_read_reg_seq] READ REG [0x008] -> 0xxxxxxxX0
+# UVM_INFO ../apb_uvc/apb_seqs.sv(181) @ 210000: uvm_test_top.env.apb_uvcc.agent.sequencer@@wr_txdata [apb_write_reg_seq] WRITE REG [0x000] = 0x000000a5 strb=0x1
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 270000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# ----------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                              
+# ----------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @1118                                              
+#   paddr                        integral          12    'h0                                                
+#   pwdata                       integral          32    'ha5                                               
+#   pwrite                       integral          1     'h1                                                
+#   pstrb                        integral          4     'h1                                                
+#   prdata                       integral          32    'h0xxxxxxxx                                        
+#   pslverr                      integral          1     'h0X                                               
+#   addr_type                    addr_test_type_e  32    ADDR_VALID                                         
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                    
+#   begin_time                   time              64    230000                                             
+#   depth                        int               32    'd2                                                
+#   parent sequence (name)       string            9     wr_txdata                                          
+#   parent sequence (full name)  string            51    uvm_test_top.env.apb_uvcc.agent.sequencer.wr_txdata
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
+# ----------------------------------------------------------------------------------------------------------
+# 
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(93) @ 270000: uvm_test_top.env.apb_uvcc.agent.monitor [MON] Writing TX Data: 0xa5
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(89) @ 270000: uvm_test_top.env.scoreboard [SB_APB] APB->TXDATA queued: 0xa5
+# UVM_INFO ../apb_uvc/apb_seqs.sv(156) @ 270000: uvm_test_top.env.apb_uvcc.agent.sequencer@@rd_rx_after [apb_read_reg_seq] READ REG [0x004]
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 330000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# ------------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                                
+# ------------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @1130                                                
+#   paddr                        integral          12    'h4                                                  
+#   pwdata                       integral          32    'habc213cc                                           
+#   pwrite                       integral          1     'h0                                                  
+#   pstrb                        integral          4     'h1                                                  
+#   prdata                       integral          32    'h0xx                                                
+#   pslverr                      integral          1     'h0X                                                 
+#   addr_type                    addr_test_type_e  32    ADDR_RO                                              
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_FALSE                                     
+#   begin_time                   time              64    290000                                               
+#   depth                        int               32    'd2                                                  
+#   parent sequence (name)       string            11    rd_rx_after                                          
+#   parent sequence (full name)  string            53    uvm_test_top.env.apb_uvcc.agent.sequencer.rd_rx_after
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer            
+# ------------------------------------------------------------------------------------------------------------
+# 
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(96) @ 330000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0xxx
+# UVM_INFO ../apb_uvc/apb_seqs.sv(164) @ 330000: uvm_test_top.env.apb_uvcc.agent.sequencer@@rd_rx_after [apb_read_reg_seq] READ REG [0x004] -> 0x000000xx
+# UVM_INFO ../apb_uvc/apb_seqs.sv(156) @ 330000: uvm_test_top.env.apb_uvcc.agent.sequencer@@rd_cfg_after [apb_read_reg_seq] READ REG [0x008]
+# UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 390000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
+# -------------------------------------------------------------------------------------------------------------
+# Name                           Type              Size  Value                                                 
+# -------------------------------------------------------------------------------------------------------------
+# req                            apb_transaction   -     @1142                                                 
+#   paddr                        integral          12    'h8                                                   
+#   pwdata                       integral          32    'h4f58b589                                            
+#   pwrite                       integral          1     'h0                                                   
+#   pstrb                        integral          4     'h1                                                   
+#   prdata                       integral          32    'ha0                                                  
+#   pslverr                      integral          1     'h0X                                                  
+#   addr_type                    addr_test_type_e  32    ADDR_VALID                                            
+#   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                       
+#   begin_time                   time              64    350000                                                
+#   depth                        int               32    'd2                                                   
+#   parent sequence (name)       string            12    rd_cfg_after                                          
+#   parent sequence (full name)  string            54    uvm_test_top.env.apb_uvcc.agent.sequencer.rd_cfg_after
+#   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer             
+# -------------------------------------------------------------------------------------------------------------
+# 
+# UVM_INFO ../apb_uvc/apb_seqs.sv(164) @ 390000: uvm_test_top.env.apb_uvcc.agent.sequencer@@rd_cfg_after [apb_read_reg_seq] READ REG [0x008] -> 0x000000a0
+# UVM_INFO ../tb/uart_virseqs.sv(789) @ 390000: uvm_test_top.env.vir_seqr@@vseq_txdata_no_side_effect [VSEQ_SIDEFX] RX_DATA unchanged OK. VAL=0x000000xx
+# UVM_INFO ../tb/uart_virseqs.sv(800) @ 390000: uvm_test_top.env.vir_seqr@@vseq_txdata_no_side_effect [VSEQ_SIDEFX] CFG unchanged OK. VAL=0x000000a0
+# UVM_INFO ../tb/uart_virseqs.sv(805) @ 390000: uvm_test_top.env.vir_seqr@@vseq_txdata_no_side_effect [VSEQ_SIDEFX] === DONE ===
+# UVM_INFO ../tb/uart_virseqs.sv(35) @ 10390000: uvm_test_top.env.vir_seqr@@vseq_txdata_no_side_effect [vseq_txdata_no_side_effect] drop objection
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 110390000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO @ 110390000: uvm_test_top [CFGNRD]  ::: The following resources have at least one write and no reads :::
+# cfg [/^uvm_test_top\.env\.vir_seqr.*$/] : (class uart_common_pkg::apb_uart_config) {cfg} 489 1 1152 @uvm_status_container@1 115200 DATA_6BIT STOP_1BIT PARITY_EN PARITY_ODD MON_NONE GOOD_PARITY COV_DISABLE {apb_uart_config}
+# -  
+#   --------
+#   uvm_test_top.env reads: 0 @ 0  writes: 1 @ 0
+#  
+# UVM_INFO ../apb_uvc/apb_driver.sv(75) @ 110390000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Report: APB Driver sent 5 transactions
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(118) @ 110390000: uvm_test_top.env.apb_uvcc.agent.monitor [apb_coverage_monitor] Report: APB Monitor Collected 5 Transactions
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(341) @ 110390000: uvm_test_top.env.scoreboard [SB_REPORT] 
+# --- APB-UART Scoreboard ---
+# CFG backdoor: OK=0 BAD=0
+# TX compare : MATCH=0 MIS=0
+# RX compare : MATCH=0 MIS=0
+# --------------------------
+# UVM_INFO ../uart_uvc/uart_coverage_monitor.sv(196) @ 110390000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_coverage_monitor] Report: UART Monitor Collected 0 Transactions
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :   51
+# UVM_WARNING :    0
+# UVM_ERROR :    0
+# UVM_FATAL :    0
+# ** Report counts by id
+# [APB_UART_ENVIRONMENT]     1
+# [CFGNRD]     1
+# [MON]     1
+# [Questa UVM]     3
+# [RNTST]     1
+# [SB_APB]     3
+# [SB_REPORT]     1
+# [SB_RESET]     1
+# [TEST]     1
+# [TEST_DONE]     1
+# [UVMTOP]     1
+# [VSEQ_SIDEFX]     4
+# [apb_agent]     1
+# [apb_coverage_monitor]     2
+# [apb_driver]     8
+# [apb_read_reg_seq]     8
+# [apb_sequencer]     1
+# [apb_uvc]     1
+# [apb_write_reg_seq]     1
+# [test_txdata_no_side_effect]     2
+# [uart_agent]     2
+# [uart_coverage_monitor]     2
+# [uart_driver]     1
+# [uart_sequencer]     1
+# [vseq_txdata_no_side_effect]     2
+# ** Note: $finish    : /home/viethung/tools/Questasim/questasim/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
+#    Time: 110390 ns  Iteration: 53  Instance: /tb_top
+# Saving coverage database on exit...
+# End time: 00:28:20 on Jan 27,2026, Elapsed time: 0:00:04
+# Errors: 0, Warnings: 0

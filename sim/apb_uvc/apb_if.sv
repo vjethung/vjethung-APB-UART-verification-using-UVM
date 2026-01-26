@@ -71,8 +71,10 @@ interface apb_if (input logic pclk, input logic presetn);
                                            output logic [3:0]  strobe,
                                            output logic        err);
         // thời điểm Access Phase hoàn tất thành công (PREADY lên cao)
-        wait(psel === 1'b1 && penable === 1'b1 && pready === 1'b1);
-        
+        // wait(psel === 1'b1 && penable === 1'b1 && pready === 1'b1);
+        do begin
+          @(posedge pclk);
+        end while (!(psel === 1'b1 && penable === 1'b1 && pready === 1'b1));
         // monitor_start <= 1'b1; // Trigger cho Monitor recording 
         
         addr     = paddr;
@@ -92,7 +94,7 @@ interface apb_if (input logic pclk, input logic presetn);
             captured_data = prdata; 
         end
 
-        @(posedge pclk); 
+        // @(posedge pclk); 
         // monitor_start <= 1'b0; // Tắt trigger 
     endtask
 

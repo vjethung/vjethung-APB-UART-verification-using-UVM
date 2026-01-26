@@ -1,8 +1,7 @@
 # vsim -c tb_top hw_top -wlf vsim.wlf -sv_seed random -solvefaildebug -assertdebug -sva -coverage -voptargs="+acc" -l ./log/vsim.log "+UVM_VERBOSITY=UVM_HIGH" "+UVM_TESTNAME=test_rxdata_write_ignored" -sv_lib uvm_dpi -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; log -r /*; run -all; quit" 
-# Start time: 19:50:12 on Jan 26,2026
+# Start time: 00:28:03 on Jan 27,2026
 # ** Note: (vsim-3812) Design is being optimized...
-# ** Note: (vopt-143) Recognized 1 FSM in module "uart_tx(fast)".
-# ** Note: (vopt-143) Recognized 1 FSM in module "uart_rx(fast)".
+# ** Note: (vopt-143) Recognized 2 FSMs in module "uart(fast)".
 # //  Questa Sim-64
 # //  Version 10.7c linux_x86_64 Aug 17 2018
 # //
@@ -31,15 +30,10 @@
 # Loading work.apb_if(fast)
 # Loading work.uart_if_sv_unit(fast)
 # Loading work.uart_if(fast)
-# Loading work.uart_DUT_4(fast)
-# Loading work.apb_slave(fast)
-# Loading work.register_block(fast)
-# Loading work.uart_tx(fast)
-# Loading work.bclk_gen(fast)
-# Loading work.uart_rx(fast)
+# Loading work.uart(fast)
 # Loading mtiUvm.questa_uvm_pkg(fast)
 # Loading ./uvm_dpi.so
-# Sv_Seed = 1104004114
+# Sv_Seed = 2819941460
 # coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb
 #  log -r /*
 #  run -all
@@ -66,10 +60,9 @@
 # UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(215) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
 # UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(216) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
 # UVM_INFO @ 0: reporter [RNTST] Running test test_rxdata_write_ignored...
-# UVM_INFO ../tb/apb_uart_testlib.sv(262) @ 0: uvm_test_top [TEST] 
+# UVM_INFO ../tb/apb_uart_testlib.sv(264) @ 0: uvm_test_top [TEST] 
 ####======================== TEST VALUE OF REGISTER ========================#####
 # UVM_INFO ../tb/apb_uart_env.sv(17) @ 0: uvm_test_top.env [APB_UART_ENVIRONMENT] The env is being build phase
-# UVM_INFO ../uart_uvc/uart_agent.sv(24) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Agent set to PASSIVE (TX Only monitoring)
 # UVM_INFO ../tb/apb_uart_testlib.sv(32) @ 0: uvm_test_top [test_rxdata_write_ignored] Printing topology:
 # UVM_INFO @ 0: reporter [UVMTOP] UVM testbench topology:
 # --------------------------------------------------------------------------
@@ -83,9 +76,10 @@
 #           rsp_port             uvm_analysis_port          -     @802      
 #           seq_item_port        uvm_seq_item_pull_port     -     @794      
 #           num_trans            integral                   32    'h0       
-#         monitor                apb_monitor                -     @663      
+#         monitor                apb_coverage_monitor       -     @663      
 #           item_collected_port  uvm_analysis_port          -     @670      
 #           num_trans_col        integral                   32    'h0       
+#           coverage_control     cover_e                    1     COV_ENABLE
 #         sequencer              apb_sequencer              -     @678      
 #           rsp_export           uvm_analysis_export        -     @685      
 #           seq_item_export      uvm_seq_item_pull_imp      -     @779      
@@ -99,8 +93,18 @@
 #       uart_port                uvm_analysis_imp_uart      -     @531      
 #     uart_uvcc                  uart_uvc                   -     @509      
 #       agent                    uart_agent                 -     @825      
-#         monitor                uart_monitor               -     @834      
+#         driver                 uart_driver                -     @958      
+#           rsp_port             uvm_analysis_port          -     @973      
+#           seq_item_port        uvm_seq_item_pull_port     -     @965      
+#         monitor                uart_coverage_monitor      -     @834      
 #           item_collected_port  uvm_analysis_port          -     @841      
+#         sequencer              uart_sequencer             -     @849      
+#           rsp_export           uvm_analysis_export        -     @856      
+#           seq_item_export      uvm_seq_item_pull_imp      -     @950      
+#           arbitration_queue    array                      0     -         
+#           lock_queue           array                      0     -         
+#           num_last_reqs        integral                   32    'd1       
+#           num_last_rsps        integral                   32    'd1       
 #     vir_seqr                   uart_virsequencer          -     @539      
 #       rsp_export               uvm_analysis_export        -     @546      
 #       seq_item_export          uvm_seq_item_pull_imp      -     @640      
@@ -112,28 +116,30 @@
 # 
 # UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] End Of Elaboration
 # UVM_INFO ../apb_uvc/apb_driver.sv(22) @ 0: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Start of simulation for uvm_test_top.env.apb_uvcc.agent.driver
-# UVM_INFO ../apb_uvc/apb_monitor.sv(28) @ 0: uvm_test_top.env.apb_uvcc.agent.monitor [apb_monitor] Start of simulation for uvm_test_top.env.apb_uvcc.agent.monitor
-# UVM_INFO ../apb_uvc/apb_sequencer.sv(10) @ 0: uvm_test_top.env.apb_uvcc.agent.sequencer [apb_sequencer] start of simulation for uvm_test_top.env.apb_uvcc.agent.sequencer
-# UVM_INFO ../apb_uvc/apb_agent.sv(33) @ 0: uvm_test_top.env.apb_uvcc.agent [apb_agent] Start of simulation for uvm_test_top.env.apb_uvcc.agent
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(71) @ 0: uvm_test_top.env.apb_uvcc.agent.monitor [apb_coverage_monitor] Start of simulation for uvm_test_top.env.apb_uvcc.agent.monitor
+# UVM_INFO ../apb_uvc/apb_sequencer.sv(11) @ 0: uvm_test_top.env.apb_uvcc.agent.sequencer [apb_sequencer] start of simulation for uvm_test_top.env.apb_uvcc.agent.sequencer
+# UVM_INFO ../apb_uvc/apb_agent.sv(35) @ 0: uvm_test_top.env.apb_uvcc.agent [apb_agent] Start of simulation for uvm_test_top.env.apb_uvcc.agent
 # UVM_INFO ../apb_uvc/apb_uvc.sv(19) @ 0: uvm_test_top.env.apb_uvcc [apb_uvc] Start of simulation for uvm_test_top.env.apb_uvcc
-# UVM_INFO ../uart_uvc/uart_agent.sv(45) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Start of simulation for uvm_test_top.env.uart_uvcc.agent
-# UVM_INFO ../uart_uvc/uart_agent.sv(46) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Agent started in UVM_PASSIVE mode.
+# UVM_INFO ../uart_uvc/uart_sequencer.sv(10) @ 0: uvm_test_top.env.uart_uvcc.agent.sequencer [uart_sequencer] start of simulation for uvm_test_top.env.uart_uvcc.agent.sequencer
+# UVM_INFO ../uart_uvc/uart_agent.sv(48) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Start of simulation for uvm_test_top.env.uart_uvcc.agent
+# UVM_INFO ../uart_uvc/uart_agent.sv(49) @ 0: uvm_test_top.env.uart_uvcc.agent [uart_agent] Agent started in UVM_ACTIVE mode.
 # UVM_INFO ../tb/apb_uart_testlib.sv(37) @ 0: uvm_test_top [test_rxdata_write_ignored] start of simulation for uvm_test_top
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(121) @ 0: uvm_test_top.env.scoreboard [SB_RESET] Reset detected! Clearing all queues...
 # UVM_INFO ../tb/uart_virseqs.sv(21) @ 0: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [vseq_rxdata_write_ignored] raise objection
-# UVM_INFO ../tb/uart_virseqs.sv(674) @ 0: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [VSEQ_RO] === STARTING SYSTEMATIC RO & UNMAPPED WRITE TEST ===
-# UVM_INFO ../uart_uvc/uart_monitor.sv(36) @ 100000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_monitor] Monitor started.
+# UVM_INFO ../tb/uart_virseqs.sv(677) @ 0: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [VSEQ_RO] === STARTING SYSTEMATIC RO & UNMAPPED WRITE TEST ===
+# UVM_INFO ../uart_uvc/uart_driver.sv(33) @ 100000: uvm_test_top.env.uart_uvcc.agent.driver [uart_driver] Reset released. UART Driver started.
+# UVM_INFO ../uart_uvc/uart_coverage_monitor.sv(95) @ 100000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_coverage_monitor] Coverage Monitor started.
 # UVM_INFO ../apb_uvc/apb_driver.sv(35) @ 100000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Reset released, APB Driver active
-# UVM_INFO ../tb/apb_uart_scoreboard.sv(73) @ 150000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0x00
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 150000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @867                                               
+# tr                             apb_transaction   -     @1008                                              
 #   paddr                        integral          12    'h4                                                
-#   pwdata                       integral          32    'h93eb401c                                         
+#   pwdata                       integral          32    'h2589372b                                         
 #   pwrite                       integral          1     'h0                                                
-#   pstrb                        integral          4     'h0                                                
-#   prdata                       integral          32    'h0                                                
+#   pstrb                        integral          4     'h1                                                
+#   prdata                       integral          32    'h0xxxxxxxx                                        
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_RO                                            
 #   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                    
@@ -144,16 +150,16 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
 # ----------------------------------------------------------------------------------------------------------
 # 
-# UVM_INFO ../tb/apb_uart_scoreboard.sv(73) @ 170000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0x00
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(96) @ 150000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0xxx
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 210000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @937                                               
+# tr                             apb_transaction   -     @1106                                              
 #   paddr                        integral          12    'h4                                                
 #   pwdata                       integral          32    'hdeadbeef                                         
 #   pwrite                       integral          1     'h1                                                
-#   pstrb                        integral          4     'h0                                                
+#   pstrb                        integral          4     'h1                                                
 #   prdata                       integral          32    'h0xxxxxxxx                                        
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_RO                                            
@@ -165,18 +171,17 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
 # ----------------------------------------------------------------------------------------------------------
 # 
-# UVM_WARNING ../apb_uvc/apb_monitor.sv(56) @ 210000: uvm_test_top.env.apb_uvcc.agent.monitor [MON_RO_WRITE] Illegal Write attempt to RO register at 0x004
-# UVM_ERROR ../apb_uvc/apb_if.sv(174) @ 210000: reporter [APB_SVA] Write RO did NOT raise PSLVERR
+# UVM_WARNING ../apb_uvc/apb_coverage_monitor.sv(98) @ 210000: uvm_test_top.env.apb_uvcc.agent.monitor [MON_RO_WRITE] Illegal Write attempt to RO register at 0x004
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 270000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @945                                               
+# tr                             apb_transaction   -     @1114                                              
 #   paddr                        integral          12    'h4                                                
-#   pwdata                       integral          32    'h77903c2b                                         
+#   pwdata                       integral          32    'h9c708b93                                         
 #   pwrite                       integral          1     'h0                                                
 #   pstrb                        integral          4     'h0                                                
-#   prdata                       integral          32    'h0                                                
+#   prdata                       integral          32    'hdeadbexx                                         
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_RO                                            
 #   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                    
@@ -187,18 +192,18 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
 # ----------------------------------------------------------------------------------------------------------
 # 
-# UVM_INFO ../tb/uart_virseqs.sv(726) @ 270000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [VSEQ_RO] ADDR 0x4: SUCCESS. Write ignored. Val=0x00000000
-# UVM_INFO ../tb/apb_uart_scoreboard.sv(73) @ 270000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0x00
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(96) @ 270000: uvm_test_top.env.scoreboard [SB_APB] APB<-RXDATA queued: 0xxx
+# UVM_INFO ../tb/uart_virseqs.sv(729) @ 270000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [VSEQ_RO] ADDR 0x4: SUCCESS. Write ignored. Val=0xdeadbexx
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 330000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @953                                               
+# tr                             apb_transaction   -     @1122                                              
 #   paddr                        integral          12    'h10                                               
-#   pwdata                       integral          32    'hec806485                                         
+#   pwdata                       integral          32    'h1f3c27db                                         
 #   pwrite                       integral          1     'h0                                                
-#   pstrb                        integral          4     'h0                                                
-#   prdata                       integral          32    'h0                                                
+#   pstrb                        integral          4     'h1                                                
+#   prdata                       integral          32    'hdeadbeeb                                         
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_RO                                            
 #   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                    
@@ -213,7 +218,7 @@
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @961                                               
+# tr                             apb_transaction   -     @1130                                              
 #   paddr                        integral          12    'h10                                               
 #   pwdata                       integral          32    'hdeadbeef                                         
 #   pwrite                       integral          1     'h1                                                
@@ -229,18 +234,17 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
 # ----------------------------------------------------------------------------------------------------------
 # 
-# UVM_WARNING ../apb_uvc/apb_monitor.sv(56) @ 390000: uvm_test_top.env.apb_uvcc.agent.monitor [MON_RO_WRITE] Illegal Write attempt to RO register at 0x010
-# UVM_ERROR ../apb_uvc/apb_if.sv(174) @ 390000: reporter [APB_SVA] Write RO did NOT raise PSLVERR
+# UVM_WARNING ../apb_uvc/apb_coverage_monitor.sv(98) @ 390000: uvm_test_top.env.apb_uvcc.agent.monitor [MON_RO_WRITE] Illegal Write attempt to RO register at 0x010
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 450000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @969                                               
+# tr                             apb_transaction   -     @1138                                              
 #   paddr                        integral          12    'h10                                               
-#   pwdata                       integral          32    'h1a53b1a8                                         
+#   pwdata                       integral          32    'h2230febd                                         
 #   pwrite                       integral          1     'h0                                                
-#   pstrb                        integral          4     'h1                                                
-#   prdata                       integral          32    'h0                                                
+#   pstrb                        integral          4     'h0                                                
+#   prdata                       integral          32    'hdeadbeeb                                         
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_RO                                            
 #   write_true_flase             write_quality_e   32    WRITE_ADDR_TRUE                                    
@@ -251,16 +255,16 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
 # ----------------------------------------------------------------------------------------------------------
 # 
-# UVM_INFO ../tb/uart_virseqs.sv(726) @ 450000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [VSEQ_RO] ADDR 0x10: SUCCESS. Write ignored. Val=0x00000000
+# UVM_INFO ../tb/uart_virseqs.sv(729) @ 450000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [VSEQ_RO] ADDR 0x10: SUCCESS. Write ignored. Val=0xdeadbeeb
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 510000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @977                                               
+# tr                             apb_transaction   -     @1146                                              
 #   paddr                        integral          12    'h20                                               
-#   pwdata                       integral          32    'h16965054                                         
+#   pwdata                       integral          32    'h6656d20d                                         
 #   pwrite                       integral          1     'h0                                                
-#   pstrb                        integral          4     'h1                                                
+#   pstrb                        integral          4     'h0                                                
 #   prdata                       integral          32    'h0                                                
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_INVALID                                       
@@ -272,12 +276,12 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
 # ----------------------------------------------------------------------------------------------------------
 # 
-# UVM_WARNING ../apb_uvc/apb_if.sv(175) @ 550000: reporter [APB_SVA] Write invalid did NOT raise PSLVERR
+# UVM_WARNING ../apb_uvc/apb_if.sv(177) @ 550000: reporter [APB_SVA] Write invalid did NOT raise PSLVERR
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 570000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @985                                               
+# tr                             apb_transaction   -     @1154                                              
 #   paddr                        integral          12    'h20                                               
 #   pwdata                       integral          32    'hdeadbeef                                         
 #   pwrite                       integral          1     'h1                                                
@@ -293,16 +297,16 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
 # ----------------------------------------------------------------------------------------------------------
 # 
-# UVM_INFO ../apb_uvc/apb_monitor.sv(58) @ 570000: uvm_test_top.env.apb_uvcc.agent.monitor [MON_INVALID] Access to unmapped address 0x020
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(100) @ 570000: uvm_test_top.env.apb_uvcc.agent.monitor [MON_INVALID] Access to unmapped address 0x020
 # UVM_INFO ../apb_uvc/apb_driver.sv(52) @ 630000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] APB Transaction:
 # ----------------------------------------------------------------------------------------------------------
 # Name                           Type              Size  Value                                              
 # ----------------------------------------------------------------------------------------------------------
-# tr                             apb_transaction   -     @993                                               
+# tr                             apb_transaction   -     @1162                                              
 #   paddr                        integral          12    'h20                                               
-#   pwdata                       integral          32    'h1e737024                                         
+#   pwdata                       integral          32    'h71680bed                                         
 #   pwrite                       integral          1     'h0                                                
-#   pstrb                        integral          4     'h1                                                
+#   pstrb                        integral          4     'h0                                                
 #   prdata                       integral          32    'h0                                                
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_INVALID                                       
@@ -314,57 +318,60 @@
 #   sequencer                    string            41    uvm_test_top.env.apb_uvcc.agent.sequencer          
 # ----------------------------------------------------------------------------------------------------------
 # 
-# UVM_INFO ../tb/uart_virseqs.sv(726) @ 630000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [VSEQ_RO] ADDR 0x20: SUCCESS. Write ignored. Val=0x00000000
-# UVM_INFO ../tb/uart_virseqs.sv(34) @ 630000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [vseq_rxdata_write_ignored] drop objection
-# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 780000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
-# UVM_INFO @ 780000: uvm_test_top [CFGNRD]  ::: The following resources have at least one write and no reads :::
-# cfg [/^uvm_test_top\.env\.vir_seqr.*$/] : (class uart_common_pkg::apb_uart_config) {cfg} 489 1 1007 @uvm_status_container@1 115200 DATA_6BIT STOP_2BIT PARITY_EN PARITY_ODD MON_TX_ONLY GOOD_PARITY COV_DISABLE {apb_uart_config}
+# UVM_INFO ../tb/uart_virseqs.sv(729) @ 630000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [VSEQ_RO] ADDR 0x20: SUCCESS. Write ignored. Val=0x00000000
+# UVM_INFO ../tb/uart_virseqs.sv(35) @ 10630000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [vseq_rxdata_write_ignored] drop objection
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 110630000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO @ 110630000: uvm_test_top [CFGNRD]  ::: The following resources have at least one write and no reads :::
+# cfg [/^uvm_test_top\.env\.vir_seqr.*$/] : (class uart_common_pkg::apb_uart_config) {cfg} 489 1 1172 @uvm_status_container@1 115200 DATA_5BIT STOP_2BIT PARITY_DIS PARITY_EVEN MON_BOTH GOOD_PARITY COV_DISABLE {apb_uart_config}
 # -  
 #   --------
 #   uvm_test_top.env reads: 0 @ 0  writes: 1 @ 0
 #  
-# UVM_INFO ../apb_uvc/apb_driver.sv(75) @ 780000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Report: APB Driver sent 9 transactions
-# UVM_INFO ../apb_uvc/apb_monitor.sv(73) @ 780000: uvm_test_top.env.apb_uvcc.agent.monitor [apb_monitor] Report: APB Monitor Collected 10 Transactions
-# UVM_INFO ../tb/apb_uart_scoreboard.sv(244) @ 780000: uvm_test_top.env.scoreboard [SB_REPORT] 
+# UVM_INFO ../apb_uvc/apb_driver.sv(75) @ 110630000: uvm_test_top.env.apb_uvcc.agent.driver [apb_driver] Report: APB Driver sent 9 transactions
+# UVM_INFO ../apb_uvc/apb_coverage_monitor.sv(118) @ 110630000: uvm_test_top.env.apb_uvcc.agent.monitor [apb_coverage_monitor] Report: APB Monitor Collected 9 Transactions
+# UVM_INFO ../tb/apb_uart_scoreboard.sv(341) @ 110630000: uvm_test_top.env.scoreboard [SB_REPORT] 
 # --- APB-UART Scoreboard ---
 # CFG backdoor: OK=0 BAD=0
 # TX compare : MATCH=0 MIS=0
 # RX compare : MATCH=0 MIS=0
 # --------------------------
-# UVM_INFO ../uart_uvc/uart_monitor.sv(136) @ 780000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_monitor] Report: UART Monitor Collected 0 Transactions
+# UVM_INFO ../uart_uvc/uart_coverage_monitor.sv(196) @ 110630000: uvm_test_top.env.uart_uvcc.agent.monitor [uart_coverage_monitor] Report: UART Monitor Collected 0 Transactions
 # 
 # --- UVM Report Summary ---
 # 
 # ** Report counts by severity
-# UVM_INFO :   44
+# UVM_INFO :   45
 # UVM_WARNING :    3
-# UVM_ERROR :    2
+# UVM_ERROR :    0
 # UVM_FATAL :    0
 # ** Report counts by id
-# [APB_SVA]     3
+# [APB_SVA]     1
 # [APB_UART_ENVIRONMENT]     1
 # [CFGNRD]     1
 # [MON_INVALID]     1
 # [MON_RO_WRITE]     2
 # [Questa UVM]     3
 # [RNTST]     1
-# [SB_APB]     3
+# [SB_APB]     2
 # [SB_REPORT]     1
+# [SB_RESET]     1
 # [TEST]     1
 # [TEST_DONE]     1
 # [UVMTOP]     1
 # [VSEQ_RO]     4
 # [apb_agent]     1
+# [apb_coverage_monitor]     2
 # [apb_driver]    12
-# [apb_monitor]     2
 # [apb_sequencer]     1
 # [apb_uvc]     1
 # [test_rxdata_write_ignored]     2
-# [uart_agent]     3
-# [uart_monitor]     2
+# [uart_agent]     2
+# [uart_coverage_monitor]     2
+# [uart_driver]     1
+# [uart_sequencer]     1
 # [vseq_rxdata_write_ignored]     2
 # ** Note: $finish    : /home/viethung/tools/Questasim/questasim/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
-#    Time: 780 ns  Iteration: 53  Instance: /tb_top
+#    Time: 110630 ns  Iteration: 53  Instance: /tb_top
 # Saving coverage database on exit...
-# End time: 19:50:15 on Jan 26,2026, Elapsed time: 0:00:03
+# End time: 00:28:07 on Jan 27,2026, Elapsed time: 0:00:04
 # Errors: 0, Warnings: 0
