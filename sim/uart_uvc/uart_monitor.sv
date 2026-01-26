@@ -57,7 +57,7 @@ class uart_monitor extends uvm_monitor;
 
         forever begin
             trans = uart_transaction::type_id::create("trans");
-
+            trans.is_tx = is_tx;
             if (is_tx) 
                 @(negedge vif.tx);
             else       
@@ -69,7 +69,7 @@ class uart_monitor extends uvm_monitor;
                 continue;
             end
 
-            case(cfg.data_width)
+            case(cfg.data_bit_num)
                 DATA_5BIT: num_data_bits = 5;
                 DATA_6BIT: num_data_bits = 6;
                 DATA_7BIT: num_data_bits = 7;
@@ -83,7 +83,7 @@ class uart_monitor extends uvm_monitor;
                 captured_data[i] = bit_val;
             end
             trans.data = captured_data;
-            trans.data_width = cfg.data_width;
+            trans.data_bit_num = cfg.data_bit_num;
 
             // Check Parity
             if (cfg.parity_en == PARITY_EN) begin
@@ -93,7 +93,7 @@ class uart_monitor extends uvm_monitor;
                 trans.parity_en   = PARITY_EN;
                 calculated_parity = trans.calc_parity();
 
-                if (received_parity != calculated_parity) begin
+                if (received_parity != calculated_parity && is_tx) begin
                     `uvm_error(tag, $sformatf("Parity Error! Recv: %b, Exp: %b", received_parity, calculated_parity))
                     trans.parity_error_detected = 1;
                 end
@@ -102,16 +102,20 @@ class uart_monitor extends uvm_monitor;
             // Check Stop Bit 1
             vif.sample_bit(bit_val, is_tx); 
             if (bit_val != 1'b1) begin
-                `uvm_error(tag, "Framing Error! Stop bit is 0")
-                trans.framing_error_detected = 1;
+                if (is_tx) begin
+                   `uvm_error(tag, "Framing Error! Stop bit is 0") 
+                    trans.framing_error_detected = 1;
+                end
             end
 
             // Check Stop Bit 2
-            if (cfg.stop_bits == STOP_2BIT) begin
+            if (cfg.stop_bit_num == STOP_2BIT) begin
                 vif.sample_bit(bit_val, is_tx); 
                 if (bit_val != 1'b1) begin
-                    trans.framing_error_detected = 1;
-                    `uvm_error(tag, "Framing Error on 2nd Stop bit")
+                    if (is_tx) begin
+                        trans.framing_error_detected = 1;
+                        `uvm_error(tag, "Framing Error on 2nd Stop bit")
+                    end
                 end
             end
 

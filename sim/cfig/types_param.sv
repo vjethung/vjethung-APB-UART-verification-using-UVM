@@ -1,4 +1,5 @@
-// --- APB & UART TYPES DEFINITIONS ---
+typedef enum bit {GOOD_PARITY, BAD_PARITY} parity_quality_e;
+
 typedef enum bit [1:0] {
     DATA_5BIT = 2'b00,
     DATA_6BIT = 2'b01,
@@ -24,8 +25,8 @@ typedef enum bit {
 typedef enum bit {COV_ENABLE, COV_DISABLE} cover_e;
 
 typedef enum {
-    MON_NONE,    // Không giám sát
-    MON_TX_ONLY, // Chỉ giám sát TX (DUT -> UVC)
-    MON_RX_ONLY, // Chỉ giám sát RX (UVC -> DUT)
-    MON_BOTH     // Giám sát cả hai (Mặc định)
+    MON_NONE,    
+    MON_TX_ONLY, 
+    MON_RX_ONLY, 
+    MON_BOTH     
 } uart_mon_mode_e;

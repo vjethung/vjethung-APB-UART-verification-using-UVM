@@ -10,7 +10,8 @@ interface apb_if (input logic pclk, input logic presetn);
     logic        pslverr;
 
     // Tín hiệu hỗ trợ Transaction Recording 
-    bit monitor_start, drive_start;
+    // bit monitor_start; 
+    bit drive_start;
 
     // WRITE TRANSFER - Driver
     task automatic write_task(input logic [11:0] addr, 
@@ -70,7 +71,7 @@ interface apb_if (input logic pclk, input logic presetn);
         // thời điểm Access Phase hoàn tất thành công (PREADY lên cao)
         wait(psel === 1'b1 && penable === 1'b1 && pready === 1'b1);
         
-        monitor_start <= 1'b1; // Trigger cho Monitor recording 
+        // monitor_start <= 1'b1; // Trigger cho Monitor recording 
         
         addr     = paddr;
         is_write = pwrite;
@@ -90,7 +91,7 @@ interface apb_if (input logic pclk, input logic presetn);
         end
 
         @(posedge pclk); 
-        monitor_start <= 1'b0; // Tắt trigger 
+        // monitor_start <= 1'b0; // Tắt trigger 
     endtask
 
 endinterface

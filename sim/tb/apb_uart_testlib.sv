@@ -68,7 +68,7 @@ class simple_test extends base_test;
     
     super.build_phase(phase);
     
-    `uvm_info("TEST", "Build phase: SIMPLE TEST configured with system_config_seq", UVM_LOW)
+    `uvm_info("TEST", "\n####======================== Build phase: SIMPLE TEST configured with system_config_seq ========================#####", UVM_LOW)
   endfunction
 
 endclass
@@ -90,7 +90,7 @@ class test_send_1_frame extends base_test;
     
     cfg.monitor_mode = MON_TX_ONLY;
     
-    `uvm_info("TEST", "SEND 1 FRAME configured (TX Monitoring Only)", UVM_LOW)
+    `uvm_info("TEST", "\n####======================== SEND 1 FRAME configured (TX Monitoring Only) ========================#####", UVM_LOW)
   endfunction
 endclass 
 
@@ -111,7 +111,7 @@ class test_send_N_frame extends base_test;
     
     cfg.monitor_mode = MON_TX_ONLY;
     
-    `uvm_info("TEST", "SEND 1 FRAME configured (TX Monitoring Only)", UVM_LOW)
+    `uvm_info("TEST", "\n####======================== SEND N FRAME configured (TX Monitoring Only) ========================#####", UVM_LOW)
   endfunction
 endclass 
 
@@ -136,7 +136,7 @@ class test_received_1_frame extends base_test;
     // MON_RX_ONLY: Chỉ giám sát hướng từ UVC đẩy vào DUT (RX path) 
     cfg.monitor_mode = MON_RX_ONLY; 
     
-    `uvm_info("TEST", "RECEIVE 1 FRAME configured (RX Monitoring only)", UVM_LOW)
+    `uvm_info("TEST", "\n####======================== RECEIVE 1 FRAME configured (RX Monitoring only) ========================#####", UVM_LOW)
   endfunction
 endclass
 
@@ -160,28 +160,81 @@ class test_received_N_frame extends base_test;
     // 3. Thiết lập chế độ giám sát (Monitor Mode)
     // MON_RX_ONLY: Chỉ giám sát hướng từ UVC đẩy vào DUT (RX path) 
     cfg.monitor_mode = MON_RX_ONLY; 
-    
-    `uvm_info("TEST", "RECEIVE 1 FRAME configured (RX Monitoring only)", UVM_LOW)
+    cfg.parity_err_target = GOOD_PARITY;
+    `uvm_info("TEST", "\n####======================== RECEIVE N FRAME configured (RX Monitoring only) ========================#####", UVM_LOW)
   endfunction
 endclass
 // --------------------------------------------------------------------------
 // TEST 2: PARITY ERROR INJECTION (Negative Test)
 // Mục tiêu: Kiểm tra DUT xử lý thế nào khi nhận gói tin lỗi Parity từ UART
 // --------------------------------------------------------------------------
-// class test_parity_error extends base_test;
-//   `uvm_component_utils(test_parity_error)
+class test_parity_error extends base_test;
+  `uvm_component_utils(test_parity_error)
 
-//   function new (string name, uvm_component parent);
-//     super.new(name, parent);
-//   endfunction
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
 
-//   virtual function void build_phase(uvm_phase phase);
-//     uvm_config_wrapper::set(this, 
-//                             "env.vir_seqr.run_phase", 
-//                             "default_sequence", 
-//                             vseq_parity_error_test::get_type());
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_receive_RX_ErrorInject::get_type());
 
-//     super.build_phase(phase);
-//     `uvm_info("TEST", "Build phase: test_parity_error configured", UVM_LOW)
-//   endfunction
-// endclass
+    super.build_phase(phase);
+
+    if (!cfg.randomize() with { monitor_mode == MON_RX_ONLY; 
+                                parity_en    == PARITY_EN; 
+                                parity_err_target == BAD_PARITY; // Ràng buộc này sẽ thắng 'soft' constraint
+    }) begin
+        `uvm_fatal("TEST", "\n####======================== Randomization of cfg failed in test_parity_error! ========================#####")
+    end
+
+    `uvm_info("TEST", "\n####======================== TEST PARITY DETECT OF DUT ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+class test_N_parity_error extends base_test;
+  `uvm_component_utils(test_N_parity_error)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_receive_N_RX_ErrorInject::get_type());
+
+    super.build_phase(phase);
+
+    if (!cfg.randomize() with { monitor_mode == MON_RX_ONLY; 
+                                parity_en    == PARITY_EN;
+                                parity_err_target == BAD_PARITY;
+    }) begin
+        `uvm_fatal("TEST", "Randomization of cfg failed in test_parity_error!")
+    end
+
+    `uvm_info("TEST", "\n####======================== TEST N trans PARITY DETECT OF DUT ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+class test_check_reset extends base_test;
+  `uvm_component_utils(test_check_reset)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_check_reset::get_type());
+
+    super.build_phase(phase);
+
+    `uvm_info("TEST", "\n####======================== TEST VALUE OF REGISTER ========================#####", UVM_LOW)
+  endfunction
+endclass

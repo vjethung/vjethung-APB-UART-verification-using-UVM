@@ -56,8 +56,8 @@ class uart_driver extends uvm_driver #(uart_transaction);
     logic [7:0] payload;
 
     `uvm_info(get_type_name(), $sformatf("\n#####===Driving Trans: DATA=0x%h,%s, %s, %s, %s===#####", 
-                                         trans.data, trans.data_width.name(), 
-                                         trans.stop_bits.name(),
+                                         trans.data, trans.data_bit_num.name(), 
+                                         trans.stop_bit_num.name(),
                                          trans.parity_en.name(),
                                          cfg.parity_type.name()), UVM_HIGH)
 
@@ -65,7 +65,7 @@ class uart_driver extends uvm_driver #(uart_transaction);
 
     vif.drive_bit(1'b0);
 
-    case(trans.data_width)
+    case(trans.data_bit_num)
       DATA_5BIT: num_data_bits = 5;
       DATA_6BIT: num_data_bits = 6;
       DATA_7BIT: num_data_bits = 7;
@@ -90,15 +90,9 @@ class uart_driver extends uvm_driver #(uart_transaction);
       vif.drive_bit(parity_bit);
     end
 
-    // inject lỗi Stop (BAD_STOP) stopbit = 0.
-    if (trans.stop_err_inject == BAD_STOP) begin
-        `uvm_info(get_type_name(), "Injecting Stop Bit Error!", UVM_LOW)
-        vif.drive_bit(1'b0); 
-    end else begin
-        vif.drive_bit(1'b1); 
-    end
+    vif.drive_bit(1'b1);
 
-    if (trans.stop_bits == STOP_2BIT) begin
+    if (trans.stop_bit_num == STOP_2BIT) begin
        vif.drive_bit(1'b1);
     end
 

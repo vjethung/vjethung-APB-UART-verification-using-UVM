@@ -18,7 +18,7 @@ module tb_uart_rx();
     wire         rts_n;
 
     // --- DUT Instantiation ---
-    uart dut (
+    uart_n dut (
         .clk(clk), 
         .reset_n(reset_n),
         .pclk(pclk), 
@@ -116,7 +116,8 @@ module tb_uart_rx();
 
             // Parity Bit
             if (par_en) begin
-                rx = parity_bit;
+                rx = ~parity_bit;
+                // rx = parity_bit;
                 repeat(435) @(posedge clk);
             end
 
@@ -142,8 +143,10 @@ module tb_uart_rx();
         $display("--- UART RX TEST START ---");
 
         // 1. CPU configures UART Frame (8-bit, Even Parity, 1 Stop bit)
-        // cfg_reg (0x8): Bit[4]=1 (Even), Bit[3]=1 (Parity En), Bit[2]=0 (1 stop), Bit[1:0]=00 (5-bit)
-        apb_write(12'h008, 32'h0000_0018);  // 1 1000
+        // cfg_reg (0x8): Bit[4]=1 (Even), Bit[3]=0 (Parity En), Bit[2]=0 (1 stop), Bit[1:0]=11 (5-bit)
+        // apb_write(12'h008, 32'h0000_0013);  // 1 0011
+        // cfg_reg (0x8): Bit[4]=1 (Even), Bit[3]=0 (Parity En), Bit[2]=1 (2 stop), Bit[1:0]=11 (5-bit)
+        apb_write(12'h008, 32'h0000_001F);  // 1 1111        
         $display("[CPU] Step 1: Configured UART to 8E1 format.");
 
         // 2. Wait for UART to be ready (rts_n == 0) 
@@ -152,7 +155,7 @@ module tb_uart_rx();
 
         // 3. Peripheral sends data frame 
         // Sending 0x3C with correct Even Parity 0011 1100
-        send_uart_frame(8'h3C, 2'b11, 1'b1, 1'b1, 1'b0);
+        send_uart_frame(8'h3C, 2'b11, 1'b1, 1'b1, 1'b1);
         repeat(8) #8685;
         // 4. CPU Polling rx_done == 1 
         // stt_reg (0x10): Bit[1] is rx_done

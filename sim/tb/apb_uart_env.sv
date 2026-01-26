@@ -3,9 +3,10 @@ class apb_uart_env extends uvm_env;
 
   apb_uvc      apb_uvcc;
   uart_uvc     uart_uvcc;
-  // apb_uart_scoreboard scoreboard;
+  apb_uart_scoreboard scoreboard;
   uart_virsequencer vir_seqr;
-  apb_uart_config cfg; //
+  apb_uart_config cfg; 
+
 
   function new(string name, uvm_component parent);
     super.new(name, parent);
@@ -20,18 +21,19 @@ class apb_uart_env extends uvm_env;
 
     apb_uvcc    = apb_uvc::type_id::create("apb_uvcc", this);
     uart_uvcc   = uart_uvc::type_id::create("uart_uvcc", this);
-    // scoreboard = apb_uart_scoreboard::type_id::create("scoreboard", this);
+    scoreboard = apb_uart_scoreboard::type_id::create("scoreboard", this);
     vir_seqr      = uart_virsequencer::type_id::create("vir_seqr", this);
 
     system_config::set(this, "uart_uvcc*", "cfg", cfg);
     system_config::set(this, "vir_seqr*", "cfg", cfg);
+    system_config::set(this, "scoreboard*", "cfg", cfg);
   endfunction
 
   virtual function void connect_phase(uvm_phase phase);
     vir_seqr.apb_sqr  = apb_uvcc.agent.sequencer;
     vir_seqr.uart_sqr = uart_uvcc.agent.sequencer;
 
-    // apb_uvcc.agent.monitor.item_collected_port.connect(scoreboard.apb_in);
-    // uart_uvcc.agent.monitor.item_collected_port.connect(scoreboard.uart_out);
+    apb_uvcc.agent.monitor.item_collected_port.connect(scoreboard.apb_port);
+    uart_uvcc.agent.monitor.item_collected_port.connect(scoreboard.uart_port);
   endfunction
 endclass

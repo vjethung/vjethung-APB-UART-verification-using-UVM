@@ -54,16 +54,16 @@ class apb_config_frame_seq extends apb_base_seq;
         `uvm_fatal("APB_CFG_SEQ", "Config object is NULL! Virtual Sequence must set it.")
     end
     
-    wdata[1:0] = cfg.data_width;
-    wdata[2]   = cfg.stop_bits;
+    wdata[1:0] = cfg.data_bit_num;
+    wdata[2]   = cfg.stop_bit_num;
     wdata[3]   = cfg.parity_en;
     wdata[4]   = cfg.parity_type;
 
     `uvm_info("APB_WR_SEQ", $sformatf("Writing Config to DUT: 0x%h \n (%s, %s, %s, %s)", wdata, 
-                                      cfg.data_width.name(),
+                                      cfg.data_bit_num.name(),
                                       cfg.parity_en.name(),
                                       cfg.parity_type.name(),
-                                      cfg.stop_bits.name()), UVM_MEDIUM)
+                                      cfg.stop_bit_num.name()), UVM_MEDIUM)
 
     `uvm_do_with(req, { 
         paddr  == 12'h008; 
@@ -122,61 +122,6 @@ class read_rx_data_seq extends apb_base_seq;
     endtask
 endclass
 
-class apb_trans_random_data_seq extends apb_base_seq;
-    `uvm_object_utils(apb_trans_random_data_seq)
-
-    rand logic [31:0] random_data;
-    rand bit          pstrb_bit0;
-
-    function new(string name="apb_trans_random_data_seq");
-      super.new(name);
-    endfunction
-
-    virtual task body();
-      `uvm_info(get_type_name(), $sformatf("Executing TX Random: Data=0x%0h, PSTRB=0x%0h", 
-                random_data, pstrb_bit0), UVM_LOW)
-
-      // BƯỚC 1: Ghi dữ liệu ngẫu nhiên vào thanh ghi TX_DATA (Địa chỉ 0x0) 
-      `uvm_do_with(req, { 
-        paddr  == 12'h000; 
-        pwrite == 1'b1; 
-        pwdata == random_data; 
-        pstrb  == {3'b000, pstrb_bit0}; 
-      })
-
-      // BƯỚC 2: Kích hoạt lệnh truyền (Start TX) tại thanh ghi CTRL (Địa chỉ 0xC)z
-      `uvm_do_with(req, { 
-        paddr  == 12'h00C; 
-        pwrite == 1'b1; 
-        pwdata == 32'h0000_0001; // bit [0] là start_tx
-        pstrb  == 4'h1;
-      })
-    endtask
-
-endclass
-
-class apb_multiple_trans_seq extends apb_base_seq;
-    `uvm_object_utils(apb_multiple_trans_seq)
-
-    rand int count;
-    constraint c_count { count inside {[3:10]}; }
-
-    function new(string name="apb_multiple_trans_seq");
-      super.new(name);
-    endfunction
-
-    virtual task body();
-      `uvm_info(get_type_name(), $sformatf("Executing multiple TX: %0d packets", count), UVM_LOW)
-
-      repeat(count) begin
-
-        apb_trans_random_data_seq single_tx;
-        
-        `uvm_do(single_tx) 
-      end
-    endtask
-endclass
-
 // seq đọc thanh ghi trạng thái stt_reg
 class read_status_reg_seq extends apb_base_seq;
     `uvm_object_utils(read_status_reg_seq)
@@ -195,23 +140,4 @@ class read_status_reg_seq extends apb_base_seq;
       read_data = req.prdata;
     endtask
 
-endclass
-
-// equence Kiểm Tra Lỗi Protocol
-class apb_protocol_error_seq extends apb_base_seq;
-    `uvm_object_utils(apb_protocol_error_seq)
-
-    virtual task body();
-      `uvm_info(get_type_name(), "Testing Illegal Access (Invalid Address)", UVM_LOW)
-
-      // Ghi vào địa chỉ "lạ" không có trong Spec (ví dụ 0xFFF)
-      `uvm_do_with(req, { 
-        paddr  == 12'hFFF; 
-        pwrite == 1'b1; 
-        pwdata == 32'hDEAD_BEEF;
-        pstrb  == 4'b1010; // Strobe "lạ" 
-      })
-
-      // mong đợi pslverr trả về từ Monitor
-    endtask
 endclass

@@ -6,9 +6,9 @@ package uart_tb_pkg;
     import apb_pkg::*;
     import uart_pkg::*;
 
+    `include "apb_uart_scoreboard.sv"
     `include "uart_virsequencer.sv"
     `include "uart_virseqs.sv"
-    // `include "scoreboard.sv"
     `include "apb_uart_env.sv"
     `include "apb_uart_testlib.sv"
 endpackage
