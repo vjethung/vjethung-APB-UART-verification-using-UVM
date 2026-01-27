@@ -1,0 +1,10 @@
+var g_data = {
+g985:[{dummy:0},
+{name:'uart_cfg_cg',f:1,type:1,id:986,tb:'40',h:'38',m:'2',hp:'95.00%',cov:['87.50%','Y'],g:'100.00%',gp:['87.50%','Y'],opts:[[],['merge_instance','auto(true)']],parent:'985'},
+{name:'uvm_test_top.env.uart_uvcc.agent.monitor.uart_cfg_cg',f:1,type:2,id:995,tb:'40',h:'38',m:'2',hp:'95.00%',cov:['87.50%','Y'],g:'100.00%',gp:['87.50%','Y'],opts:[[],['per_instance','true']],cvg:'uart_cfg_cg',parent:'986'}],
+g1014:[{dummy:0},
+{name:'apb_trans_cg',f:1,type:1,id:1016,tb:'31',h:'24',m:'7',hp:'77.41%',cov:['88.33%','Y'],g:'100.00%',gp:['88.33%','Y'],opts:[[],['merge_instance','auto(true)']],parent:'1014'},
+{name:'uvm_test_top.env.apb_uvcc.agent.monitor.apb_trans_cg',f:1,type:2,id:1023,tb:'31',h:'24',m:'7',hp:'77.41%',cov:['88.33%','Y'],g:'100.00%',gp:['88.33%','Y'],opts:[[],['per_instance','true']],cvg:'apb_trans_cg',parent:'1016'}],
+dummyEnd:0
+};
+processCovergroupsData(g_data);

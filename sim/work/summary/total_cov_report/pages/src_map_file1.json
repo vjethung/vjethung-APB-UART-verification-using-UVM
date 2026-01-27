@@ -1,0 +1,9 @@
+var g_data = {'dummy':null,
+'2':'../../hdl/uart.sv',
+'5':'../apb_uvc/apb_coverage_monitor.sv',
+'7':'../apb_uvc/apb_if.sv',
+'6':'../apb_uvc/apb_pkg.sv',
+'1':'../tb/hw_top.sv',
+'3':'../uart_uvc/uart_coverage_monitor.sv',
+'8':'../uart_uvc/uart_if.sv',
+'4':'../uart_uvc/uart_pkg.sv'};

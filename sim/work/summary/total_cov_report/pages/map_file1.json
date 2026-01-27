@@ -1,0 +1,13 @@
+var g_data = {'dummy':{null},
+'/hw_top/aif':{h:'31',z:1},
+'/hw_top/uif':{h:'40',z:1},
+'work.uart':{h:'27',z:1},
+'/hw_top/dut':{h:'43',z:1},
+'work.hw_top':{h:'24',z:1},
+'/hw_top':{h:'30',z:1},
+'/uart_pkg/uart_coverage_monitor':{h:'985',g:1,z:1},
+'/uart_pkg':{h:'982',z:1},
+'/apb_pkg/apb_coverage_monitor':{h:'1014',g:1,z:1},
+'/apb_pkg':{h:'1011',z:1},
+'work.apb_if':{h:'16',z:1},
+'work.uart_if':{h:'17',z:1}};

@@ -1,0 +1,5 @@
+var g_db_data = [
+{dummy:0},
+{name:'uart_cfg_cg',f:1,type:6,id:986,tb:'40',h:'38',m:'2',hp:'95.00%',cov:['87.50%','Y'],g:'100.00%',gp:['87.50%','Y'],opts:[[],['merge_instance','auto(true)']],hdlPath:'/uart_pkg/uart_coverage_monitor',parent:'985'},
+{name:'apb_trans_cg',f:1,type:6,id:1016,tb:'31',h:'24',m:'7',hp:'77.41%',cov:['88.33%','Y'],g:'100.00%',gp:['88.33%','Y'],opts:[[],['merge_instance','auto(true)']],hdlPath:'/apb_pkg/apb_coverage_monitor',parent:'1014'}];
+processConsCovergroupsData(g_db_data);

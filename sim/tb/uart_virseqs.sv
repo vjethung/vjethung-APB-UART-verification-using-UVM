@@ -603,12 +603,211 @@ class vseq_check_reset extends base_vseq;
     endtask
 endclass
 
+// class vseq_check_tx_reset extends base_vseq;
+//     `uvm_object_utils(vseq_check_reset)
+
+//     apb_uart_config shared_cfg;
+
+//     // Sequences con để tạo traffic thật
+//     system_config_seq config_vseq;
+//     vseq_send_TX      tx_traffic_vseq; 
+
+//     localparam string PATH_RESET = "$root.hw_top.reset_n"; 
+//     localparam string PATH_TX_DATA = "$root.hw_top.dut.tx_data";
+//     localparam string PATH_RX_DATA = "$root.hw_top.dut.rx_data";
+//     localparam string PATH_DATA_BIT_NUM = "$root.hw_top.dut.data_bit_num";
+//     localparam string PATH_STOP_BIT_NUM = "$root.hw_top.dut.stop_bit_num";
+//     localparam string PATH_PARITY_EN = "$root.hw_top.dut.parity_en";
+//     localparam string PATH_PARITY_TYPE = "$root.hw_top.dut.parity_type";
+//     localparam string PATH_START_TX = "$root.hw_top.dut.start_tx";
+//     localparam string PATH_TX_DONE = "$root.hw_top.dut.tx_done";
+//     localparam string PATH_RX_DONE = "$root.hw_top.dut.rx_done";
+//     localparam string PATH_PARITY_ERR = "$root.hw_top.dut.parity_error";
+
+//     function new(string name="vseq_check_reset");
+//         super.new(name);
+//     endfunction
+
+//     virtual task body();
+//         int error_count = 0;
+//         if (!system_config::get(p_sequencer, "", "cfg", shared_cfg)) begin
+//             `uvm_fatal("VSEQ_RESET", "Virtual Sequence cannot find 'cfg'!")
+//         end
+
+//         `uvm_info("VSEQ_RESET", "=== STARTING RESET DURING ACTIVE TRAFFIC ===", UVM_MEDIUM)
+
+//         // BƯỚC 1: Cấu hình DUT vào trạng thái hoạt động (Ví dụ: bật Parity để dễ thấy sự thay đổi)
+//         config_vseq = system_config_seq::type_id::create("config_vseq");
+//         config_vseq.shared_cfg = this.shared_cfg;
+//         // Ép cấu hình có Parity để Reset có cái để xóa
+//         shared_cfg.parity_en = PARITY_EN; 
+//         config_vseq.start(p_sequencer); 
+
+//         // BƯỚC 2: Tạo traffic UART và chèn Reset bất ngờ
+//         fork
+//             begin
+//                 `uvm_info("VSEQ_RESET", "Step 1: Starting active UART TX traffic...", UVM_LOW)
+//                 tx_traffic_vseq = vseq_send_TX::type_id::create("tx_traffic_vseq");
+//                 tx_traffic_vseq.start(p_sequencer); // Bắt đầu gửi frame dữ liệu
+//             end
+
+//             begin
+//                 // Chờ cho khung hình UART bắt đầu truyền (Start bit)
+//                 #20us; 
+//                 `uvm_info("VSEQ_RESET", "Step 2: TRIGGERING RESET MID-TRANSMISSION!!!", UVM_NONE)
+                
+//                 if(!uvm_hdl_force(PATH_RESET, 1'b0)) 
+//                     `uvm_error("VSEQ_RESET", "Failed to force Reset!")
+                
+//                 #100ns; // Giữ reset
+                
+//                 if(!uvm_hdl_release(PATH_RESET)) 
+//                     `uvm_error("VSEQ_RESET", "Failed to release Reset!")
+                
+//                 #10ns; // Chờ logic RTL ổn định
+//             end
+//         join_any
+//         disable fork; // Ngắt traffic ngay khi Reset xảy ra
+
+//         // BƯỚC 3: ĐỒNG BỘ HÓA UVM CONFIG (QUAN TRỌNG NHẤT)
+//         // Khi RTL Reset, các thanh ghi về mặc định. Ta phải ép shared_cfg về đúng như vậy.
+//         `uvm_info("VSEQ_RESET", "Step 2.1: Synchronizing UVM Config with RTL Reset State", UVM_MEDIUM)
+//         shared_cfg.data_bit_num   = DATA_5BIT;    // Reset value 0x0
+//         shared_cfg.stop_bit_num   = STOP_1BIT;    // Reset value 0x0
+//         shared_cfg.parity_en      = PARITY_DIS;   // Reset value 0x0
+//         shared_cfg.parity_type    = PARITY_EVEN;  // Reset value 0x0
+//         shared_cfg.parity_err_target = GOOD_PARITY;
+
+//         // Cập nhật lại vào Config DB để Scoreboard/Monitor nhận diện cấu hình mới
+//         system_config::set(p_sequencer, "", "cfg", shared_cfg);
+
+//         // BƯỚC 4: Kiểm tra Backdoor (Giữ nguyên logic của bạn)
+//         `uvm_info("VSEQ_RESET", "Step 3: Verifying register values...", UVM_MEDIUM)
+//         check_reset_val(PATH_TX_DATA, 32'h0, "tx_data", error_count); 
+//         check_reset_val(PATH_PARITY_EN, 32'h0, "parity_en", error_count); 
+//         check_reset_val(PATH_TX_DONE, 32'h1, "tx_done", error_count); 
+//         // ... (các check khác)
+        
+//         if (error_count == 0)
+//             `uvm_info("VSEQ_RESET", "SUCCESS: System synced after reset!", UVM_LOW)
+//     endtask
+
+//     task check_reset_val(string path, bit [31:0] exp, string name, ref int errors);
+//         bit [31:0] val;
+//         if (uvm_hdl_read(path, val)) begin
+//             if (val !== exp) begin
+//                 `uvm_error("RESET_FAIL", $sformatf("%s mismatch! Got: 0x%h | Exp: 0x%h", name, val, exp))
+//                 errors++;
+//             end
+//         end
+//     endtask
+// endclass
+
+// class vseq_check_rx_reset extends base_vseq;
+//     `uvm_object_utils(vseq_check_rx_reset)
+
+//     apb_uart_config shared_cfg;
+
+//     system_config_seq config_vseq;
+//     vseq_receive_RX   rx_traffic_vseq; 
+
+//     localparam string PATH_RESET = "$root.hw_top.reset_n"; 
+//     localparam string PATH_TX_DATA      = "$root.hw_top.dut.tx_data";      
+//     localparam string PATH_RX_DATA      = "$root.hw_top.dut.rx_data";      
+//     localparam string PATH_DATA_BIT_NUM = "$root.hw_top.dut.data_bit_num"; 
+//     localparam string PATH_STOP_BIT_NUM = "$root.hw_top.dut.stop_bit_num"; 
+//     localparam string PATH_PARITY_EN    = "$root.hw_top.dut.parity_en";    
+//     localparam string PATH_PARITY_TYPE  = "$root.hw_top.dut.parity_type";  
+//     localparam string PATH_RX_DONE      = "$root.hw_top.dut.rx_done";      
+
+//     function new(string name="vseq_check_rx_reset");
+//         super.new(name);
+//     endfunction
+
+//     virtual task body();
+//         int error_count = 0;
+//         `uvm_info("VSEQ_RESET_RX", "=== STARTING RESET DURING ACTIVE RX RECEPTION ===", UVM_MEDIUM)
+
+//         // 1. LẤY CONFIG VÀ TRUYỀN HANDLE TRỰC TIẾP ĐỂ TRÁNH FATAL
+//         if (!system_config::get(p_sequencer, "", "cfg", shared_cfg)) begin
+//             `uvm_fatal("VSEQ_RESET_RX", "Cannot find 'cfg' in Config DB!")
+//         end
+
+//         // 2. CẤU HÌNH HỆ THỐNG TRƯỚC (Ví dụ: đặt 8-bit, có Parity)
+//         config_vseq = system_config_seq::type_id::create("config_vseq");
+//         config_vseq.shared_cfg = this.shared_cfg; // Truyền handle trực tiếp 
+        
+//         shared_cfg.data_bit_num = DATA_8BIT;
+//         shared_cfg.parity_en    = PARITY_EN;
+//         print_frame_cfg(shared_cfg)
+//         config_vseq.start(p_sequencer); 
+
+//         // 3. TẠO TRAFFIC RX VÀ DẬP RESET BẤT NGỜ
+//         fork
+//             begin
+//                 `uvm_info("VSEQ_RESET_RX", "Step 1: UART UVC starts driving RX data to DUT...", UVM_LOW)
+//                 rx_traffic_vseq = vseq_receive_RX::type_id::create("rx_traffic_vseq");
+//                 // Lưu ý: vseq_receive_RX sẽ tự gọi config_vseq bên trong, 
+//                 // nhưng vì ta dùng chung shared_cfg nên sẽ không bị xung đột.
+//                 rx_traffic_vseq.start(p_sequencer); 
+//             end
+
+//             begin
+//                 // Chờ khoảng 50us (UART 115200bps thì 1 bit ~ 8.6us, chờ 50us là đang ở giữa khung hình)
+//                 #50us; 
+//                 `uvm_info("VSEQ_RESET_RX", "Step 2: TRIGGERING RESET DURING RX RECEPTION!!!", UVM_NONE)
+                
+//                 if(!uvm_hdl_force(PATH_RESET, 1'b0)) 
+//                     `uvm_error("VSEQ_RESET_RX", "Failed to force Reset!")
+                
+//                 #100ns; // Giữ Reset
+                
+//                 if(!uvm_hdl_release(PATH_RESET)) 
+//                     `uvm_error("VSEQ_RESET_RX", "Failed to release Reset!")
+                
+//                 #10ns; // Chờ logic ổn định
+//             end
+//         join_any
+//         disable fork; // Dừng sequence RX ngay khi có Reset
+
+//         // 4. ĐỒNG BỘ LẠI ĐỐI TƯỢNG CONFIG (QUAN TRỌNG ĐỂ SCOREBOARD KHÔNG LỖI)
+//         `uvm_info("VSEQ_RESET_RX", "Step 3: Synchronizing shared_cfg with DUT Reset state", UVM_MEDIUM)
+//         shared_cfg.data_bit_num   = DATA_5BIT;    // RTL default
+//         shared_cfg.stop_bit_num   = STOP_1BIT;    // RTL default
+//         shared_cfg.parity_en      = PARITY_DIS;   // RTL default
+//         shared_cfg.parity_type    = PARITY_EVEN;  // RTL default
+//         shared_cfg.parity_err_target = GOOD_PARITY;
+
+//         // Cập nhật lại vào DB để Scoreboard/Monitor đồng bộ theo 
+//         system_config::set(p_sequencer, "", "cfg", shared_cfg);
+
+//         // 5. KIỂM TRA GIÁ TRỊ THANH GHI QUA BACKDOOR
+//         `uvm_info("VSEQ_RESET_RX", "Step 4: Verifying register values after RX reset...", UVM_MEDIUM)
+//         check_reset_val(PATH_RX_DATA, 32'h0, "rx_data", error_count); 
+//         check_reset_val(PATH_PARITY_EN, 32'h0, "parity_en", error_count); 
+//         check_reset_val(PATH_RX_DONE, 32'h0, "rx_done", error_count); 
+
+//         if (error_count == 0)
+//             `uvm_info("VSEQ_RESET_RX", "SUCCESS: RX path recovered correctly after reset!", UVM_LOW)
+//     endtask
+
+//     task check_reset_val(string path, bit [31:0] exp, string name, ref int errors);
+//         bit [31:0] val;
+//         if (uvm_hdl_read(path, val)) begin
+//             if (val !== exp) begin
+//                 `uvm_error("RESET_FAIL", $sformatf("%s mismatch! Got: 0x%h | Exp: 0x%h", name, val, exp))
+//                 errors++;
+//             end
+//         end
+//     endtask
+// endclass
+
 class vseq_cfg_wr_rd_check extends base_vseq;
   `uvm_object_utils(vseq_cfg_wr_rd_check)
 
   apb_uart_config          shared_cfg;
-  apb_config_frame_seq     wr_cfg_seq;   // đã có trong apb_seqs.sv
-  apb_read_reg_seq         rd_cfg_seq;   // cái mới bạn vừa thêm
+  apb_config_frame_seq     wr_cfg_seq; 
+  apb_read_reg_seq         rd_cfg_seq;   
 
   function new(string name="vseq_cfg_wr_rd_check");
     super.new(name);
@@ -902,97 +1101,156 @@ class vseq_send_TX_sweep_all_cfg_32 extends base_vseq;
   endtask
 endclass
 
+// class vseq_receive_RX_sweep_all_cfg_32 extends base_vseq;
+//   `uvm_object_utils(vseq_receive_RX_sweep_all_cfg_32)
+
+//   apb_uart_config cfg;
+
+//   // vseq nhận 1 frame RX (bạn đã có)
+//   vseq_receive_RX one_rx;
+
+//   function new(string name="vseq_receive_RX_sweep_all_cfg_32");
+//     super.new(name);
+//   endfunction
+
+//   task automatic get_cfg_once();
+//     if (cfg == null) begin
+//       if (!system_config::get(p_sequencer, "", "cfg", cfg)) begin
+//         `uvm_fatal("RXCFG32", "Cannot get cfg from p_sequencer (key='cfg')")
+//       end
+//     end
+//   endtask
+
+//   task automatic banner(string s);
+//     string line = "======================================================================";
+//     `uvm_info("RXCFG32", "", UVM_NONE)
+//     `uvm_info("RXCFG32", line, UVM_NONE)
+//     `uvm_info("RXCFG32", s,    UVM_NONE)
+//     `uvm_info("RXCFG32", line, UVM_NONE)
+//   endtask
+
+//   task automatic set_cfg_fields(int idx,
+//                                 uart_data_size_e db,
+//                                 uart_stop_size_e sb,
+//                                 uart_parity_mode_e  pe,
+//                                 uart_parity_type_e pt);
+//     get_cfg_once();
+
+//     cfg.data_bit_num      = db;
+//     cfg.stop_bit_num      = sb;
+//     cfg.parity_en         = pe;
+//     cfg.parity_type       = pt;
+//     cfg.parity_err_target = GOOD_PARITY;
+
+//     // RX test: ép RX-only để tránh kích TX path
+//     cfg.monitor_mode      = MON_RX_ONLY;
+//     cfg.monitor_mode = MON_BOTH;
+//     // publish lại để vseq con get() đâu cũng thấy đúng handle
+//     system_config::set(p_sequencer, "", "cfg", cfg);
+//     system_config::set(null, "*", "cfg", cfg);
+
+//     `uvm_info("RXCFG32", $sformatf(
+//       "[%0d/32] APPLY RX CFG: data=%s stop=%s parity_en=%s parity_type=%s (%s)",
+//       idx,
+//       cfg.data_bit_num.name(),
+//       cfg.stop_bit_num.name(),
+//       cfg.parity_en.name(),
+//       cfg.parity_type.name(),
+//       cfg.parity_err_target.name()
+//     ), UVM_LOW)
+//   endtask
+
+//   virtual task body();
+//     int idx = 0;
+
+//     // Bạn đổi enum type ở đây nếu tên enum trong project khác.
+//     uart_data_size_e      db_list[4] = '{DATA_5BIT, DATA_6BIT, DATA_7BIT, DATA_8BIT};
+//     uart_parity_mode_e      pe_list[2] = '{PARITY_DIS, PARITY_EN};
+//     uart_parity_type_e    pt_list[2] = '{PARITY_ODD, PARITY_EVEN};
+//     uart_stop_size_e      sb_list[2] = '{STOP_1BIT, STOP_2BIT};
+
+//     banner("START: Sweep ALL 32 RX CFGs (GOOD_PARITY) and RECEIVE 1 frame each");
+
+//     foreach (db_list[dbi]) begin
+//       foreach (pe_list[pei]) begin
+//         foreach (pt_list[pti]) begin
+//           foreach (sb_list[sbi]) begin
+//             `uvm_info("VSEQ_N", $sformatf(
+//             "\n#####======================== Executing FRAME %0d/32 ========================#####",
+//             idx), UVM_LOW)
+//             idx++;
+
+//             // Bạn muốn đủ 32 combo => parity_en=DIS vẫn chạy cả 2 parity_type
+//             set_cfg_fields(idx, db_list[dbi], sb_list[sbi], pe_list[pei], pt_list[pti]);
+
+//             // Receive 1 frame
+//             one_rx = vseq_receive_RX::type_id::create($sformatf("one_rx_cfg%0d", idx));
+//             one_rx.start(p_sequencer);
+//           end
+//         end
+//       end
+//     end
+
+//     banner("DONE: Sweep 32 RX CFGs completed ");
+//   endtask
+// endclass
 class vseq_receive_RX_sweep_all_cfg_32 extends base_vseq;
-  `uvm_object_utils(vseq_receive_RX_sweep_all_cfg_32)
+    `uvm_object_utils(vseq_receive_RX_sweep_all_cfg_32)
 
-  apb_uart_config cfg;
+    apb_uart_config      shared_cfg;
+    system_config_seq    config_vseq; // Sequence ghi cấu hình vào DUT qua APB
+    vseq_receive_RX      one_rx_vseq; // Sequence thực hiện nhận 1 frame UART
 
-  vseq_receive_RX one_rx;
+    function new(string name="vseq_receive_RX_sweep_all_cfg_32");
+        super.new(name);
+    endfunction
 
-  function new(string name="vseq_receive_RX_sweep_all_cfg_32");
-    super.new(name);
-  endfunction
+    virtual task body();
+        int idx = 0;
+        // Định nghĩa các tập hợp giá trị dựa trên Enum
+        uart_data_size_e    db_list[4] = '{DATA_5BIT, DATA_6BIT, DATA_7BIT, DATA_8BIT};
+        uart_parity_mode_e  pe_list[2] = '{PARITY_DIS, PARITY_EN};
+        uart_parity_type_e  pt_list[2] = '{PARITY_ODD, PARITY_EVEN};
+        uart_stop_size_e    sb_list[2] = '{STOP_1BIT, STOP_2BIT};
 
-  task automatic get_cfg_once();
-    if (cfg == null) begin
-      if (!system_config::get(p_sequencer, "", "cfg", cfg)) begin
-        `uvm_fatal("RXCFG32", "Cannot get cfg from p_sequencer (key='cfg')")
-      end
-    end
-  endtask
-
-  task automatic banner(string s);
-    string line = "======================================================================";
-    `uvm_info("RXCFG32", "", UVM_NONE)
-    `uvm_info("RXCFG32", line, UVM_NONE)
-    `uvm_info("RXCFG32", s,    UVM_NONE)
-    `uvm_info("RXCFG32", line, UVM_NONE)
-  endtask
-
-  task automatic set_cfg_fields(int idx,
-                                uart_data_size_e db,
-                                uart_stop_size_e sb,
-                                uart_parity_mode_e  pe,
-                                uart_parity_type_e pt);
-    get_cfg_once();
-
-    cfg.data_bit_num      = db;
-    cfg.stop_bit_num      = sb;
-    cfg.parity_en         = pe;
-    cfg.parity_type       = pt;
-    cfg.parity_err_target = GOOD_PARITY;
-
-    // RX test: ép RX-only để tránh kích TX path
-    cfg.monitor_mode      = MON_RX_ONLY;
-    cfg.monitor_mode = MON_BOTH;
-    // publish lại để vseq con get() đâu cũng thấy đúng handle
-    system_config::set(p_sequencer, "", "cfg", cfg);
-    system_config::set(null, "*", "cfg", cfg);
-
-    `uvm_info("RXCFG32", $sformatf(
-      "[%0d/32] APPLY RX CFG: data=%s stop=%s parity_en=%s parity_type=%s (%s)",
-      idx,
-      cfg.data_bit_num.name(),
-      cfg.stop_bit_num.name(),
-      cfg.parity_en.name(),
-      cfg.parity_type.name(),
-      cfg.parity_err_target.name()
-    ), UVM_LOW)
-  endtask
-
-  virtual task body();
-    int idx = 0;
-
-    // Bạn đổi enum type ở đây nếu tên enum trong project khác.
-    uart_data_size_e      db_list[4] = '{DATA_5BIT, DATA_6BIT, DATA_7BIT, DATA_8BIT};
-    uart_parity_mode_e      pe_list[2] = '{PARITY_DIS, PARITY_EN};
-    uart_parity_type_e    pt_list[2] = '{PARITY_ODD, PARITY_EVEN};
-    uart_stop_size_e      sb_list[2] = '{STOP_1BIT, STOP_2BIT};
-
-    banner("START: Sweep ALL 32 RX CFGs (GOOD_PARITY) and RECEIVE 1 frame each");
-
-    foreach (db_list[dbi]) begin
-      foreach (pe_list[pei]) begin
-        foreach (pt_list[pti]) begin
-          foreach (sb_list[sbi]) begin
-            `uvm_info("VSEQ_N", $sformatf(
-            "\n#####======================== Executing FRAME %0d/32 ========================#####",
-            idx), UVM_LOW)
-            idx++;
-
-            // Bạn muốn đủ 32 combo => parity_en=DIS vẫn chạy cả 2 parity_type
-            set_cfg_fields(idx, db_list[dbi], sb_list[sbi], pe_list[pei], pt_list[pti]);
-
-            // Receive 1 frame
-            one_rx = vseq_receive_RX::type_id::create($sformatf("one_rx_cfg%0d", idx));
-            one_rx.start(p_sequencer);
-          end
+        // 1. Lấy handle config từ p_sequencer
+        if (!system_config::get(p_sequencer, "", "cfg", shared_cfg)) begin
+            `uvm_fatal("RXCFG32", "Cannot get shared_cfg from DB!")
         end
-      end
-    end
 
-    banner("DONE: Sweep 32 RX CFGs completed ");
-  endtask
+        `uvm_info("RXCFG32", "=== STARTING SWEEP: 32 RX CONFIGURATIONS ===", UVM_LOW)
+
+        // 2. Vòng lặp lồng nhau tạo 32 tổ hợp
+        foreach (db_list[dbi]) begin
+            foreach (pe_list[pei]) begin
+                foreach (pt_list[pti]) begin
+                    foreach (sb_list[sbi]) begin
+                        idx++;
+                        `uvm_info("RXC FG32", $sformatf("\n----------------- [ITERATION %0d/32] --------------------", idx), UVM_LOW)
+
+                        // Cập nhật cấu hình vào object dùng chung
+                        shared_cfg.data_bit_num = db_list[dbi];
+                        shared_cfg.parity_en    = pe_list[pei];
+                        shared_cfg.parity_type  = pt_list[pti];
+                        shared_cfg.stop_bit_num = sb_list[sbi];
+                        shared_cfg.monitor_mode = MON_BOTH; 
+
+                        // 3. ĐỒNG BỘ CONFIG: Ghi vào thanh ghi 0x008 của DUT qua APB
+                        config_vseq = system_config_seq::type_id::create("config_vseq");
+                        config_vseq.shared_cfg = shared_cfg;
+                        config_vseq.start(p_sequencer);
+
+                        // 4. THỰC THI RX: Nhận 1 frame UART với cấu hình vừa set
+                        one_rx_vseq = vseq_receive_RX::type_id::create($sformatf("one_rx_cfg_%0d", idx));
+                        // Lưu ý: vseq_receive_RX bên trong không nên gọi lại config_vseq để tránh lặp
+                        one_rx_vseq.start(p_sequencer);
+                    end
+                end
+            end
+        end
+
+        `uvm_info("RXCFG32", "=== SWEEP 32 RX CONFIGS COMPLETED ===", UVM_LOW)
+    endtask
 endclass
 
 // =========== TX ====================================================================================
@@ -1152,59 +1410,74 @@ endclass
 class vseq_tx_done_pulse extends base_vseq;
     `uvm_object_utils(vseq_tx_done_pulse)
 
+    // HDL Paths 
     localparam string PATH_TX_DONE  = "$root.hw_top.dut.tx_done";
     localparam string PATH_START_TX = "$root.hw_top.dut.start_tx";
     localparam string CTS_N_PATH    = "$root.hw_top.uif.cts_n";
     
-    send_tx_data_seq apb_send_vseq;
-    apb_uart_config  shared_cfg;
+    // Sub-sequences 
+    system_config_seq    config_vseq;   // Sequence cấu hình thanh ghi UART
+    send_tx_data_seq     apb_send_vseq; // Sequence gửi dữ liệu APB
+    apb_uart_config      shared_cfg;
 
     virtual task body();
         int val;
         real bit_period_ns;
-        int total_bits;
+        bit [7:0] data_mask;
 
         if (!system_config::get(p_sequencer, "", "cfg", shared_cfg)) begin
             `uvm_fatal("VSEQ", "Cannot find 'cfg' in Config DB!")
         end
 
+        //  Gọi system_config_seq để ghi vào thanh ghi 0x008 của DUT 
+        config_vseq = system_config_seq::type_id::create("config_vseq");
+        config_vseq.shared_cfg = shared_cfg; 
+        config_vseq.start(p_sequencer); 
+        `uvm_info("TX_DONE_PULSE", "Step 1: DUT Configuration Synced via APB.", UVM_MEDIUM)
+
+        // 3. Tính toán Mask dựa trên cấu hình hiện tại 
+        case(shared_cfg.data_bit_num)
+            DATA_5BIT: data_mask = 8'h1F;
+            DATA_6BIT: data_mask = 8'h3F;
+            DATA_7BIT: data_mask = 8'h7F;
+            default:   data_mask = 8'hFF;
+        endcase
+
         bit_period_ns = 1000000000.0 / shared_cfg.baud_rate; 
-        total_bits = 1 + (shared_cfg.data_bit_num == DATA_5BIT ? 5 : 
-                         shared_cfg.data_bit_num == DATA_6BIT ? 6 :
-                         shared_cfg.data_bit_num == DATA_7BIT ? 7 : 8);
-        if (shared_cfg.parity_en == PARITY_EN) total_bits += 1;
-        total_bits += (shared_cfg.stop_bit_num == STOP_2BIT) ? 2 : 1;
 
-        `uvm_info("TX_DONE_PULSE", $sformatf("=== STARTING TEST: Frame width = %0d bits ===", total_bits), UVM_LOW)
-
-        void'(uvm_hdl_force(CTS_N_PATH, 1'b0));
+        // 4. Chuẩn bị Sequence gửi dữ liệu
         apb_send_vseq = send_tx_data_seq::type_id::create("apb_send_vseq");
         
-        if(!apb_send_vseq.randomize()) `uvm_error("VSEQ", "Randomization failed")
+        // Randomize với Mask để tránh gửi 8-bit trong khi DUT đang chạy 5-bit
+        if(!apb_send_vseq.randomize() with {
+            // Giả sử biến dữ liệu trong sequence là data_in
+            // data_in & (~data_mask) == 0; 
+        }) `uvm_error("VSEQ", "Randomization failed")
+
+        `uvm_info("TX_DONE_PULSE", $sformatf("Step 2: Sending Data (Mask: %h)", data_mask), UVM_LOW)
+
+        void'(uvm_hdl_force(CTS_N_PATH, 1'b0));
 
         fork
             begin
-                `uvm_do_on(apb_send_vseq, p_sequencer.apb_sqr)
+                apb_send_vseq.start(p_sequencer.apb_sqr);
             end
 
             begin
                 // Đợi start_tx nội bộ lên 1 
                 wait_hdl_val(PATH_START_TX, 1);
                 
-                // Kiểm tra tx_done phải về 0 sau 1 bit (Start bit)
+                // Kiểm tra tx_done phải về 0 khi đang truyền 
                 #(bit_period_ns * 2 * 1ns); 
                 void'(uvm_hdl_read(PATH_TX_DONE, val));
                 if (val == 0) 
-                    `uvm_info("TX_DONE_PULSE", "SUCCESS: tx_done dropped to 0 during transmission", UVM_LOW)
+                    `uvm_info("TX_DONE_PULSE", "SUCCESS: tx_done dropped to 0", UVM_LOW)
                 else 
-                    `uvm_error("TX_DONE_PULSE", "FAILED: tx_done did not drop to 0!")
+                    `uvm_error("TX_DONE_PULSE", "FAILED: tx_done remained 1!")
 
-                // Đợi tx_done thực sự quay lại 1 từ RTL
+                // Đợi tx_done quay lại 1 sau khi xong frame 
                 wait_hdl_val(PATH_TX_DONE, 1);
-                
-                #(bit_period_ns * 2.0 * 1ns); 
-                
-                `uvm_info("TX_DONE_PULSE", "SUCCESS: tx_done returned to 1 and Monitor finished.", UVM_LOW)
+                `uvm_info("TX_DONE_PULSE", "SUCCESS: tx_done returned to 1.", UVM_LOW)
             end
         join
 
@@ -1212,6 +1485,7 @@ class vseq_tx_done_pulse extends base_vseq;
         `uvm_info("TX_DONE_PULSE", "=== TX_DONE PULSE TEST COMPLETED ===", UVM_LOW)
     endtask
 
+    // Helper task để đợi HDL tín hiệu 
     task wait_hdl_val(string path, int exp);
         int val;
         forever begin

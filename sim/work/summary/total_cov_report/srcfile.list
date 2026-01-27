@@ -1,0 +1,8 @@
+../../hdl/uart.sv
+../apb_uvc/apb_coverage_monitor.sv
+../apb_uvc/apb_if.sv
+../apb_uvc/apb_pkg.sv
+../tb/hw_top.sv
+../uart_uvc/uart_coverage_monitor.sv
+../uart_uvc/uart_if.sv
+../uart_uvc/uart_pkg.sv

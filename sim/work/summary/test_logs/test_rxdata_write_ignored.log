@@ -1,5 +1,5 @@
-# vsim -c tb_top hw_top -wlf vsim.wlf -sv_seed random -solvefaildebug -assertdebug -sva -coverage -voptargs="+acc" -l ./log/vsim.log "+UVM_VERBOSITY=UVM_HIGH" "+UVM_TESTNAME=test_rxdata_write_ignored" -sv_lib uvm_dpi -do "coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb; log -r /*; run -all; quit" 
-# Start time: 00:28:03 on Jan 27,2026
+# vsim -c tb_top hw_top -wlf vsim.wlf -sv_seed random -coverage -voptargs="+acc" -l ./log/vsim.log "+UVM_VERBOSITY=UVM_HIGH" "+UVM_TESTNAME=test_rxdata_write_ignored" -sv_lib uvm_dpi -do "coverage save -onexit -testname test_rxdata_write_ignored coverage.ucdb; log -r /*; add wave -r /*; run -all; quit" 
+# Start time: 04:23:57 on Jan 27,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # ** Note: (vopt-143) Recognized 2 FSMs in module "uart(fast)".
 # //  Questa Sim-64
@@ -33,9 +33,10 @@
 # Loading work.uart(fast)
 # Loading mtiUvm.questa_uvm_pkg(fast)
 # Loading ./uvm_dpi.so
-# Sv_Seed = 2819941460
-# coverage save -onexit -assert -code bcefs -directive -cvg coverage.ucdb
+# Sv_Seed = 2788934240
+# coverage save -onexit -testname test_rxdata_write_ignored coverage.ucdb
 #  log -r /*
+#  add wave -r /*
 #  run -all
 # ----------------------------------------------------------------
 # UVM-1.1d
@@ -136,7 +137,7 @@
 # ----------------------------------------------------------------------------------------------------------
 # tr                             apb_transaction   -     @1008                                              
 #   paddr                        integral          12    'h4                                                
-#   pwdata                       integral          32    'h2589372b                                         
+#   pwdata                       integral          32    'hcfafd25b                                         
 #   pwrite                       integral          1     'h0                                                
 #   pstrb                        integral          4     'h1                                                
 #   prdata                       integral          32    'h0xxxxxxxx                                        
@@ -178,7 +179,7 @@
 # ----------------------------------------------------------------------------------------------------------
 # tr                             apb_transaction   -     @1114                                              
 #   paddr                        integral          12    'h4                                                
-#   pwdata                       integral          32    'h9c708b93                                         
+#   pwdata                       integral          32    'hf70c5e2e                                         
 #   pwrite                       integral          1     'h0                                                
 #   pstrb                        integral          4     'h0                                                
 #   prdata                       integral          32    'hdeadbexx                                         
@@ -200,9 +201,9 @@
 # ----------------------------------------------------------------------------------------------------------
 # tr                             apb_transaction   -     @1122                                              
 #   paddr                        integral          12    'h10                                               
-#   pwdata                       integral          32    'h1f3c27db                                         
+#   pwdata                       integral          32    'h6faf293                                          
 #   pwrite                       integral          1     'h0                                                
-#   pstrb                        integral          4     'h1                                                
+#   pstrb                        integral          4     'h0                                                
 #   prdata                       integral          32    'hdeadbeeb                                         
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_RO                                            
@@ -222,7 +223,7 @@
 #   paddr                        integral          12    'h10                                               
 #   pwdata                       integral          32    'hdeadbeef                                         
 #   pwrite                       integral          1     'h1                                                
-#   pstrb                        integral          4     'h0                                                
+#   pstrb                        integral          4     'h1                                                
 #   prdata                       integral          32    'h0xxxxxxxx                                        
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_RO                                            
@@ -241,7 +242,7 @@
 # ----------------------------------------------------------------------------------------------------------
 # tr                             apb_transaction   -     @1138                                              
 #   paddr                        integral          12    'h10                                               
-#   pwdata                       integral          32    'h2230febd                                         
+#   pwdata                       integral          32    'hbbe8f005                                         
 #   pwrite                       integral          1     'h0                                                
 #   pstrb                        integral          4     'h0                                                
 #   prdata                       integral          32    'hdeadbeeb                                         
@@ -262,7 +263,7 @@
 # ----------------------------------------------------------------------------------------------------------
 # tr                             apb_transaction   -     @1146                                              
 #   paddr                        integral          12    'h20                                               
-#   pwdata                       integral          32    'h6656d20d                                         
+#   pwdata                       integral          32    'h6b449727                                         
 #   pwrite                       integral          1     'h0                                                
 #   pstrb                        integral          4     'h0                                                
 #   prdata                       integral          32    'h0                                                
@@ -285,7 +286,7 @@
 #   paddr                        integral          12    'h20                                               
 #   pwdata                       integral          32    'hdeadbeef                                         
 #   pwrite                       integral          1     'h1                                                
-#   pstrb                        integral          4     'h1                                                
+#   pstrb                        integral          4     'h0                                                
 #   prdata                       integral          32    'h0xxxxxxxx                                        
 #   pslverr                      integral          1     'h0X                                               
 #   addr_type                    addr_test_type_e  32    ADDR_INVALID                                       
@@ -304,7 +305,7 @@
 # ----------------------------------------------------------------------------------------------------------
 # tr                             apb_transaction   -     @1162                                              
 #   paddr                        integral          12    'h20                                               
-#   pwdata                       integral          32    'h71680bed                                         
+#   pwdata                       integral          32    'he577d6f7                                         
 #   pwrite                       integral          1     'h0                                                
 #   pstrb                        integral          4     'h0                                                
 #   prdata                       integral          32    'h0                                                
@@ -322,7 +323,7 @@
 # UVM_INFO ../tb/uart_virseqs.sv(35) @ 10630000: uvm_test_top.env.vir_seqr@@vseq_rxdata_write_ignored [vseq_rxdata_write_ignored] drop objection
 # UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 110630000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
 # UVM_INFO @ 110630000: uvm_test_top [CFGNRD]  ::: The following resources have at least one write and no reads :::
-# cfg [/^uvm_test_top\.env\.vir_seqr.*$/] : (class uart_common_pkg::apb_uart_config) {cfg} 489 1 1172 @uvm_status_container@1 115200 DATA_5BIT STOP_2BIT PARITY_DIS PARITY_EVEN MON_BOTH GOOD_PARITY COV_DISABLE {apb_uart_config}
+# cfg [/^uvm_test_top\.env\.vir_seqr.*$/] : (class uart_common_pkg::apb_uart_config) {cfg} 489 1 1172 @uvm_status_container@1 115200 DATA_6BIT STOP_1BIT PARITY_EN PARITY_EVEN MON_BOTH GOOD_PARITY COV_DISABLE {apb_uart_config}
 # -  
 #   --------
 #   uvm_test_top.env reads: 0 @ 0  writes: 1 @ 0
@@ -373,5 +374,5 @@
 # ** Note: $finish    : /home/viethung/tools/Questasim/questasim/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
 #    Time: 110630 ns  Iteration: 53  Instance: /tb_top
 # Saving coverage database on exit...
-# End time: 00:28:07 on Jan 27,2026, Elapsed time: 0:00:04
+# End time: 04:24:00 on Jan 27,2026, Elapsed time: 0:00:03
 # Errors: 0, Warnings: 0

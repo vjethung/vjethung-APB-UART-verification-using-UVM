@@ -246,6 +246,45 @@ class test_check_reset extends base_test;
   endfunction
 endclass
 
+class test_check_tx_reset extends base_test;
+  `uvm_component_utils(test_check_tx_reset)
+
+  function new (string name, uvm_component parent);
+    super.new(name, parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    uvm_config_wrapper::set(this, 
+                            "env.vir_seqr.run_phase", 
+                            "default_sequence", 
+                            vseq_check_tx_reset::get_type());
+
+    super.build_phase(phase);
+    cfg.monitor_mode = MON_TX_ONLY;
+    
+    `uvm_info("TEST", "\n####======================== TEST VALUE OF REGISTER ========================#####", UVM_LOW)
+  endfunction
+endclass
+
+// class test_check_rx_reset extends base_test;
+//   `uvm_component_utils(test_check_rx_reset)
+
+//   function new (string name, uvm_component parent);
+//     super.new(name, parent);
+//   endfunction
+
+//   virtual function void build_phase(uvm_phase phase);
+//     uvm_config_wrapper::set(this, 
+//                             "env.vir_seqr.run_phase", 
+//                             "default_sequence", 
+//                             vseq_check_rx_reset::get_type());
+
+//     super.build_phase(phase);
+
+//     `uvm_info("TEST", "\n####======================== TEST VALUE OF REGISTER ========================#####", UVM_LOW)
+//   endfunction
+// endclass
+
 class test_rxdata_write_ignored extends base_test;
   `uvm_component_utils(test_rxdata_write_ignored)
 
@@ -319,6 +358,7 @@ class test_send_TX_sweep_all_cfg_32 extends base_test;
                             vseq_send_TX_sweep_all_cfg_32::get_type());
 
     super.build_phase(phase);
+    cfg.monitor_mode = MON_TX_ONLY; 
 
     `uvm_info("TEST", "\n####======================== TEST ALL CONFIG TO TRAN ========================#####", UVM_LOW)
   endfunction
@@ -338,6 +378,7 @@ class test_receive_RX_sweep_all_cfg_32 extends base_test;
                             vseq_receive_RX_sweep_all_cfg_32::get_type());
 
     super.build_phase(phase);
+    // cfg.monitor_mode = MON_RX_ONLY; 
 
     `uvm_info("TEST", "\n####======================== TEST ALL CONFIG TO RECV ========================#####", UVM_LOW)
   endfunction
